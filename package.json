@@ -1,8 +1,8 @@
 {
   "name": "aksesaja-server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
-  "author": "",
+  "author": "Aksesana",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -41,6 +41,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "29.3.1",
+    "jest-ts-auto-mock": "^2.1.0",
     "prettier": "^2.3.2",
     "run-script-webpack-plugin": "^0.1.1",
     "source-map-support": "^0.5.20",
