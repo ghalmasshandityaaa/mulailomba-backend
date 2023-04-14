@@ -24,8 +24,30 @@
       }
     ],
     "paths": {
-      "@test": ["tests"],
-      "@test/*": ["tests/*"]
+      "@test": [
+        "tests"
+      ],
+      "@test/*": [
+        "tests/*"
+      ],
+      "@aksesaja/common": [
+        "libs/common/src"
+      ],
+      "@aksesaja/common/*": [
+        "libs/common/src/*"
+      ],
+      "@aksesaja/logger": [
+        "libs/logger/src"
+      ],
+      "@aksesaja/logger/*": [
+        "libs/logger/src/*"
+      ],
+      "@aksesaja/config": [
+        "libs/config/src"
+      ],
+      "@aksesaja/config/*": [
+        "libs/config/src/*"
+      ]
     }
   }
 }
