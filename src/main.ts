@@ -8,6 +8,7 @@ import { ServerConfigService } from '@aksesaja/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { json } from 'express';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
 declare const module: any;
@@ -17,7 +18,7 @@ async function bootstrap() {
   });
 
   const config = app.get(ServerConfigService);
-
+  app.useLogger(app.get(PinoLogger));
   app.use(json({ limit: '5mb' }));
   app
     .useGlobalPipes(

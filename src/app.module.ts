@@ -1,5 +1,12 @@
 import { RequestIdInterceptor, ResponseEnvelopeInterceptor } from '@aksesaja/common';
-import { DatabaseConfigModule, DatabaseConfigService, ServerConfigModule } from '@aksesaja/config';
+import {
+  DatabaseConfigModule,
+  DatabaseConfigService,
+  LoggerConfigModule,
+  LoggerConfigService,
+  ServerConfigModule,
+} from '@aksesaja/config';
+import { LoggerModule } from '@aksesaja/logger';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -16,6 +23,14 @@ import { TypeOrmOptionsProvider } from './providers';
       imports: [DatabaseConfigModule],
       useClass: TypeOrmOptionsProvider,
       inject: [DatabaseConfigService],
+    }),
+    LoggerModule.forRootAsync({
+      imports: [LoggerConfigModule],
+      useFactory: (config: LoggerConfigService) => ({
+        level: config.level,
+        excludePath: ['health'],
+      }),
+      inject: [LoggerConfigService],
     }),
   ],
   controllers: [],
