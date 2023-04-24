@@ -7,6 +7,7 @@ import {
 import { ServerConfigService } from '@aksesaja/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
 import { json } from 'express';
 import { Logger as PinoLogger } from 'nestjs-pino';
 import { AppModule } from './app.module';
@@ -20,6 +21,7 @@ async function bootstrap() {
   const config = app.get(ServerConfigService);
   app.useLogger(app.get(PinoLogger));
   app.use(json({ limit: '5mb' }));
+  app.use(cookieParser());
   app
     .useGlobalPipes(
       new ValidationPipe({

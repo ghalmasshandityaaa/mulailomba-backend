@@ -1,4 +1,5 @@
 import { DatabaseConfigService } from '@aksesaja/config';
+import { TypeOrmUserEntities } from '@aksesaja/user/entities';
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
@@ -12,7 +13,7 @@ export class TypeOrmOptionsProvider implements TypeOrmOptionsFactory {
       type: 'postgres',
       url: this.config.url,
       autoLoadEntities: false,
-      entities: [],
+      entities: [...TypeOrmUserEntities],
       synchronize: false,
       logging: true,
     };

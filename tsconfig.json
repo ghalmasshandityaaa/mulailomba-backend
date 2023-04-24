@@ -47,6 +47,18 @@
       ],
       "@aksesaja/config/*": [
         "libs/config/src/*"
+      ],
+      "@aksesaja/user": [
+        "libs/user/src"
+      ],
+      "@aksesaja/user/*": [
+        "libs/user/src/*"
+      ],
+      "@aksesaja/organizer": [
+        "libs/organizer/src"
+      ],
+      "@aksesaja/organizer/*": [
+        "libs/organizer/src/*"
       ]
     }
   }

@@ -33,6 +33,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/config/tsconfig.lib.json"
       }
+    },
+    "user": {
+      "type": "library",
+      "root": "libs/user",
+      "entryFile": "index",
+      "sourceRoot": "libs/user/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/user/tsconfig.lib.json"
+      }
+    },
+    "organizer": {
+      "type": "library",
+      "root": "libs/organizer",
+      "entryFile": "index",
+      "sourceRoot": "libs/organizer/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/organizer/tsconfig.lib.json"
+      }
     }
   }
 }

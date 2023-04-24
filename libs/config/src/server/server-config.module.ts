@@ -7,6 +7,8 @@ import { ServerConfigService } from './server-config.service';
   imports: [
     ConfigModule.forRoot({
       cache: true,
+      isGlobal: true,
+      envFilePath: ['.env'],
       validationSchema: Joi.object({
         PORT: Joi.number().default(3000),
         CORS_ORIGIN: Joi.string().default('*'),

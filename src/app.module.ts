@@ -11,6 +11,7 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health';
 import { TypeOrmOptionsProvider } from './providers';
 
@@ -32,6 +33,7 @@ import { TypeOrmOptionsProvider } from './providers';
       }),
       inject: [LoggerConfigService],
     }),
+    AuthModule,
   ],
   controllers: [],
   providers: [
