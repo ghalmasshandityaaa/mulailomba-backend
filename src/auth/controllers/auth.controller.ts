@@ -1,7 +1,6 @@
-import { Identity, IIdentity, RolePermission, Roles } from '@aksesaja/common';
-import { Body, Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Request } from 'express';
+import { Cookies, CookieUtils, Identity, IIdentity, RolePermission, Roles } from '@aksesaja/common';
+import { Body, Controller, Get, Inject, Post, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
 import { AUTH_SERVICE } from '../constants';
 import { LoginBodyDTO } from '../dtos';
 import { JwtAuthGuard, RoleGuard } from '../guard';
@@ -15,20 +14,20 @@ export class AuthController {
   constructor(
     @Inject(AUTH_SERVICE)
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
   ) {}
 
   @Post('login/user')
-  async loginUser(@Body() body: LoginBodyDTO) {
+  async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: LoginBodyDTO) {
     const identity = await this.authService.validateUser(body.emailAddress, body.password);
     const tokens = await this.authService.generateTokens(identity);
+
+    CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
     return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken };
   }
 
   @Post('refresh')
-  async refreshTokens(@Req() req: Request) {
-    const refreshToken = req.cookies['refresh_token'];
+  async refreshTokens(@Cookies('refresh_token') refreshToken: any) {
     const tokens = await this.authService.refreshTokens(refreshToken);
 
     return { access_token: tokens.accessToken };
