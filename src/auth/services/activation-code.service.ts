@@ -4,6 +4,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 import { TypeOrmActivationCodeEntity } from '../entities';
+import { AuthError, VerificationError } from '../errors';
 import { IActivationCodeService } from '../interfaces';
 
 export class ActivationCodeService extends TypeOrmBaseRepository implements IActivationCodeService {
@@ -44,5 +45,34 @@ export class ActivationCodeService extends TypeOrmBaseRepository implements IAct
     }
 
     this.logger.trace({ method }, 'END');
+  }
+
+  async verifyActivationCode(emailAddress: string, activationCode: string): Promise<void> {
+    if (!emailAddress) throw new AuthError.InvalidCredentials();
+    const verification = await this.findByEmail(emailAddress);
+
+    if (!verification) throw new AuthError.EmailNotRegistered();
+    if (activationCode !== verification.activationCode) throw new VerificationError.InvalidCode();
+
+    await this.delete(emailAddress);
+  }
+
+  private async findByEmail(
+    emailAddress: string,
+  ): Promise<TypeOrmActivationCodeEntity | undefined> {
+    const entity = await this.dataSource
+      .createQueryBuilder(TypeOrmActivationCodeEntity, 'ac')
+      .where('ac.emailAddress = :emailAddress', { emailAddress })
+      .getOne();
+
+    return entity || undefined;
+  }
+
+  private async delete(emailAddress: string): Promise<void> {
+    return this.execute(async () => {
+      await this.dataSource
+        .createEntityManager()
+        .delete(TypeOrmActivationCodeEntity, { emailAddress });
+    });
   }
 }

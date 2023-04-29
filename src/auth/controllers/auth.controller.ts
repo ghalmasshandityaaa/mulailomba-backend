@@ -11,10 +11,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { AUTH_SERVICE } from '../constants';
-import { CheckAvailabilityEmailBodyDTO, LoginBodyDTO } from '../dtos';
+import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
+import { CheckAvailabilityEmailBodyDTO, LoginBodyDTO, VerifyActivationCodeBodyDTO } from '../dtos';
 import { JwtAuthGuard, RoleGuard } from '../guard';
-import { IAuthService } from '../interfaces';
+import { IActivationCodeService, IAuthService } from '../interfaces';
 
 @Controller({
   path: 'auth',
@@ -24,6 +24,8 @@ export class AuthController {
   constructor(
     @Inject(AUTH_SERVICE)
     private readonly authService: IAuthService,
+    @Inject(ACTIVATION_CODE_SERVICE)
+    private readonly acService: IActivationCodeService,
   ) {}
 
   @Post('login/user')
@@ -53,6 +55,18 @@ export class AuthController {
   ) {
     await this.authService.checkAvailabilityEmail(body.emailAddress);
     CookieUtils.set(res, 'email', body.emailAddress);
+  }
+
+  @Post('verify-activation-code')
+  @HttpCode(HttpStatus.OK)
+  async verifyActivationCode(
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: VerifyActivationCodeBodyDTO,
+    @Cookies('email') email: any,
+  ) {
+    await this.acService.verifyActivationCode(email as string, body.activationCode);
+    CookieUtils.delete(res, 'email');
+    CookieUtils.set(res, 'is_valid', 'true');
   }
 
   @Get('me')

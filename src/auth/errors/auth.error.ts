@@ -58,4 +58,18 @@ export namespace AuthError {
       );
     }
   }
+
+  export class EmailNotRegistered extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'auth/email-not-registered',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
 }

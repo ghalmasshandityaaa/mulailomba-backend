@@ -25,7 +25,10 @@ export class CookieUtils {
    * @param name
    */
   public static delete = (res: Response, name: string): void => {
-    res.clearCookie(name, COOKIES_OPTIONS);
+    res.clearCookie(name, {
+      ...COOKIES_OPTIONS,
+      maxAge: 0,
+    });
   };
 
   /**
@@ -36,7 +39,10 @@ export class CookieUtils {
     const cookies: any = req.cookies;
 
     for (const cookie in cookies) {
-      res.clearCookie(cookie, COOKIES_OPTIONS);
+      res.clearCookie(cookie, {
+        ...COOKIES_OPTIONS,
+        maxAge: 0,
+      });
     }
   };
 }
