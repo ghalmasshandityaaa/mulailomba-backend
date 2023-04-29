@@ -10,4 +10,5 @@ export interface IAuthService {
   validate(identity: IIdentity): Promise<boolean>;
   generateTokens(identity: IIdentity): Promise<ILoginResponse>;
   refreshTokens(refreshToken: string): Promise<ILoginResponse>;
+  checkAvailabilityEmail(emailAddress: string): Promise<void>;
 }

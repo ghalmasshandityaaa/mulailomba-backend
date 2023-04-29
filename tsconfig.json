@@ -59,6 +59,12 @@
       ],
       "@aksesaja/organizer/*": [
         "libs/organizer/src/*"
+      ],
+      "@aksesaja/mailer": [
+        "libs/mailer/src"
+      ],
+      "@aksesaja/mailer/*": [
+        "libs/mailer/src/*"
       ]
     }
   }

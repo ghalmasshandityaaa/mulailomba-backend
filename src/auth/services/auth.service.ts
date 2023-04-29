@@ -1,4 +1,6 @@
-import { IIdentity, RolePermission } from '@aksesaja/common';
+import { GenerateRandomCode, IIdentity, RolePermission } from '@aksesaja/common';
+import { IMailerService } from '@aksesaja/mailer/interfaces';
+import { MAILER_SERVICE } from '@aksesaja/mailer/mailer.constant';
 import { USER_SERVICE } from '@aksesaja/user/constants';
 import { UserError } from '@aksesaja/user/errors';
 import { IUserService } from '@aksesaja/user/interfaces';
@@ -7,8 +9,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { ACTIVATION_CODE_SERVICE } from '../constants';
 import { AuthError } from '../errors';
-import { IAuthService, ILoginResponse } from '../interfaces';
+import { IActivationCodeService, IAuthService, ILoginResponse } from '../interfaces';
 
 export class AuthService implements IAuthService {
   constructor(
@@ -18,6 +21,10 @@ export class AuthService implements IAuthService {
     private readonly userService: IUserService,
     @InjectPinoLogger(AuthService.name)
     private readonly logger: PinoLogger,
+    @Inject(MAILER_SERVICE)
+    private readonly mailerService: IMailerService,
+    @Inject(ACTIVATION_CODE_SERVICE)
+    private readonly activationCodeService: IActivationCodeService,
   ) {}
 
   async validateUser(emailAddress: string, password: string): Promise<IIdentity> {
@@ -26,7 +33,7 @@ export class AuthService implements IAuthService {
 
     const valid = await this.comparePassword(password, user.password);
     if (!valid) throw new AuthError.InvalidCredentials();
-    else if (!user.isActive) throw new UserError.UserAlreadyDeactivated();
+    else if (!user.isActive) throw new UserError.AlreadyDeactivated();
 
     return { id: user.id, role: RolePermission.USER, isActive: user.isActive };
   }
@@ -91,6 +98,19 @@ export class AuthService implements IAuthService {
       this.logger.error(error);
       throw error;
     }
+  }
+
+  async checkAvailabilityEmail(emailAddress: string): Promise<void> {
+    const user = await this.userService.findByEmail(emailAddress);
+    if (user) throw new UserError.AlreadyExist();
+
+    const activationCode = GenerateRandomCode(6);
+    await this.activationCodeService.create(emailAddress, activationCode);
+
+    await this.mailerService.sendActivationCode(
+      { recipients: [emailAddress] },
+      { activationCode: activationCode.split('') },
+    );
   }
 
   /** Utility Method */

@@ -17,13 +17,27 @@ export namespace UserError {
     }
   }
 
-  export class UserAlreadyDeactivated extends HttpException {
+  export class AlreadyDeactivated extends HttpException {
     constructor() {
       super(
         {
           ok: false,
           error: {
             code: 'user/already-deactivated',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  export class AlreadyExist extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'user/already-exist',
           },
         } as HttpErrorResponse,
         HttpStatus.BAD_REQUEST,
