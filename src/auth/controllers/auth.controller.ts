@@ -13,6 +13,7 @@ import {
 import { Response } from 'express';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import { CheckAvailabilityEmailBodyDTO, LoginBodyDTO, VerifyActivationCodeBodyDTO } from '../dtos';
+import { AuthError } from '../errors';
 import { JwtAuthGuard, RoleGuard } from '../guard';
 import { IActivationCodeService, IAuthService } from '../interfaces';
 
@@ -67,6 +68,13 @@ export class AuthController {
     await this.acService.verifyActivationCode(email as string, body.activationCode);
     CookieUtils.delete(res, 'email');
     CookieUtils.set(res, 'is_valid', 'true');
+  }
+
+  @Post('resend-activation-code')
+  @HttpCode(HttpStatus.OK)
+  async resendActivationCode(@Cookies('email') email: any) {
+    if (!email) throw new AuthError.ForbiddenAccess();
+    await this.authService.sendActivationCode(email as string);
   }
 
   @Get('me')

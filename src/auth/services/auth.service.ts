@@ -104,9 +104,12 @@ export class AuthService implements IAuthService {
     const user = await this.userService.findByEmail(emailAddress);
     if (user) throw new UserError.AlreadyExist();
 
+    await this.sendActivationCode(emailAddress);
+  }
+
+  async sendActivationCode(emailAddress: string): Promise<void> {
     const activationCode = GenerateRandomCode(6);
     await this.activationCodeService.create(emailAddress, activationCode);
-
     await this.mailerService.sendActivationCode(
       { recipients: [emailAddress] },
       { activationCode: activationCode.split('') },

@@ -48,7 +48,7 @@ export class ActivationCodeService extends TypeOrmBaseRepository implements IAct
   }
 
   async verifyActivationCode(emailAddress: string, activationCode: string): Promise<void> {
-    if (!emailAddress) throw new AuthError.InvalidCredentials();
+    if (!emailAddress) throw new AuthError.ForbiddenAccess();
     const verification = await this.findByEmail(emailAddress);
 
     if (!verification) throw new AuthError.EmailNotRegistered();

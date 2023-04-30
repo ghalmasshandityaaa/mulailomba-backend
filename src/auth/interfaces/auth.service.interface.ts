@@ -11,4 +11,5 @@ export interface IAuthService {
   generateTokens(identity: IIdentity): Promise<ILoginResponse>;
   refreshTokens(refreshToken: string): Promise<ILoginResponse>;
   checkAvailabilityEmail(emailAddress: string): Promise<void>;
+  sendActivationCode(emailAddress: string): Promise<void>;
 }
