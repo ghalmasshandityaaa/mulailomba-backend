@@ -1,4 +1,6 @@
 import { Cookies, CookieUtils, Identity, IIdentity, RolePermission, Roles } from '@aksesaja/common';
+import { USER_SERVICE } from '@aksesaja/user/constants';
+import { IUserService } from '@aksesaja/user/interfaces';
 import {
   Body,
   Controller,
@@ -12,7 +14,12 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
-import { CheckAvailabilityEmailBodyDTO, LoginBodyDTO, VerifyActivationCodeBodyDTO } from '../dtos';
+import {
+  CheckAvailabilityEmailBodyDTO,
+  UserLoginBodyDTO,
+  UserRegisterBodyDTO,
+  VerifyActivationCodeBodyDTO,
+} from '../dtos';
 import { AuthError } from '../errors';
 import { JwtAuthGuard, RoleGuard } from '../guard';
 import { IActivationCodeService, IAuthService } from '../interfaces';
@@ -27,17 +34,37 @@ export class AuthController {
     private readonly authService: IAuthService,
     @Inject(ACTIVATION_CODE_SERVICE)
     private readonly acService: IActivationCodeService,
+    @Inject(USER_SERVICE)
+    private readonly userService: IUserService,
   ) {}
 
   @Post('login/user')
   @HttpCode(HttpStatus.OK)
-  async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: LoginBodyDTO) {
+  async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
     const identity = await this.authService.validateUser(body.emailAddress, body.password);
     const tokens = await this.authService.generateTokens(identity);
 
     CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
     return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken };
+  }
+
+  @Post('register/user')
+  @HttpCode(HttpStatus.OK)
+  async registerUser(
+    @Res({ passthrough: true }) res: Response,
+    @Cookies('email') emailAddress: any,
+    @Cookies('is_valid') isValid: any,
+    @Body() body: UserRegisterBodyDTO,
+  ) {
+    if (!emailAddress || !isValid) throw new AuthError.ForbiddenAccess();
+    await this.userService.create({
+      ...body,
+      phone: body.phoneNumber,
+      emailAddress,
+      isActive: true,
+    });
+    CookieUtils.delete(res, ['email', 'is_valid']);
   }
 
   @Post('refresh')
@@ -66,7 +93,6 @@ export class AuthController {
     @Cookies('email') email: any,
   ) {
     await this.acService.verifyActivationCode(email as string, body.activationCode);
-    CookieUtils.delete(res, 'email');
     CookieUtils.set(res, 'is_valid', 'true');
   }
 

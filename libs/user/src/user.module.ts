@@ -1,7 +1,7 @@
 import { Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { USER_READ_REPOSITORY, USER_SERVICE } from './constants';
-import { TypeOrmUserReadRepository } from './repositories';
+import { USER_READ_REPOSITORY, USER_SERVICE, USER_WRITE_REPOSITORY } from './constants';
+import { TypeOrmUserReadRepository, TypeOrmUserWriteRepository } from './repositories';
 import { UserService } from './services';
 
 const Services: Provider<any>[] = [
@@ -15,6 +15,10 @@ const Repositories = [
   {
     provide: USER_READ_REPOSITORY,
     useClass: TypeOrmUserReadRepository,
+  },
+  {
+    provide: USER_WRITE_REPOSITORY,
+    useClass: TypeOrmUserWriteRepository,
   },
 ];
 

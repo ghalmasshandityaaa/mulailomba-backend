@@ -24,11 +24,20 @@ export class CookieUtils {
    *
    * @param name
    */
-  public static delete = (res: Response, name: string): void => {
-    res.clearCookie(name, {
-      ...COOKIES_OPTIONS,
-      maxAge: 0,
-    });
+  public static delete = (res: Response, names: string | string[]): void => {
+    if (names instanceof Array) {
+      for (const name of names) {
+        res.clearCookie(name, {
+          ...COOKIES_OPTIONS,
+          maxAge: 0,
+        });
+      }
+    } else {
+      res.clearCookie(names, {
+        ...COOKIES_OPTIONS,
+        maxAge: 0,
+      });
+    }
   };
 
   /**

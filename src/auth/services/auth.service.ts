@@ -117,12 +117,6 @@ export class AuthService implements IAuthService {
   }
 
   /** Utility Method */
-  // private async hashPassword(password: string): Promise<string> {
-  //   const saltRounds = 10;
-  //   const salt = await genSalt(saltRounds);
-  //   return await hash(password, salt);
-  // }
-
   private async comparePassword(password: string, hash: string): Promise<boolean> {
     return compare(password, hash);
   }

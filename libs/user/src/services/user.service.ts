@@ -1,7 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { USER_READ_REPOSITORY } from '../constants';
-import { IUserReadRepository, IUserService, UserQueryModel } from '../interfaces';
+import { USER_READ_REPOSITORY, USER_WRITE_REPOSITORY } from '../constants';
+import { CreateUserProps, UserEntity } from '../domains';
+import {
+  IUserReadRepository,
+  IUserService,
+  IUserWriteRepository,
+  UserQueryModel,
+} from '../interfaces';
 
 export class UserService implements IUserService {
   constructor(
@@ -9,6 +15,8 @@ export class UserService implements IUserService {
     private logger: PinoLogger,
     @Inject(USER_READ_REPOSITORY)
     private readonly repository: IUserReadRepository,
+    @Inject(USER_WRITE_REPOSITORY)
+    private readonly writeRepository: IUserWriteRepository,
   ) {}
 
   async findById(id: string): Promise<UserQueryModel | undefined> {
@@ -29,5 +37,10 @@ export class UserService implements IUserService {
 
     this.logger.trace('END');
     return user;
+  }
+
+  async create(props: CreateUserProps): Promise<void> {
+    const entity = UserEntity.create({ ...props });
+    await this.writeRepository.create(entity);
   }
 }
