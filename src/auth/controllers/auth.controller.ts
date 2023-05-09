@@ -16,6 +16,7 @@ import { Response } from 'express';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
   CheckAvailabilityEmailBodyDTO,
+  OrganizerLoginBodyDTO,
   UserLoginBodyDTO,
   UserRegisterBodyDTO,
   VerifyActivationCodeBodyDTO,
@@ -46,7 +47,27 @@ export class AuthController {
 
     CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken };
+    return { access_token: tokens.accessToken };
+  }
+
+  @Post('login/organizer')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RolePermission.USER)
+  @HttpCode(HttpStatus.OK)
+  async loginOrganizer(
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: OrganizerLoginBodyDTO,
+    @Identity() identity: IIdentity,
+    @Cookies('organizer_refresh_token') organizerRefreshToken: any,
+  ) {
+    if (organizerRefreshToken) throw new AuthError.SignedIn();
+
+    const organizer = await this.authService.validateOrganizer(body.id, identity.id, body.password);
+    const tokens = await this.authService.generateTokens(organizer);
+
+    CookieUtils.set(res, 'organizer_refresh_token', tokens.refreshToken);
+
+    return { access_token: tokens.accessToken };
   }
 
   @Post('register/user')

@@ -1,4 +1,5 @@
 import { MailerModule } from '@aksesaja/mailer';
+import { OrganizerModule } from '@aksesaja/organizer';
 import { UserModule } from '@aksesaja/user';
 import { Module, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -38,6 +39,7 @@ const Services: Provider<any>[] = [
     }),
     UserModule,
     MailerModule,
+    OrganizerModule,
   ],
   controllers: [AuthController],
   providers: [...Services, JwtStrategy, JwtAuthGuard, RoleGuard],

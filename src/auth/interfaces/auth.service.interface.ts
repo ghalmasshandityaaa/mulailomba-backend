@@ -7,6 +7,7 @@ export type ILoginResponse = {
 
 export interface IAuthService {
   validateUser(email: string, password: string): Promise<IIdentity>;
+  validateOrganizer(organizerId: string, userId: string, password?: string): Promise<IIdentity>;
   validate(identity: IIdentity): Promise<boolean>;
   generateTokens(identity: IIdentity): Promise<ILoginResponse>;
   refreshTokens(refreshToken: string): Promise<ILoginResponse>;

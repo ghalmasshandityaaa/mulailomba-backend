@@ -1,4 +1,6 @@
 import { IIdentity, RolePermission } from '@aksesaja/common';
+import { ORGANIZER_SERVICE } from '@aksesaja/organizer/constants';
+import { IOrganizerService } from '@aksesaja/organizer/interfaces';
 import { USER_SERVICE } from '@aksesaja/user/constants';
 import { IUserService } from '@aksesaja/user/interfaces';
 import { Inject, Injectable } from '@nestjs/common';
@@ -13,6 +15,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     readonly configService: ConfigService,
     @Inject(USER_SERVICE)
     private readonly userService: IUserService,
+    @Inject(ORGANIZER_SERVICE)
+    private readonly organizerService: IOrganizerService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -25,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const identity: IIdentity = {
       id: payload.sub,
       role: payload.role,
-      isActive: false,
+      isActive: payload.isActive,
     };
 
     if (identity.role === RolePermission.USER) {
@@ -34,6 +38,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
       identity.isActive = user.isActive;
     } else if (identity.role === RolePermission.ORGANIZER) {
+      const organizer = await this.organizerService.findById(identity.id);
+      if (!organizer) throw new AuthError.InvalidCredentials();
+
+      identity.isActive = organizer.isActive;
     } else {
       throw new AuthError.InvalidCredentials();
     }

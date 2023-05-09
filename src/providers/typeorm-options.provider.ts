@@ -1,6 +1,7 @@
 import { DatabaseConfigService } from '@aksesaja/config';
 import { TYPEORM_PINO_LOGGER } from '@aksesaja/logger/logger.constants';
 import { TypeOrmPinoLoggerProvider } from '@aksesaja/logger/providers/typeorm.pino-logger.provider';
+import { TypeOrmOrganizerEntities } from '@aksesaja/organizer/entities';
 import { TypeOrmUserEntities } from '@aksesaja/user/entities';
 import { Inject, Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
@@ -20,7 +21,7 @@ export class TypeOrmOptionsProvider implements TypeOrmOptionsFactory {
       type: 'postgres',
       url: this.config.url,
       autoLoadEntities: false,
-      entities: [...TypeOrmUserEntities, ...TypeOrmAuthEntities],
+      entities: [...TypeOrmUserEntities, ...TypeOrmAuthEntities, ...TypeOrmOrganizerEntities],
       synchronize: false,
       logging: true,
       logger: this.logger,

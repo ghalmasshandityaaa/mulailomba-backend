@@ -72,4 +72,19 @@ export namespace AuthError {
       );
     }
   }
+
+  export class SignedIn extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'auth/signed-in',
+            details: 'you are already logged in to an account',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
 }

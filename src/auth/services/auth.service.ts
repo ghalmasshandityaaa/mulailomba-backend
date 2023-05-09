@@ -1,6 +1,9 @@
 import { GenerateRandomCode, IIdentity, RolePermission } from '@aksesaja/common';
 import { IMailerService } from '@aksesaja/mailer/interfaces';
 import { MAILER_SERVICE } from '@aksesaja/mailer/mailer.constant';
+import { ORGANIZER_SERVICE } from '@aksesaja/organizer/constants';
+import { OrganizerError } from '@aksesaja/organizer/errors';
+import { IOrganizerService } from '@aksesaja/organizer/interfaces';
 import { USER_SERVICE } from '@aksesaja/user/constants';
 import { UserError } from '@aksesaja/user/errors';
 import { IUserService } from '@aksesaja/user/interfaces';
@@ -25,6 +28,8 @@ export class AuthService implements IAuthService {
     private readonly mailerService: IMailerService,
     @Inject(ACTIVATION_CODE_SERVICE)
     private readonly activationCodeService: IActivationCodeService,
+    @Inject(ORGANIZER_SERVICE)
+    private readonly organizerService: IOrganizerService,
   ) {}
 
   async validateUser(emailAddress: string, password: string): Promise<IIdentity> {
@@ -38,6 +43,25 @@ export class AuthService implements IAuthService {
     return { id: user.id, role: RolePermission.USER, isActive: user.isActive };
   }
 
+  async validateOrganizer(
+    organizerId: string,
+    userId: string,
+    password?: string,
+  ): Promise<IIdentity> {
+    const organizer = await this.organizerService.findById(organizerId, userId);
+    if (!organizer) throw new OrganizerError.NotFound();
+
+    if (organizer.isLocked) {
+      if (!password) throw new AuthError.InvalidCredentials();
+      const valid = await this.comparePassword(password, organizer.password);
+      if (!valid) throw new AuthError.InvalidCredentials();
+    }
+
+    if (!organizer.isActive) throw new OrganizerError.AlreadyDeactivated();
+
+    return { id: organizer.id, role: RolePermission.ORGANIZER, isActive: organizer.isActive };
+  }
+
   async validate(identity: IIdentity): Promise<boolean> {
     let valid = false;
 
@@ -45,7 +69,8 @@ export class AuthService implements IAuthService {
       const user = await this.userService.findById(identity.id);
       if (user) valid = true;
     } else if (identity.role === RolePermission.ORGANIZER) {
-      // TODO: validate identity organizer
+      const organizer = await this.organizerService.findById(identity.id);
+      if (organizer) valid = true;
     }
 
     return valid;
