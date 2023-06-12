@@ -5,8 +5,10 @@ import { Module, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from './constants';
 import { AuthController } from './controllers';
+import { TypeOrmAuthEntities } from './entities';
 import { JwtAuthGuard, RoleGuard } from './guard';
 import { ActivationCodeService, AuthService } from './services';
 import { JwtStrategy } from './strategies';
@@ -25,6 +27,7 @@ const Services: Provider<any>[] = [
 @Module({
   imports: [
     ConfigModule,
+    TypeOrmModule.forFeature(TypeOrmAuthEntities),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {

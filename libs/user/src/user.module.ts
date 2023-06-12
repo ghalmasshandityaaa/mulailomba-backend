@@ -1,6 +1,8 @@
 import { Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { USER_READ_REPOSITORY, USER_SERVICE, USER_WRITE_REPOSITORY } from './constants';
+import { TypeOrmUserEntities } from './entities';
 import { TypeOrmUserReadRepository, TypeOrmUserWriteRepository } from './repositories';
 import { UserService } from './services';
 
@@ -23,7 +25,7 @@ const Repositories = [
 ];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, TypeOrmModule.forFeature(TypeOrmUserEntities)],
   providers: [...Services, ...Repositories],
   exports: [...Services],
 })

@@ -1,11 +1,8 @@
 import { DatabaseConfigService } from '@mulailomba/config';
 import { TYPEORM_PINO_LOGGER } from '@mulailomba/logger/logger.constants';
 import { TypeOrmPinoLoggerProvider } from '@mulailomba/logger/providers/typeorm.pino-logger.provider';
-import { TypeOrmOrganizerEntities } from '@mulailomba/organizer/entities';
-import { TypeOrmUserEntities } from '@mulailomba/user/entities';
 import { Inject, Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { TypeOrmAuthEntities } from 'src/auth/entities';
 
 @Injectable()
 export class TypeOrmOptionsProvider implements TypeOrmOptionsFactory {
@@ -20,8 +17,7 @@ export class TypeOrmOptionsProvider implements TypeOrmOptionsFactory {
       retryAttempts: 3,
       type: 'postgres',
       url: this.config.url,
-      autoLoadEntities: false,
-      entities: [...TypeOrmUserEntities, ...TypeOrmAuthEntities, ...TypeOrmOrganizerEntities],
+      autoLoadEntities: true,
       synchronize: false,
       logging: true,
       logger: this.logger,
