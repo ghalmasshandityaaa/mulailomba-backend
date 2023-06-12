@@ -24,48 +24,20 @@
       }
     ],
     "paths": {
-      "@test": [
-        "tests"
-      ],
-      "@test/*": [
-        "tests/*"
-      ],
-      "@aksesaja/common": [
-        "libs/common/src"
-      ],
-      "@aksesaja/common/*": [
-        "libs/common/src/*"
-      ],
-      "@aksesaja/logger": [
-        "libs/logger/src"
-      ],
-      "@aksesaja/logger/*": [
-        "libs/logger/src/*"
-      ],
-      "@aksesaja/config": [
-        "libs/config/src"
-      ],
-      "@aksesaja/config/*": [
-        "libs/config/src/*"
-      ],
-      "@aksesaja/user": [
-        "libs/user/src"
-      ],
-      "@aksesaja/user/*": [
-        "libs/user/src/*"
-      ],
-      "@aksesaja/organizer": [
-        "libs/organizer/src"
-      ],
-      "@aksesaja/organizer/*": [
-        "libs/organizer/src/*"
-      ],
-      "@aksesaja/mailer": [
-        "libs/mailer/src"
-      ],
-      "@aksesaja/mailer/*": [
-        "libs/mailer/src/*"
-      ]
+      "@test": ["tests"],
+      "@test/*": ["tests/*"],
+      "@mulailomba/common": ["libs/common/src"],
+      "@mulailomba/common/*": ["libs/common/src/*"],
+      "@mulailomba/logger": ["libs/logger/src"],
+      "@mulailomba/logger/*": ["libs/logger/src/*"],
+      "@mulailomba/config": ["libs/config/src"],
+      "@mulailomba/config/*": ["libs/config/src/*"],
+      "@mulailomba/user": ["libs/user/src"],
+      "@mulailomba/user/*": ["libs/user/src/*"],
+      "@mulailomba/organizer": ["libs/organizer/src"],
+      "@mulailomba/organizer/*": ["libs/organizer/src/*"],
+      "@mulailomba/mailer": ["libs/mailer/src"],
+      "@mulailomba/mailer/*": ["libs/mailer/src/*"]
     }
   }
 }

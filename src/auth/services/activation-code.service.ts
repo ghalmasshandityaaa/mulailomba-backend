@@ -1,5 +1,5 @@
-import { GenerateRandomCode } from '@aksesaja/common';
-import { DatabaseConstraintError, TypeOrmBaseRepository } from '@aksesaja/common/repositories';
+import { GenerateRandomCode } from '@mulailomba/common';
+import { DatabaseConstraintError, TypeOrmBaseRepository } from '@mulailomba/common/repositories';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';

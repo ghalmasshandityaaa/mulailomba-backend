@@ -1,4 +1,4 @@
-import { Constraint, IRepository } from '@aksesaja/common';
+import { Constraint, IRepository } from '@mulailomba/common';
 import { DatabaseError } from 'pg';
 import { QueryFailedError } from 'typeorm';
 import { DatabaseConstraintError } from './database-constraint.error';

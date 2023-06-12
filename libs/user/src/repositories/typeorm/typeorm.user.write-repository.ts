@@ -1,7 +1,7 @@
-import { TypeOrmBaseRepository } from '@aksesaja/common/repositories';
-import { UserEntity } from '@aksesaja/user/domains';
-import { TypeOrmUserEntity } from '@aksesaja/user/entities';
-import { IUserWriteRepository } from '@aksesaja/user/interfaces';
+import { TypeOrmBaseRepository } from '@mulailomba/common/repositories';
+import { UserEntity } from '@mulailomba/user/domains';
+import { TypeOrmUserEntity } from '@mulailomba/user/entities';
+import { IUserWriteRepository } from '@mulailomba/user/interfaces';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';

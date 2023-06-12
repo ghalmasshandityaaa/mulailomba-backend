@@ -1,4 +1,4 @@
-import { Public } from '@aksesaja/common';
+import { Public } from '@mulailomba/common';
 import { Controller, Get, Header } from '@nestjs/common';
 import { HealthCheck, HealthCheckService, TypeOrmHealthIndicator } from '@nestjs/terminus';
 import { InjectDataSource } from '@nestjs/typeorm';

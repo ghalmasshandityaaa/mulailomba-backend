@@ -1,4 +1,4 @@
-import { IIdentity } from '@aksesaja/common';
+import { IIdentity } from '@mulailomba/common';
 
 export type ILoginResponse = {
   accessToken: string;

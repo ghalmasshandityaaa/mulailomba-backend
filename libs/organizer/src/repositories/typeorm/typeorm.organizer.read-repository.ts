@@ -1,6 +1,6 @@
-import { BaseReadRepository } from '@aksesaja/common/repositories';
-import { TypeOrmOrganizerEntity } from '@aksesaja/organizer/entities';
-import { IOrganizerReadRepository, OrganizerQueryModel } from '@aksesaja/organizer/interfaces';
+import { BaseReadRepository } from '@mulailomba/common/repositories';
+import { TypeOrmOrganizerEntity } from '@mulailomba/organizer/entities';
+import { IOrganizerReadRepository, OrganizerQueryModel } from '@mulailomba/organizer/interfaces';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 

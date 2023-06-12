@@ -7,7 +7,7 @@ const COOKIES_OPTIONS: CookieOptions = {
   secure: SECURE_COOKIES,
   sameSite: SAME_SITE_COOKIES,
   maxAge: 30 * 24 * 60 * 60 * 1000,
-  domain: SECURE_COOKIES ? 'aksesaja.site' : 'localhost',
+  domain: SECURE_COOKIES ? 'mulailomba.com' : 'localhost',
 };
 
 export class CookieUtils {

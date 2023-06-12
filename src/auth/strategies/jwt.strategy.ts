@@ -1,8 +1,8 @@
-import { IIdentity, RolePermission } from '@aksesaja/common';
-import { ORGANIZER_SERVICE } from '@aksesaja/organizer/constants';
-import { IOrganizerService } from '@aksesaja/organizer/interfaces';
-import { USER_SERVICE } from '@aksesaja/user/constants';
-import { IUserService } from '@aksesaja/user/interfaces';
+import { IIdentity, RolePermission } from '@mulailomba/common';
+import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
+import { IOrganizerService } from '@mulailomba/organizer/interfaces';
+import { USER_SERVICE } from '@mulailomba/user/constants';
+import { IUserService } from '@mulailomba/user/interfaces';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';

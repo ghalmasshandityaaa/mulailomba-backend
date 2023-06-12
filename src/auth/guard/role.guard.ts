@@ -1,4 +1,4 @@
-import { IIdentity } from '@aksesaja/common';
+import { IIdentity } from '@mulailomba/common';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';

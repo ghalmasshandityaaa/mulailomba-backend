@@ -1,4 +1,4 @@
-import { TemplateUtils } from '@aksesaja/common';
+import { TemplateUtils } from '@mulailomba/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import * as nodemailer from 'nodemailer';
@@ -32,7 +32,7 @@ export class MailerService implements IMailerService {
       if (sendSeparately) {
         mailOption.recipients.forEach((to) => {
           const mailOptions: Mail.Options = {
-            from: `Aksesaja Official < ${this.configService.get<string>('MAIL_USERNAME')} >`,
+            from: `MulaiLomba Official < ${this.configService.get<string>('MAIL_USERNAME')} >`,
             to,
             cc: mailOption.cc,
             bcc: mailOption.bcc,
@@ -45,7 +45,7 @@ export class MailerService implements IMailerService {
         });
       } else {
         const mailOptions: Mail.Options = {
-          from: `Aksesaja Official < ${this.configService.get<string>('MAIL_USER')} >`,
+          from: `MulaiLomba Official < ${this.configService.get<string>('MAIL_USER')} >`,
           to: mailOption.recipients,
           cc: mailOption.cc,
           bcc: mailOption.bcc,

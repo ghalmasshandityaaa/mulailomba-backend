@@ -1,6 +1,6 @@
-import { BaseReadRepository } from '@aksesaja/common/repositories';
-import { TypeOrmUserEntity } from '@aksesaja/user/entities';
-import { IUserReadRepository, UserQueryModel } from '@aksesaja/user/interfaces';
+import { BaseReadRepository } from '@mulailomba/common/repositories';
+import { TypeOrmUserEntity } from '@mulailomba/user/entities';
+import { IUserReadRepository, UserQueryModel } from '@mulailomba/user/interfaces';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 

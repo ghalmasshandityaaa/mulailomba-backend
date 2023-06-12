@@ -1,6 +1,6 @@
-import { MailerModule } from '@aksesaja/mailer';
-import { OrganizerModule } from '@aksesaja/organizer';
-import { UserModule } from '@aksesaja/user';
+import { MailerModule } from '@mulailomba/mailer';
+import { OrganizerModule } from '@mulailomba/organizer';
+import { UserModule } from '@mulailomba/user';
 import { Module, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';

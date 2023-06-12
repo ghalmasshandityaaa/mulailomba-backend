@@ -1,12 +1,12 @@
-import { RequestIdInterceptor, ResponseEnvelopeInterceptor } from '@aksesaja/common';
+import { RequestIdInterceptor, ResponseEnvelopeInterceptor } from '@mulailomba/common';
 import {
   DatabaseConfigModule,
   DatabaseConfigService,
   LoggerConfigModule,
   LoggerConfigService,
   ServerConfigModule,
-} from '@aksesaja/config';
-import { LoggerModule } from '@aksesaja/logger';
+} from '@mulailomba/config';
+import { LoggerModule } from '@mulailomba/logger';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';

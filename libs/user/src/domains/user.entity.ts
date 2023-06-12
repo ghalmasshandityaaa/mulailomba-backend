@@ -1,4 +1,4 @@
-import { Entity } from '@aksesaja/common';
+import { Entity } from '@mulailomba/common';
 import { genSaltSync, hashSync } from 'bcrypt';
 
 type Props = {

@@ -3,8 +3,8 @@ import {
   JoiSchemaErrorFilter,
   JoiSchemaValidationPipe,
   NotFoundErrorFilter,
-} from '@aksesaja/common';
-import { ServerConfigService } from '@aksesaja/config';
+} from '@mulailomba/common';
+import { ServerConfigService } from '@mulailomba/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';

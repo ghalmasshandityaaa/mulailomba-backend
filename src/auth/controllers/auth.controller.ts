@@ -1,6 +1,13 @@
-import { Cookies, CookieUtils, Identity, IIdentity, RolePermission, Roles } from '@aksesaja/common';
-import { USER_SERVICE } from '@aksesaja/user/constants';
-import { IUserService } from '@aksesaja/user/interfaces';
+import {
+  Cookies,
+  CookieUtils,
+  Identity,
+  IIdentity,
+  RolePermission,
+  Roles,
+} from '@mulailomba/common';
+import { USER_SERVICE } from '@mulailomba/user/constants';
+import { IUserService } from '@mulailomba/user/interfaces';
 import {
   Body,
   Controller,

@@ -1,4 +1,4 @@
-import { EmailTemplates } from '@aksesaja/mailer';
+import { EmailTemplates } from '@mulailomba/mailer';
 import handlebars from 'handlebars';
 
 export class TemplateUtils {

@@ -1,8 +1,8 @@
 {
-  "name": "aksesaja-server",
+  "name": "mulailomba-backend",
   "version": "1.0.0",
   "description": "",
-  "author": "Aksesana",
+  "author": "Ghalmas Shanditya Putra Agung",
   "private": true,
   "license": "UNLICENSED",
   "workspaces": [
@@ -107,12 +107,12 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@aksesaja/common(|/.*)$": "<rootDir>/libs/common/src/$1",
-      "^@aksesaja/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
-      "^@aksesaja/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@aksesaja/user(|/.*)$": "<rootDir>/libs/user/src/$1",
-      "^@aksesaja/organizer(|/.*)$": "<rootDir>/libs/organizer/src/$1",
-      "^@aksesaja/mailer(|/.*)$": "<rootDir>/libs/mailer/src/$1"
+      "^@mulailomba/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@mulailomba/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
+      "^@mulailomba/config(|/.*)$": "<rootDir>/libs/config/src/$1",
+      "^@mulailomba/user(|/.*)$": "<rootDir>/libs/user/src/$1",
+      "^@mulailomba/organizer(|/.*)$": "<rootDir>/libs/organizer/src/$1",
+      "^@mulailomba/mailer(|/.*)$": "<rootDir>/libs/mailer/src/$1"
     }
   }
 }
