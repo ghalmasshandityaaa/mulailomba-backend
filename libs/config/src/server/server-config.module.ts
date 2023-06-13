@@ -10,7 +10,7 @@ import { ServerConfigService } from './server-config.service';
       isGlobal: true,
       envFilePath: ['.env'],
       validationSchema: Joi.object({
-        PORT: Joi.number().default(3000),
+        PORT: Joi.number(),
         CORS_ORIGIN: Joi.string().default('*'),
       }),
       validationOptions: {
