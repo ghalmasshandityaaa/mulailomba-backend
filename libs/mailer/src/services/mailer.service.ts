@@ -19,6 +19,7 @@ export class MailerService implements IMailerService {
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
+      host: this.configService.get<string>('MAIL_HOST'),
       auth: {
         user: this.configService.get<string>('MAIL_USERNAME'),
         pass: this.configService.get<string>('MAIL_PASSWORD'),
