@@ -135,10 +135,7 @@ export class AuthService implements IAuthService {
   async sendActivationCode(emailAddress: string): Promise<void> {
     const activationCode = GenerateRandomCode(6);
     await this.activationCodeService.create(emailAddress, activationCode);
-    await this.mailerService.sendActivationCode(
-      { recipients: [emailAddress] },
-      { activationCode: activationCode.split('') },
-    );
+    await this.mailerService.sendActivationCode({ recipients: [emailAddress] }, activationCode);
   }
 
   /** Utility Method */
