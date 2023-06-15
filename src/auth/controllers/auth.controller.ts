@@ -5,6 +5,7 @@ import {
   IIdentity,
   RolePermission,
   Roles,
+  StringUtils,
 } from '@mulailomba/common';
 import { USER_SERVICE } from '@mulailomba/user/constants';
 import { IUserService } from '@mulailomba/user/interfaces';
@@ -26,7 +27,7 @@ import {
   OrganizerLoginBodyDTO,
   UserLoginBodyDTO,
   UserRegisterBodyDTO,
-  VerifyActivationCodeBodyDTO,
+  VerifyAccountBodyDTO,
 } from '../dtos';
 import { AuthError } from '../errors';
 import { JwtAuthGuard, RoleGuard } from '../guard';
@@ -46,7 +47,7 @@ export class AuthController {
     private readonly userService: IUserService,
   ) {}
 
-  @Post('login/user')
+  @Post('user/login')
   @HttpCode(HttpStatus.OK)
   async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
     const identity = await this.authService.validateUser(body.emailAddress, body.password);
@@ -57,7 +58,7 @@ export class AuthController {
     return { access_token: tokens.accessToken };
   }
 
-  @Post('login/organizer')
+  @Post('organizer/login')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RolePermission.USER)
   @HttpCode(HttpStatus.OK)
@@ -77,22 +78,22 @@ export class AuthController {
     return { access_token: tokens.accessToken };
   }
 
-  @Post('register/user')
+  @Post('user/register')
   @HttpCode(HttpStatus.OK)
   async registerUser(
     @Res({ passthrough: true }) res: Response,
     @Cookies('email') emailAddress: any,
-    @Cookies('is_valid') isValid: any,
     @Body() body: UserRegisterBodyDTO,
   ) {
-    if (!emailAddress || !isValid) throw new AuthError.ForbiddenAccess();
+    if (!emailAddress) throw new AuthError.ForbiddenAccess();
     await this.userService.create({
       ...body,
+      password: await StringUtils.hash(body.password),
       phone: body.phoneNumber,
       emailAddress,
       isActive: true,
     });
-    CookieUtils.delete(res, ['email', 'is_valid']);
+    CookieUtils.delete(res, ['email']);
   }
 
   @Post('refresh')
@@ -113,15 +114,11 @@ export class AuthController {
     CookieUtils.set(res, 'email', body.emailAddress);
   }
 
-  @Post('verify-activation-code')
+  @Post('user/verify')
   @HttpCode(HttpStatus.OK)
-  async verifyActivationCode(
-    @Res({ passthrough: true }) res: Response,
-    @Body() body: VerifyActivationCodeBodyDTO,
-    @Cookies('email') email: any,
-  ) {
-    await this.acService.verifyActivationCode(email as string, body.activationCode);
-    CookieUtils.set(res, 'is_valid', 'true');
+  async verifyActivationCode(@Body() body: VerifyAccountBodyDTO) {
+    const [email, code] = StringUtils.decrypt(body.id).split(':');
+    await this.acService.verify(email, code);
   }
 
   @Post('resend-activation-code')
