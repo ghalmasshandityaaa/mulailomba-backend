@@ -1,4 +1,4 @@
-import { GenerateRandomCode } from '@mulailomba/common';
+import { StringUtils } from '@mulailomba/common';
 import { DatabaseConstraintError, TypeOrmBaseRepository } from '@mulailomba/common/repositories';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
@@ -39,7 +39,7 @@ export class ActivationCodeService extends TypeOrmBaseRepository implements IAct
         .execute();
     } catch (err) {
       if (err instanceof DatabaseConstraintError && err.constraint.isUnique) {
-        this.create(emailAddress, GenerateRandomCode(6));
+        this.create(emailAddress, StringUtils.randomNumber(6));
       }
       this.handleError(err);
     }
@@ -47,7 +47,7 @@ export class ActivationCodeService extends TypeOrmBaseRepository implements IAct
     this.logger.trace({ method }, 'END');
   }
 
-  async verifyActivationCode(emailAddress: string, activationCode: string): Promise<void> {
+  async verify(emailAddress: string, activationCode: string): Promise<void> {
     if (!emailAddress) throw new AuthError.ForbiddenAccess();
     const verification = await this.findByEmail(emailAddress);
 

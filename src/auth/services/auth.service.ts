@@ -1,4 +1,4 @@
-import { GenerateRandomCode, IIdentity, RolePermission } from '@mulailomba/common';
+import { IIdentity, RolePermission, StringUtils } from '@mulailomba/common';
 import { IMailerService } from '@mulailomba/mailer/interfaces';
 import { MAILER_SERVICE } from '@mulailomba/mailer/mailer.constant';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
@@ -10,7 +10,6 @@ import { IUserService } from '@mulailomba/user/interfaces';
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcrypt';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { ACTIVATION_CODE_SERVICE } from '../constants';
 import { AuthError } from '../errors';
@@ -36,7 +35,7 @@ export class AuthService implements IAuthService {
     const user = await this.userService.findByEmail(emailAddress);
     if (!user) throw new UserError.NotFound();
 
-    const valid = await this.comparePassword(password, user.password);
+    const valid = await StringUtils.compare(user.password, password);
     if (!valid) throw new AuthError.InvalidCredentials();
     else if (!user.isActive) throw new UserError.AlreadyDeactivated();
 
@@ -53,7 +52,7 @@ export class AuthService implements IAuthService {
 
     if (organizer.isLocked) {
       if (!password) throw new AuthError.InvalidCredentials();
-      const valid = await this.comparePassword(password, organizer.password);
+      const valid = await StringUtils.compare(organizer.password, password);
       if (!valid) throw new AuthError.InvalidCredentials();
     }
 
@@ -133,13 +132,8 @@ export class AuthService implements IAuthService {
   }
 
   async sendActivationCode(emailAddress: string): Promise<void> {
-    const activationCode = GenerateRandomCode(6);
+    const activationCode = StringUtils.randomNumber(6);
     await this.activationCodeService.create(emailAddress, activationCode);
     await this.mailerService.sendActivationCode({ recipients: [emailAddress] }, activationCode);
-  }
-
-  /** Utility Method */
-  private async comparePassword(password: string, hash: string): Promise<boolean> {
-    return compare(password, hash);
   }
 }

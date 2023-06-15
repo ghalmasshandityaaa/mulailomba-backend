@@ -1,4 +1,4 @@
-import { genSalt, hash as toHash } from 'bcrypt';
+import { compare as toCompare, genSalt, hash as toHash } from 'bcrypt';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 
 export class StringUtils {
@@ -18,6 +18,17 @@ export class StringUtils {
     const hash = await toHash(text, salt);
 
     return hash;
+  }
+
+  /**
+   *
+   * @param hashString
+   * @param text
+   * @returns
+   */
+  public static async compare(hashString: string, text: string): Promise<boolean> {
+    const isMatch = await toCompare(text, hashString);
+    return isMatch;
   }
 
   /**
@@ -50,5 +61,18 @@ export class StringUtils {
     decrypted += decipher.final('utf8');
 
     return decrypted;
+  }
+  /**
+   *
+   * @param length
+   * @returns
+   */
+  public static randomNumber(length: number): string {
+    let num = '';
+    for (let i = 0; i < length; i++) {
+      num = num + Math.floor(Math.random() * (9 - 1 + 1) + 1);
+    }
+
+    return num;
   }
 }
