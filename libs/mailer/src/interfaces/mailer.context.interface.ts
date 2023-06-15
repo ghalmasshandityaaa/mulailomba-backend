@@ -1,4 +1,3 @@
 export interface ActivationCodeContext {
-  title?: string;
-  activationCode: string[];
+  activationCode: string;
 }

@@ -1,17 +1,21 @@
-import { TemplateUtils } from '@mulailomba/common';
+import { StringUtils, TemplateUtils } from '@mulailomba/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import * as nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
-import { ActivationCodeContext, IMailerService, IMailOptions, IRecipients } from '../interfaces';
+import { IMailerService, IMailOptions, IRecipients } from '../interfaces';
 import { EmailTemplates } from '../mailer.template';
 
 export class MailerService implements IMailerService {
+  private APP_DOMAIN: string;
+
   constructor(
     @InjectPinoLogger(MailerService.name)
     private readonly logger: PinoLogger,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.APP_DOMAIN = this.configService.get<string>('APP_DOMAIN') || 'mulailomba.com';
+  }
 
   async send(mailOption: IMailOptions, sendSeparately = false): Promise<void> {
     const method = 'send';
@@ -76,11 +80,12 @@ export class MailerService implements IMailerService {
     this.logger.trace({ method }, 'END');
   }
 
-  async sendActivationCode(recipients: IRecipients, context: ActivationCodeContext): Promise<void> {
+  async sendActivationCode(recipients: IRecipients, activationCode: string): Promise<void> {
     const title = 'Activation Code';
-    const template = TemplateUtils.compile<ActivationCodeContext>(EmailTemplates.ACTIVATION_CODE, {
-      ...context,
-      title,
+    const uniqueId = `${recipients.recipients.join(',')}:${activationCode}`;
+    const idVerification = StringUtils.encrypt(uniqueId);
+    const template = TemplateUtils.compile(EmailTemplates.ACTIVATION_CODE, {
+      url: `${this.APP_DOMAIN}/registration/validate?id=${idVerification}`,
     });
 
     const mailOption: IMailOptions = {
