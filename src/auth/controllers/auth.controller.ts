@@ -101,11 +101,11 @@ export class AuthController {
     CookieUtils.delete(res, ['email']);
   }
 
-  @Post('register/organizer')
+  @Post('organizer/register')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RolePermission.USER)
-  async registerORganizer(@Body() body: OrganizerRegisterBodyDTO, @Identity() identity: IIdentity) {
+  async registerOrganizer(@Body() body: OrganizerRegisterBodyDTO, @Identity() identity: IIdentity) {
     const organizer = await this.organizerService.findByEmail(body.emailAddress);
     if (organizer) throw new OrganizerError.EmailTaken();
     await this.organizerService.create({ ...body, userId: identity.id });
