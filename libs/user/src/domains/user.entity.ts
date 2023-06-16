@@ -1,5 +1,4 @@
-import { Entity } from '@mulailomba/common';
-import { genSaltSync, hashSync } from 'bcrypt';
+import { Entity, StringUtils } from '@mulailomba/common';
 
 type Props = {
   fullName: string;
@@ -31,7 +30,7 @@ export class UserEntity extends Entity<Props, string> {
   public static create(props: CreateUserProps): UserEntity {
     const entity = new UserEntity({
       ...props,
-      password: this.hashPassword(props.password),
+      password: StringUtils.hash(props.password),
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -46,11 +45,5 @@ export class UserEntity extends Entity<Props, string> {
    */
   public static rebuild(props: Props, id: string): UserEntity {
     return new UserEntity(props, id);
-  }
-
-  private static hashPassword(password: string): string {
-    const saltRounds = 10;
-    const salt = genSaltSync(saltRounds);
-    return hashSync(password, salt);
   }
 }

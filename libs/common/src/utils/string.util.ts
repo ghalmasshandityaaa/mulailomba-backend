@@ -1,4 +1,4 @@
-import { compare as toCompare, genSalt, hash as toHash } from 'bcrypt';
+import { compare as toCompare, genSaltSync, hashSync } from 'bcrypt';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 
 export class StringUtils {
@@ -12,10 +12,10 @@ export class StringUtils {
    * @param text
    * @returns
    */
-  public static async hash(text: string): Promise<string> {
+  public static hash(text: string): string {
     const SALT_ROUND = 10;
-    const salt = await genSalt(SALT_ROUND);
-    const hash = await toHash(text, salt);
+    const salt = genSaltSync(SALT_ROUND);
+    const hash = hashSync(text, salt);
 
     return hash;
   }
