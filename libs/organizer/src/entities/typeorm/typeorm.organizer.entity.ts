@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'organizer' })
+@Entity({ name: 'organizers' })
 export class TypeOrmOrganizerEntity {
   @PrimaryColumn({ type: 'uuid' })
   readonly id: string;
@@ -17,14 +17,17 @@ export class TypeOrmOrganizerEntity {
   @Column({ name: 'background' })
   readonly background: string;
 
+  @Column({ name: 'email_address' })
+  readonly emailAddress: string;
+
   @Column({ name: 'password' })
   readonly password: string;
 
-  @Column({ name: 'is_active' })
-  readonly isActive: boolean;
-
   @Column({ name: 'is_locked' })
   readonly isLocked: boolean;
+
+  @Column({ name: 'is_active' })
+  readonly isActive: boolean;
 
   @Column({ name: 'created_at' })
   readonly createdAt: Date;

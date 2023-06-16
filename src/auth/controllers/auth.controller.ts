@@ -7,6 +7,9 @@ import {
   Roles,
   StringUtils,
 } from '@mulailomba/common';
+import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
+import { OrganizerError } from '@mulailomba/organizer/errors';
+import { IOrganizerService } from '@mulailomba/organizer/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
 import { IUserService } from '@mulailomba/user/interfaces';
 import {
@@ -25,6 +28,7 @@ import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
   CheckAvailabilityEmailBodyDTO,
   OrganizerLoginBodyDTO,
+  OrganizerRegisterBodyDTO,
   UserLoginBodyDTO,
   UserRegisterBodyDTO,
   VerifyAccountBodyDTO,
@@ -45,6 +49,8 @@ export class AuthController {
     private readonly acService: IActivationCodeService,
     @Inject(USER_SERVICE)
     private readonly userService: IUserService,
+    @Inject(ORGANIZER_SERVICE)
+    private readonly organizerService: IOrganizerService,
   ) {}
 
   @Post('user/login')
@@ -88,12 +94,21 @@ export class AuthController {
     if (!emailAddress) throw new AuthError.ForbiddenAccess();
     await this.userService.create({
       ...body,
-      password: await StringUtils.hash(body.password),
       phone: body.phoneNumber,
       emailAddress,
       isActive: true,
     });
     CookieUtils.delete(res, ['email']);
+  }
+
+  @Post('register/organizer')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RolePermission.USER)
+  async registerORganizer(@Body() body: OrganizerRegisterBodyDTO, @Identity() identity: IIdentity) {
+    const organizer = await this.organizerService.findByEmail(body.emailAddress);
+    if (organizer) throw new OrganizerError.EmailTaken();
+    await this.organizerService.create({ ...body, userId: identity.id });
   }
 
   @Post('refresh')

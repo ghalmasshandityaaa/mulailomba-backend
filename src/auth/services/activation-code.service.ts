@@ -38,10 +38,9 @@ export class ActivationCodeService extends TypeOrmBaseRepository implements IAct
         .orUpdate(['activation_code'], ['email_address'])
         .execute();
     } catch (err) {
-      if (err instanceof DatabaseConstraintError && err.constraint.isUnique) {
+      if (err instanceof DatabaseConstraintError) {
         this.create(emailAddress, StringUtils.randomNumber(6));
       }
-      this.handleError(err);
     }
 
     this.logger.trace({ method }, 'END');

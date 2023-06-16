@@ -18,13 +18,41 @@ export class TypeOrmOrganizerReadRepository
    * @returns
    */
   async findById(id: string, userId?: string): Promise<OrganizerQueryModel | undefined> {
-    const query = await this.dataSource
+    const query = this.dataSource
       .createQueryBuilder(TypeOrmOrganizerEntity, 'organizer')
       .where('organizer.id = :id', { id });
 
     if (userId) query.andWhere('organizer.userId = :userId', { userId });
 
     const entity = await query.getOne();
+
+    return entity || undefined;
+  }
+
+  /**
+   *
+   * @param email
+   * @returns
+   */
+  async findByEmail(email: string): Promise<OrganizerQueryModel | undefined> {
+    const entity = await this.dataSource
+      .createQueryBuilder(TypeOrmOrganizerEntity, 'organizer')
+      .where('organizer.emailAddress = :email', { email })
+      .getOne();
+
+    return entity || undefined;
+  }
+
+  /**
+   *
+   * @param username
+   * @returns
+   */
+  async findByUsername(username: string): Promise<OrganizerQueryModel | undefined> {
+    const entity = await this.dataSource
+      .createQueryBuilder(TypeOrmOrganizerEntity, 'organizer')
+      .where('organizer.username = :username', { username })
+      .getOne();
 
     return entity || undefined;
   }

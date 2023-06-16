@@ -30,4 +30,18 @@ export namespace OrganizerError {
       );
     }
   }
+
+  export class EmailTaken extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'organizer/email-taken',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
