@@ -3,7 +3,7 @@ import * as joi from 'joi';
 import { JoiSchema } from 'joi-class-decorators';
 
 export class OrganizerLoginBodyDTO {
-  @JoiSchema(joi.string().uuid().optional().label('id'))
+  @JoiSchema(joi.string().uuid().required().label('id'))
   @Expose({ name: 'id' })
   readonly id: string;
 
