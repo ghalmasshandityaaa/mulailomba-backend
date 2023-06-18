@@ -27,7 +27,7 @@ export class FindHomepagesHandler
     this.logger.info({ query });
 
     const collection = await this.repository.findAll({
-      filterBy: [{ target: 'position', equals: BannerPosition.EVENT }],
+      filterBy: [{ target: 'position', equals: BannerPosition.HOMEPAGE }],
     });
     const result = new FindHomepagesResult(collection);
 
