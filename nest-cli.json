@@ -60,6 +60,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/mailer/tsconfig.lib.json"
       }
+    },
+    "banner": {
+      "type": "library",
+      "root": "libs/banner",
+      "entryFile": "index",
+      "sourceRoot": "libs/banner/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/banner/tsconfig.lib.json"
+      }
     }
   }
 }
