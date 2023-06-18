@@ -1,4 +1,5 @@
 import { BANNER_READ_REPOSITORY } from '@mulailomba/banner/banner.constants';
+import { BannerPosition } from '@mulailomba/banner/entities/typeorm/typeorm.banner.entity';
 import { IBannerReadRepository } from '@mulailomba/banner/interfaces';
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
@@ -25,7 +26,9 @@ export class FindHomepagesHandler
     this.logger.trace('BEGIN');
     this.logger.info({ query });
 
-    const collection = await this.repository.findAll();
+    const collection = await this.repository.findAll({
+      filterBy: [{ target: 'position', equals: BannerPosition.EVENT }],
+    });
     const result = new FindHomepagesResult(collection);
 
     this.logger.trace('END');

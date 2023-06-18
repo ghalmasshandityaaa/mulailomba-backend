@@ -1,5 +1,6 @@
+import { IFilterableQuery } from '@mulailomba/common';
 import { BannerQueryModel } from './banner.interface';
 
 export interface IBannerReadRepository {
-  findAll(): Promise<BannerQueryModel[]>;
+  findAll(params: IFilterableQuery): Promise<BannerQueryModel[]>;
 }
