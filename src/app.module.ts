@@ -1,3 +1,4 @@
+import { BannerModule } from '@mulailomba/banner';
 import { RequestIdInterceptor, ResponseEnvelopeInterceptor } from '@mulailomba/common';
 import {
   DatabaseConfigModule,
@@ -34,6 +35,7 @@ import { TypeOrmOptionsProvider } from './providers';
       inject: [LoggerConfigService],
     }),
     AuthModule,
+    BannerModule,
   ],
   controllers: [],
   providers: [
