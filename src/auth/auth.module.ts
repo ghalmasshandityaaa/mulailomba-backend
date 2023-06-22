@@ -7,11 +7,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from './constants';
-import { AuthController, AuthGoogleController } from './controllers';
+import { AuthController, AuthFacebookController, AuthGoogleController } from './controllers';
 import { TypeOrmAuthEntities } from './entities';
 import { GoogleGuard, JwtAuthGuard, RoleGuard } from './guard';
+import { FacebookGuard } from './guard/facebook.guard';
 import { ActivationCodeService, AuthService } from './services';
-import { GoogleStrategy, JwtStrategy } from './strategies';
+import { FacebookStrategy, GoogleStrategy, JwtStrategy } from './strategies';
 
 const Services: Provider<any>[] = [
   {
@@ -44,8 +45,17 @@ const Services: Provider<any>[] = [
     MailerModule,
     OrganizerModule,
   ],
-  controllers: [AuthController, AuthGoogleController],
-  providers: [...Services, JwtStrategy, GoogleStrategy, JwtAuthGuard, RoleGuard, GoogleGuard],
+  controllers: [AuthController, AuthGoogleController, AuthFacebookController],
+  providers: [
+    ...Services,
+    JwtStrategy,
+    GoogleStrategy,
+    FacebookStrategy,
+    JwtAuthGuard,
+    RoleGuard,
+    GoogleGuard,
+    FacebookGuard,
+  ],
   exports: [...Services],
 })
 export class AuthModule {}
