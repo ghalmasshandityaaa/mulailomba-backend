@@ -7,7 +7,7 @@ export class OrganizerRegisterBodyDTO {
   @Expose({ name: 'name' })
   readonly name: string;
 
-  @JoiSchema(joi.string().email().required())
+  @JoiSchema(joi.string().email().required().label('email'))
   @Expose({ name: 'email' })
   readonly emailAddress: string;
 
