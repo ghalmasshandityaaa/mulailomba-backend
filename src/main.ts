@@ -36,7 +36,7 @@ async function bootstrap() {
       type: VersioningType.URI,
     })
     .enableCors({
-      origin: config.cors.origin,
+      origin: ['https://www.mulailomba.com', 'https://mulailomba.com', /\.mulailomba\.com$/],
       methods: ['GET', 'POST'],
     });
 
