@@ -85,7 +85,7 @@ export class MailerService implements IMailerService {
     const uniqueId = `${recipients.recipients.join(',')}:${activationCode}`;
     const idVerification = StringUtils.encrypt(uniqueId);
     const template = TemplateUtils.compile(EmailTemplates.ACTIVATION_CODE, {
-      url: `${this.APP_DOMAIN}/registration/validate?id=${idVerification}`,
+      url: `${this.APP_DOMAIN}/validate-registration?id=${idVerification}`,
     });
 
     const mailOption: IMailOptions = {
