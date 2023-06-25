@@ -37,6 +37,7 @@ async function bootstrap() {
     })
     .enableCors({
       origin: ['https://www.mulailomba.com', 'https://mulailomba.com', /\.mulailomba\.com$/],
+      credentials: true,
       methods: ['GET', 'POST'],
     });
 
