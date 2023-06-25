@@ -1,4 +1,5 @@
 import { CookieOptions, Request, Response } from 'express';
+import { ConfigUtils } from './config.util';
 
 const SECURE_COOKIES = process.env.NODE_ENV === 'production';
 const SAME_SITE_COOKIES = SECURE_COOKIES ? 'none' : 'lax';
@@ -7,7 +8,7 @@ const COOKIES_OPTIONS: CookieOptions = {
   secure: SECURE_COOKIES,
   sameSite: SAME_SITE_COOKIES,
   maxAge: 30 * 24 * 60 * 60 * 1000,
-  domain: SECURE_COOKIES ? 'mulailomba.com' : 'localhost',
+  domain: ConfigUtils.get('APP_MODE') === 'localhost' ? 'localhost' : 'mulailomba.com',
 };
 
 export class CookieUtils {
