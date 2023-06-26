@@ -30,7 +30,7 @@ async function bootstrap() {
       }),
       new JoiSchemaValidationPipe(),
     )
-    .useGlobalInterceptors(new ApiVersionInterceptor('2.0.0'))
+    .useGlobalInterceptors(new ApiVersionInterceptor('1.0.0'))
     .useGlobalFilters(new JoiSchemaErrorFilter(), new NotFoundErrorFilter())
     .enableVersioning({
       type: VersioningType.URI,
