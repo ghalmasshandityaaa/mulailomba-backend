@@ -127,6 +127,7 @@ export class AuthController {
   ) {
     await this.authService.checkAvailabilityEmail(body.emailAddress);
     CookieUtils.set(res, 'email', body.emailAddress);
+    CookieUtils.set(res, 'email-test', body.emailAddress);
   }
 
   @Post('user/verify')
