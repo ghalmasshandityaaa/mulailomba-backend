@@ -91,13 +91,21 @@ export class AuthController {
     @Body() body: UserRegisterBodyDTO,
   ) {
     if (!emailAddress) throw new AuthError.ForbiddenAccess();
-    await this.userService.create({
+    const entity = await this.userService.create({
       ...body,
       phone: body.phoneNumber,
       emailAddress,
       isActive: true,
     });
+    const tokens = await this.authService.generateTokens({
+      id: entity.id,
+      isActive: entity.props.isActive,
+      role: RolePermission.USER,
+    });
     CookieUtils.delete(res, ['email']);
+    CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
+
+    return { access_token: tokens.accessToken };
   }
 
   @Post('organizer/register')

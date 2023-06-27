@@ -39,8 +39,9 @@ export class UserService implements IUserService {
     return user;
   }
 
-  async create(props: CreateUserProps): Promise<void> {
+  async create(props: CreateUserProps): Promise<UserEntity> {
     const entity = UserEntity.create({ ...props });
     await this.writeRepository.create(entity);
+    return entity;
   }
 }
