@@ -56,8 +56,11 @@ export class AuthController {
   @Post('user/login')
   @HttpCode(HttpStatus.OK)
   async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
+    CookieUtils.set(res, 'email', 'body.emailAddress');
     const identity = await this.authService.validateUser(body.emailAddress, body.password);
+    console.log(1, identity);
     const tokens = await this.authService.generateTokens(identity);
+    console.log(2, tokens);
 
     CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
@@ -76,7 +79,6 @@ export class AuthController {
   ) {
     if (organizerRefreshToken) throw new AuthError.SignedIn();
 
-    CookieUtils.set(res, 'email', 'body.emailAddress');
     const organizer = await this.authService.validateOrganizer(body.id, identity.id, body.password);
     const tokens = await this.authService.generateTokens(organizer);
 
