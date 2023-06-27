@@ -60,7 +60,7 @@ export class AuthController {
 
     CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken };
+    return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken };
   }
 
   @Post('organizer/login')
