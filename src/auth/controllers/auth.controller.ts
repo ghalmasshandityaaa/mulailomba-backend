@@ -15,7 +15,6 @@ import { IUserService } from '@mulailomba/user/interfaces';
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Inject,
@@ -55,17 +54,24 @@ export class AuthController {
 
   @Post('user/login')
   @HttpCode(HttpStatus.OK)
-  async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
-    CookieUtils.set(res, 'email', 'body.emailAddress');
-    const identity = await this.authService.validateUser(body.emailAddress, body.password);
-    console.log(1, identity);
-    const tokens = await this.authService.generateTokens(identity);
-    console.log(2, tokens);
-
-    CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
-
-    return { access_token: tokens.accessToken };
+  async userLogin(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
+    // await this.authService.checkAvailabilityEmail(body.emailAddress);
+    CookieUtils.set(res, 'email', body.emailAddress);
   }
+
+  // @Post('user/login')
+  // @HttpCode(HttpStatus.OK)
+  // async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
+  //   CookieUtils.set(res, 'email', 'body.emailAddress');
+  //   const identity = await this.authService.validateUser(body.emailAddress, body.password);
+  //   console.log(1, identity);
+  //   const tokens = await this.authService.generateTokens(identity);
+  //   console.log(2, tokens);
+
+  //   CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
+
+  //   return { access_token: tokens.accessToken };
+  // }
 
   @Post('organizer/login')
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -144,13 +150,5 @@ export class AuthController {
   async resendActivationCode(@Cookies('email') email: any) {
     if (!email) throw new AuthError.ForbiddenAccess();
     await this.authService.sendActivationCode(email as string);
-  }
-
-  @Get('me')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(RolePermission.USER, RolePermission.ORGANIZER)
-  @HttpCode(HttpStatus.OK)
-  async identity(@Identity() identity: IIdentity) {
-    return identity;
   }
 }
