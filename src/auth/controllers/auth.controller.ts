@@ -76,6 +76,7 @@ export class AuthController {
   ) {
     if (organizerRefreshToken) throw new AuthError.SignedIn();
 
+    CookieUtils.set(res, 'email', 'body.emailAddress');
     const organizer = await this.authService.validateOrganizer(body.id, identity.id, body.password);
     const tokens = await this.authService.generateTokens(organizer);
 
