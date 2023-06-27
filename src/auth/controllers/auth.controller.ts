@@ -54,24 +54,14 @@ export class AuthController {
 
   @Post('user/login')
   @HttpCode(HttpStatus.OK)
-  async userLogin(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
-    // await this.authService.checkAvailabilityEmail(body.emailAddress);
-    CookieUtils.set(res, 'email', body.emailAddress);
+  async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
+    const identity = await this.authService.validateUser(body.emailAddress, body.password);
+    const tokens = await this.authService.generateTokens(identity);
+
+    CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
+
+    return { access_token: tokens.accessToken };
   }
-
-  // @Post('user/login')
-  // @HttpCode(HttpStatus.OK)
-  // async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
-  //   CookieUtils.set(res, 'email', 'body.emailAddress');
-  //   const identity = await this.authService.validateUser(body.emailAddress, body.password);
-  //   console.log(1, identity);
-  //   const tokens = await this.authService.generateTokens(identity);
-  //   console.log(2, tokens);
-
-  //   CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
-
-  //   return { access_token: tokens.accessToken };
-  // }
 
   @Post('organizer/login')
   @UseGuards(JwtAuthGuard, RoleGuard)
