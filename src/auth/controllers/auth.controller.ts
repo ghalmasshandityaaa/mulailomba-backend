@@ -60,7 +60,7 @@ export class AuthController {
 
     CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken };
+    return { access_token: tokens.accessToken };
   }
 
   @Post('organizer/login')
@@ -80,7 +80,7 @@ export class AuthController {
 
     CookieUtils.set(res, 'organizer_refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken };
+    return { access_token: tokens.accessToken };
   }
 
   @Post('user/register')
@@ -116,6 +116,22 @@ export class AuthController {
     const organizer = await this.organizerService.findByEmail(body.emailAddress);
     if (organizer) throw new OrganizerError.EmailTaken();
     await this.organizerService.create({ ...body, userId: identity.id });
+  }
+
+  @Post('user/logout')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RolePermission.USER)
+  async logoutUser(@Res({ passthrough: true }) res: Response) {
+    CookieUtils.delete(res, ['refresh_token']);
+  }
+
+  @Post('organizer/logout')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RolePermission.ORGANIZER)
+  async logoutOrganizer(@Res({ passthrough: true }) res: Response) {
+    CookieUtils.delete(res, ['organizer_refresh_token']);
   }
 
   @Post('refresh')
