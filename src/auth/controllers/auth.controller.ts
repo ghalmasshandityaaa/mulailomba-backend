@@ -1,17 +1,23 @@
 import {
   Cookies,
   CookieUtils,
+  DateUtils,
   Identity,
   IIdentity,
+  JsonUtils,
   RolePermission,
   Roles,
   StringUtils,
 } from '@mulailomba/common';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
 import { OrganizerError } from '@mulailomba/organizer/errors';
-import { IOrganizerService } from '@mulailomba/organizer/interfaces';
+import {
+  IOrganizerService,
+  JsonOrganizerProps,
+  OrganizerQueryModel,
+} from '@mulailomba/organizer/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
-import { IUserService } from '@mulailomba/user/interfaces';
+import { IUserService, JsonUserProps, UserQueryModel } from '@mulailomba/user/interfaces';
 import {
   Body,
   Controller,
@@ -65,7 +71,16 @@ export class AuthController {
 
     CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken, identity: omit(identity, ['password']) };
+    const response = JsonUtils.toSnakeCase<UserQueryModel, JsonUserProps>(identity);
+
+    return {
+      access_token: tokens.accessToken,
+      identity: {
+        ...omit(response, 'password'),
+        created_at: DateUtils.toUnix(identity.createdAt),
+        updated_at: DateUtils.toUnix(identity.updatedAt),
+      },
+    };
   }
 
   @Post('organizer/login')
@@ -89,7 +104,16 @@ export class AuthController {
 
     CookieUtils.set(res, 'organizer_refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken, identity: omit(organizer, ['password']) };
+    const response = JsonUtils.toSnakeCase<OrganizerQueryModel, JsonOrganizerProps>(organizer);
+
+    return {
+      access_token: tokens.accessToken,
+      identity: {
+        ...omit(response, 'password'),
+        created_at: DateUtils.toUnix(organizer.createdAt),
+        updated_at: DateUtils.toUnix(organizer.updatedAt),
+      },
+    };
   }
 
   @Post('user/register')
