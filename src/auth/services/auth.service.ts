@@ -3,10 +3,10 @@ import { IMailerService } from '@mulailomba/mailer/interfaces';
 import { MAILER_SERVICE } from '@mulailomba/mailer/mailer.constant';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
 import { OrganizerError } from '@mulailomba/organizer/errors';
-import { IOrganizerService } from '@mulailomba/organizer/interfaces';
+import { IOrganizerService, OrganizerQueryModel } from '@mulailomba/organizer/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
 import { UserError } from '@mulailomba/user/errors';
-import { IUserService } from '@mulailomba/user/interfaces';
+import { IUserService, UserQueryModel } from '@mulailomba/user/interfaces';
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -31,7 +31,7 @@ export class AuthService implements IAuthService {
     private readonly organizerService: IOrganizerService,
   ) {}
 
-  async validateUser(emailAddress: string, password: string): Promise<IIdentity> {
+  async validateUser(emailAddress: string, password: string): Promise<UserQueryModel> {
     const user = await this.userService.findByEmail(emailAddress);
     if (!user) throw new UserError.NotFound();
 
@@ -39,14 +39,14 @@ export class AuthService implements IAuthService {
     if (!valid) throw new AuthError.InvalidCredentials();
     else if (!user.isActive) throw new UserError.AlreadyDeactivated();
 
-    return { id: user.id, role: RolePermission.USER, isActive: user.isActive };
+    return user;
   }
 
   async validateOrganizer(
     organizerId: string,
     userId: string,
     password?: string,
-  ): Promise<IIdentity> {
+  ): Promise<OrganizerQueryModel> {
     const organizer = await this.organizerService.findById(organizerId, userId);
     if (!organizer) throw new OrganizerError.NotFound();
 
@@ -58,7 +58,7 @@ export class AuthService implements IAuthService {
 
     if (!organizer.isActive) throw new OrganizerError.AlreadyDeactivated();
 
-    return { id: organizer.id, role: RolePermission.ORGANIZER, isActive: organizer.isActive };
+    return organizer;
   }
 
   async validate(identity: IIdentity): Promise<boolean> {

@@ -1,4 +1,6 @@
 import { IIdentity } from '@mulailomba/common';
+import { OrganizerQueryModel } from '@mulailomba/organizer/interfaces';
+import { UserQueryModel } from '@mulailomba/user/interfaces';
 
 export type ILoginResponse = {
   accessToken: string;
@@ -6,8 +8,12 @@ export type ILoginResponse = {
 };
 
 export interface IAuthService {
-  validateUser(email: string, password: string): Promise<IIdentity>;
-  validateOrganizer(organizerId: string, userId: string, password?: string): Promise<IIdentity>;
+  validateUser(email: string, password: string): Promise<UserQueryModel>;
+  validateOrganizer(
+    organizerId: string,
+    userId: string,
+    password?: string,
+  ): Promise<OrganizerQueryModel>;
   validate(identity: IIdentity): Promise<boolean>;
   generateTokens(identity: IIdentity): Promise<ILoginResponse>;
   refreshTokens(refreshToken: string): Promise<ILoginResponse>;
