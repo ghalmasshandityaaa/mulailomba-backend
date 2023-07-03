@@ -23,6 +23,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { omit } from 'lodash';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
   CheckAvailabilityEmailBodyDTO,
@@ -56,11 +57,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
     const identity = await this.authService.validateUser(body.emailAddress, body.password);
-    const tokens = await this.authService.generateTokens(identity);
+    const tokens = await this.authService.generateTokens({
+      id: identity.id,
+      isActive: identity.isActive,
+      role: RolePermission.USER,
+    });
 
     CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken };
+    return { access_token: tokens.accessToken, identity: omit(identity, ['password']) };
   }
 
   @Post('organizer/login')
@@ -76,11 +81,15 @@ export class AuthController {
     if (organizerRefreshToken) throw new AuthError.SignedIn();
 
     const organizer = await this.authService.validateOrganizer(body.id, identity.id, body.password);
-    const tokens = await this.authService.generateTokens(organizer);
+    const tokens = await this.authService.generateTokens({
+      id: organizer.id,
+      isActive: organizer.isActive,
+      role: RolePermission.ORGANIZER,
+    });
 
     CookieUtils.set(res, 'organizer_refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken };
+    return { access_token: tokens.accessToken, identity: omit(organizer, ['password']) };
   }
 
   @Post('user/register')
