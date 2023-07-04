@@ -33,7 +33,6 @@ export class ActivationCodeService extends TypeOrmBaseRepository implements IAct
           emailAddress,
           activationCode,
           createdAt,
-          expiredAt: new Date(createdAt.getTime() + 15 * 60000),
         })
         .orUpdate(['activation_code'], ['email_address'])
         .execute();

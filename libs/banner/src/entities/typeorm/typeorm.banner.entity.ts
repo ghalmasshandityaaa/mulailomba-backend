@@ -13,7 +13,7 @@ export enum BannerStatus {
   EXPIRED = 'EXPIRED',
 }
 
-@Entity({ name: 'banners' })
+@Entity({ name: 'banner' })
 export class TypeOrmBannerEntity {
   @PrimaryColumn({ name: 'id', type: 'uuid' })
   readonly id: string;

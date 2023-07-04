@@ -8,9 +8,6 @@ export class TypeOrmActivationCodeEntity {
   @Column({ name: 'activation_code' })
   readonly activationCode: string;
 
-  @Column({ name: 'expired_at' })
-  readonly expiredAt: Date;
-
   @Column({ name: 'created_at' })
   readonly createdAt: Date;
 }
