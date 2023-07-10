@@ -19,4 +19,10 @@ export interface IOrganizerReadRepository {
    * @returns
    */
   findByUsername(username: string): Promise<OrganizerQueryModel | undefined>;
+  /**
+   *
+   * @param userId
+   * @returns
+   */
+  findByUserId(userId: string): Promise<OrganizerQueryModel[]>;
 }

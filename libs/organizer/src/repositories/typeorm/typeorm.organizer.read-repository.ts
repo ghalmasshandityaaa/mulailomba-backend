@@ -56,4 +56,18 @@ export class TypeOrmOrganizerReadRepository
 
     return entity || undefined;
   }
+
+  /**
+   *
+   * @param userId
+   * @returns
+   */
+  async findByUserId(userId: string): Promise<OrganizerQueryModel[]> {
+    const entities = await this.dataSource
+      .createQueryBuilder(TypeOrmOrganizerEntity, 'organizer')
+      .where('organizer.userId = :userId', { userId })
+      .getMany();
+
+    return entities;
+  }
 }
