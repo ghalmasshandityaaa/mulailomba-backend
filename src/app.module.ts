@@ -7,6 +7,7 @@ import {
   LoggerConfigService,
   ServerConfigModule,
 } from '@mulailomba/config';
+import { EventModule } from '@mulailomba/event';
 import { LoggerModule } from '@mulailomba/logger';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
@@ -36,6 +37,7 @@ import { TypeOrmOptionsProvider } from './providers';
     }),
     AuthModule,
     BannerModule,
+    EventModule,
   ],
   controllers: [],
   providers: [
