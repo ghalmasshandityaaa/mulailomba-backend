@@ -8,6 +8,7 @@ export class JsonOrganizerSerializer {
       name: model.name,
       profile: model.profile,
       background: model.background,
+      email_address: model.emailAddress,
       is_locked: model.isLocked,
       is_active: model.isActive,
       created_at: DateUtils.toUnix(model.createdAt),
