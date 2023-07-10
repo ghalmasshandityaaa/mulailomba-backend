@@ -3,6 +3,7 @@ export interface OrganizerQueryModel {
   name: string;
   profile: string;
   background: string;
+  emailAddress: string;
   password: string;
   isLocked: boolean;
   isActive: boolean;
