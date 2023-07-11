@@ -13,6 +13,7 @@ export class JsonOrganizerSerializer {
       is_active: model.isActive,
       created_at: DateUtils.toUnix(model.createdAt),
       updated_at: DateUtils.toUnix(model.updatedAt),
+      logout_at: model.logoutAt ? DateUtils.toUnix(model.logoutAt) : null,
       user_id: model.userId,
     };
   }

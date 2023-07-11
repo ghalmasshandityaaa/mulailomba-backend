@@ -35,6 +35,9 @@ export class TypeOrmOrganizerEntity {
   @Column({ name: 'updated_at' })
   readonly updatedAt: Date;
 
+  @Column({ name: 'logout_at' })
+  readonly logoutAt: Date;
+
   @Column({ name: 'user_id' })
   readonly userId: string;
 }

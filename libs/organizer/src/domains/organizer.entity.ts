@@ -12,6 +12,7 @@ type Props = {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  logoutAt?: Date;
   userId: string;
 };
 
@@ -65,6 +66,10 @@ export class OrganizerEntity extends Entity<Props, string> {
         this.props.username = kebabCase(props.name);
       }
     }
+  }
+
+  public logout(): void {
+    this.props.logoutAt = new Date();
   }
 
   /**
