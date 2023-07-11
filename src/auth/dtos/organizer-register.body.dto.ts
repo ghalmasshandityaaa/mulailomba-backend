@@ -21,7 +21,7 @@ export class OrganizerRegisterBodyDTO {
       .when('isLocked', {
         is: true,
         then: joi.required(),
-        otherwise: joi.optional(),
+        otherwise: joi.optional().allow(null),
       })
       .min(8)
       .max(16)
