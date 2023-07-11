@@ -170,7 +170,9 @@ export class AuthController {
     const organizer = await this.organizerService.findAggregateById(identity.id);
     if (!organizer) throw new OrganizerError.NotFound();
 
+    organizer.logout();
     organizer.commit();
+
     CookieUtils.delete(res, ['organizer_refresh_token']);
   }
 

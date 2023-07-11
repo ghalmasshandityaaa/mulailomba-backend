@@ -70,8 +70,6 @@ export class OrganizerAggregate extends Aggregate<Props, string> {
   }
 
   public logout(): void {
-    this.props.logoutAt = new Date();
-
     this.raise(new OrganizerWasLogoutEvent({ organizerId: this.id }));
   }
 

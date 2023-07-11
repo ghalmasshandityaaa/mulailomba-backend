@@ -4,6 +4,7 @@ import { OrganizerAggregate } from '@mulailomba/organizer/domains';
 import { TypeOrmOrganizerEntity } from '@mulailomba/organizer/entities';
 import { IOrganizerWriteRepository } from '@mulailomba/organizer/interfaces';
 import { Injectable } from '@nestjs/common';
+import { EventPublisher } from '@nestjs/cqrs';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
@@ -15,7 +16,10 @@ export class TypeOrmOrganizerWriteRepository
   readonly driver = 'postgres';
   readonly name = 'TypeOrmOrganizerWriteRepository';
 
-  constructor(@InjectDataSource() private dataSource: DataSource) {
+  constructor(
+    @InjectDataSource() private dataSource: DataSource,
+    private readonly publisher: EventPublisher,
+  ) {
     super();
   }
 
@@ -50,6 +54,8 @@ export class TypeOrmOrganizerWriteRepository
       .where('organizer.id = :id', { id })
       .getOne();
 
-    return entity ? OrganizerAggregate.rebuild({ ...entity }, entity.id) : undefined;
+    return entity
+      ? this.publisher.mergeObjectContext(OrganizerAggregate.rebuild({ ...entity }, entity.id))
+      : undefined;
   }
 }
