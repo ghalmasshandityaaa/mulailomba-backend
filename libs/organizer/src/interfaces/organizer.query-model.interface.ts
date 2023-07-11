@@ -9,5 +9,6 @@ export interface OrganizerQueryModel {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  logoutAt: Date;
   userId: string;
 }

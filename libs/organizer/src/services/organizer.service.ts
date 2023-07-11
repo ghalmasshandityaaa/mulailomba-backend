@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { ORGANIZER_READ_REPOSITORY, ORGANIZER_WRITE_REPOSITORY } from '../constants';
-import { CreateOrganizerProps, OrganizerEntity } from '../domains';
+import { CreateOrganizerProps, OrganizerAggregate } from '../domains';
 import {
   IOrganizerReadRepository,
   IOrganizerService,
@@ -43,9 +43,19 @@ export class OrganizerService implements IOrganizerService {
     this.logger.trace('BEGIN');
     this.logger.info({ props });
 
-    const entity = OrganizerEntity.create({ ...props });
+    const entity = OrganizerAggregate.create({ ...props });
     await this.writeRepository.create(entity);
 
     this.logger.trace('END');
+  }
+
+  async findAggregateById(id: string): Promise<OrganizerAggregate | undefined> {
+    this.logger.trace('BEGIN');
+    this.logger.info({ id });
+
+    const entity = await this.writeRepository.findById(id);
+
+    this.logger.trace('END');
+    return entity;
   }
 }
