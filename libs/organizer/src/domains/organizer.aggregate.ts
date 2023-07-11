@@ -1,5 +1,6 @@
-import { Entity, StringUtils } from '@mulailomba/common';
+import { Aggregate, StringUtils } from '@mulailomba/common';
 import { kebabCase } from 'lodash';
+import { OrganizerWasLogoutEvent } from './events';
 
 type Props = {
   name: string;
@@ -28,7 +29,7 @@ type UpdatableProps = Partial<
 /**
  *
  */
-export class OrganizerEntity extends Entity<Props, string> {
+export class OrganizerAggregate extends Aggregate<Props, string> {
   constructor(props: Props, id?: string) {
     super(props, id);
   }
@@ -38,8 +39,8 @@ export class OrganizerEntity extends Entity<Props, string> {
    * @param props
    * @returns
    */
-  public static create(props: CreateOrganizerProps): OrganizerEntity {
-    const entity = new OrganizerEntity({
+  public static create(props: CreateOrganizerProps): OrganizerAggregate {
+    const entity = new OrganizerAggregate({
       ...props,
       username: kebabCase(props.name),
       password: props.password ? StringUtils.hash(props.password) : props.password,
@@ -70,6 +71,8 @@ export class OrganizerEntity extends Entity<Props, string> {
 
   public logout(): void {
     this.props.logoutAt = new Date();
+
+    this.raise(new OrganizerWasLogoutEvent({ organizerId: this.id }));
   }
 
   /**
@@ -78,7 +81,7 @@ export class OrganizerEntity extends Entity<Props, string> {
    * @param id
    * @returns
    */
-  public static rebuild(props: Props, id: string): OrganizerEntity {
-    return new OrganizerEntity(props, id);
+  public static rebuild(props: Props, id: string): OrganizerAggregate {
+    return new OrganizerAggregate(props, id);
   }
 }

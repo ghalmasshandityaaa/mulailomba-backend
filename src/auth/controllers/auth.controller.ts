@@ -163,7 +163,14 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RolePermission.ORGANIZER)
-  async logoutOrganizer(@Res({ passthrough: true }) res: Response) {
+  async logoutOrganizer(
+    @Res({ passthrough: true }) res: Response,
+    @Identity() identity: IIdentity,
+  ) {
+    const organizer = await this.organizerService.findAggregateById(identity.id);
+    if (!organizer) throw new OrganizerError.NotFound();
+
+    organizer.commit();
     CookieUtils.delete(res, ['organizer_refresh_token']);
   }
 
