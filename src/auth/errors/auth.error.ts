@@ -18,7 +18,7 @@ export namespace AuthError {
   }
 
   export class InvalidCredentials extends HttpException {
-    constructor() {
+    constructor(code?: number) {
       super(
         {
           ok: false,
@@ -26,7 +26,7 @@ export namespace AuthError {
             code: 'auth/invalid-credentials',
           },
         } as HttpErrorResponse,
-        HttpStatus.UNAUTHORIZED,
+        code || HttpStatus.UNAUTHORIZED,
       );
     }
   }
