@@ -21,6 +21,7 @@ import { IUserService, JsonUserProps, UserQueryModel } from '@mulailomba/user/in
 import {
   Body,
   Controller,
+  Headers,
   HttpCode,
   HttpStatus,
   Inject,
@@ -178,8 +179,15 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refreshTokens(@Cookies('refresh_token') refreshToken: any) {
-    const tokens = await this.authService.refreshTokens(refreshToken);
+  async refreshTokens(
+    @Cookies('refresh_token') refreshToken: any,
+    @Cookies('organizer_refresh_token') organizerRefreshToken: any,
+    @Headers('X-Resource-Type') type: string,
+  ) {
+    const token = type?.toUpperCase() === 'ORGANIZER' ? organizerRefreshToken : refreshToken;
+    if (!token) throw new AuthError.ForbiddenAccess();
+
+    const tokens = await this.authService.refreshTokens(token);
 
     return { access_token: tokens.accessToken };
   }
