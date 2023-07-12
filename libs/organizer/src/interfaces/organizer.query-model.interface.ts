@@ -1,6 +1,7 @@
 export interface OrganizerQueryModel {
   id: string;
   name: string;
+  username: string;
   profile: string;
   background: string;
   emailAddress: string;
