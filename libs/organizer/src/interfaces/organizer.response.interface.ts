@@ -1,6 +1,7 @@
 export interface JsonOrganizerProps {
   id: string;
   name: string;
+  username: string;
   profile: string;
   background: string;
   email_address: string;

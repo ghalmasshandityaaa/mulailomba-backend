@@ -6,6 +6,7 @@ export class JsonOrganizerSerializer {
     return {
       id: model.id,
       name: model.name,
+      username: model.username,
       profile: model.profile,
       background: model.background,
       email_address: model.emailAddress,
