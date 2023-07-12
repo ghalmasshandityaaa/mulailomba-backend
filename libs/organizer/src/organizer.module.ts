@@ -8,6 +8,7 @@ import {
 } from './constants';
 import { OrganizerController } from './controllers';
 import { TypeOrmOrganizerEntities } from './entities';
+import { Listeners } from './listeners';
 import { QueryHandlers } from './queries';
 import { TypeOrmOrganizerReadRepository, TypeOrmOrganizerWriteRepository } from './repositories';
 import { OrganizerService } from './services';
@@ -33,7 +34,7 @@ const Repositories = [
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature(TypeOrmOrganizerEntities)],
   controllers: [OrganizerController],
-  providers: [...Services, ...Repositories, ...QueryHandlers],
+  providers: [...Services, ...Repositories, ...QueryHandlers, ...Listeners],
   exports: [...Services],
 })
 export class OrganizerModule {}

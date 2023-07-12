@@ -7,7 +7,7 @@ import { IOrganizerService, OrganizerQueryModel } from '@mulailomba/organizer/in
 import { USER_SERVICE } from '@mulailomba/user/constants';
 import { UserError } from '@mulailomba/user/errors';
 import { IUserService, UserQueryModel } from '@mulailomba/user/interfaces';
-import { Inject } from '@nestjs/common';
+import { HttpStatus, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
@@ -36,7 +36,7 @@ export class AuthService implements IAuthService {
     if (!user) throw new UserError.NotFound();
 
     const valid = await StringUtils.compare(user.password, password);
-    if (!valid) throw new AuthError.InvalidCredentials();
+    if (!valid) throw new AuthError.InvalidCredentials(HttpStatus.BAD_REQUEST);
     else if (!user.isActive) throw new UserError.AlreadyDeactivated();
 
     return user;
@@ -51,9 +51,9 @@ export class AuthService implements IAuthService {
     if (!organizer) throw new OrganizerError.NotFound();
 
     if (organizer.isLocked) {
-      if (!password) throw new AuthError.InvalidCredentials();
+      if (!password) throw new AuthError.InvalidCredentials(HttpStatus.BAD_REQUEST);
       const valid = await StringUtils.compare(organizer.password, password);
-      if (!valid) throw new AuthError.InvalidCredentials();
+      if (!valid) throw new AuthError.InvalidCredentials(HttpStatus.BAD_REQUEST);
     }
 
     if (!organizer.isActive) throw new OrganizerError.AlreadyDeactivated();
