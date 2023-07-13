@@ -1,7 +1,15 @@
-import { CookieUtils, Identity, IIdentity, RolePermission, Roles } from '@mulailomba/common';
+import {
+  Cookies,
+  CookieUtils,
+  Identity,
+  IIdentity,
+  RolePermission,
+  Roles,
+} from '@mulailomba/common';
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Response } from 'express';
+import { AuthError } from 'src/auth/errors';
 import { JwtAuthGuard, RoleGuard } from 'src/auth/guard';
 import { SwitchAccountCommand } from '../commands';
 import { SwitchAccountBodyDTO } from '../dtos';
@@ -41,7 +49,9 @@ export class OrganizerController {
     @Res({ passthrough: true }) res: Response,
     @Identity() identity: IIdentity,
     @Body() body: SwitchAccountBodyDTO,
+    @Cookies('organizer_refresh_token') refreshToken: any,
   ) {
+    if (!refreshToken) throw new AuthError.ForbiddenAccess();
     const command = new SwitchAccountCommand({ ...body, organizerId: identity.id });
     const token = await this.commandBus.execute(command);
 
