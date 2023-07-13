@@ -3,6 +3,11 @@ import { TypeOrmEventBenefitEntity } from './typeorm.event-benefit.entity';
 import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
 import { TypeOrmEventEligibilityEntity } from './typeorm.event-eligibility.entity';
 
+export type EventPosterType = {
+  publicId: string;
+  secureUrl: string;
+};
+
 @Entity({ name: 'event' })
 export class TypeOrmEventEntity {
   @PrimaryColumn({ type: 'uuid' })
@@ -10,6 +15,19 @@ export class TypeOrmEventEntity {
 
   @Column({ name: 'name' })
   readonly name: string;
+
+  @Column({
+    name: 'poster',
+    transformer: {
+      from(value) {
+        return value ? JSON.parse(value) : null;
+      },
+      to(value) {
+        return value ? JSON.stringify(value) : null;
+      },
+    },
+  })
+  readonly poster: EventPosterType;
 
   @Column({ name: 'description' })
   readonly description: string;

@@ -3,6 +3,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs
 import { CommandBus } from '@nestjs/cqrs';
 import { JwtAuthGuard, RoleGuard } from 'src/auth/guard';
 import { CreateEventCommand } from '../commands/create-event/create-event.command';
+import { CreateEventBodyDTO } from '../dtos';
 
 @Controller({
   path: 'events',
@@ -11,11 +12,11 @@ import { CreateEventCommand } from '../commands/create-event/create-event.comman
 export class EventController {
   constructor(readonly commandBus: CommandBus) {}
 
-  @Post()
+  @Post('create')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RolePermission.ORGANIZER)
-  async createEvent(@Identity() identity: IIdentity, @Body() body: any) {
+  async createEvent(@Identity() identity: IIdentity, @Body() body: CreateEventBodyDTO) {
     const command = new CreateEventCommand({ ...body, userId: identity.id });
     return this.commandBus.execute(command);
   }
