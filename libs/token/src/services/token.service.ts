@@ -11,6 +11,16 @@ export class TokenService implements ITokenService {
     private readonly jwtService: JwtService,
   ) {}
 
+  validate(token: string): IIdentity {
+    const decoded = this.jwtService.verify(token);
+
+    return {
+      id: decoded.sub,
+      role: decoded.role,
+      isActive: decoded.isActive,
+    };
+  }
+
   async generateToken(identity: IIdentity): Promise<{ accessToken: string; refreshToken: string }> {
     const [accessToken, refreshToken] = await Promise.all([
       Promise.resolve(this.generateAccessToken(identity)),
