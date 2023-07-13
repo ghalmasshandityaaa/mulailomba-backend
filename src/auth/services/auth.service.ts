@@ -4,21 +4,19 @@ import { MAILER_SERVICE } from '@mulailomba/mailer/mailer.constant';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
 import { OrganizerError } from '@mulailomba/organizer/errors';
 import { IOrganizerService, OrganizerQueryModel } from '@mulailomba/organizer/interfaces';
+import { TOKEN_SERVICE } from '@mulailomba/token/constants';
+import { ITokenService } from '@mulailomba/token/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
 import { UserError } from '@mulailomba/user/errors';
 import { IUserService, UserQueryModel } from '@mulailomba/user/interfaces';
 import { HttpStatus, Inject } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { ACTIVATION_CODE_SERVICE } from '../constants';
 import { AuthError } from '../errors';
-import { IActivationCodeService, IAuthService, ILoginResponse } from '../interfaces';
+import { IActivationCodeService, IAuthService } from '../interfaces';
 
 export class AuthService implements IAuthService {
   constructor(
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     @Inject(USER_SERVICE)
     private readonly userService: IUserService,
     @InjectPinoLogger(AuthService.name)
@@ -29,6 +27,8 @@ export class AuthService implements IAuthService {
     private readonly activationCodeService: IActivationCodeService,
     @Inject(ORGANIZER_SERVICE)
     private readonly organizerService: IOrganizerService,
+    @Inject(TOKEN_SERVICE)
+    private readonly tokenService: ITokenService,
   ) {}
 
   async validateUser(emailAddress: string, password: string): Promise<UserQueryModel> {
@@ -75,49 +75,15 @@ export class AuthService implements IAuthService {
     return valid;
   }
 
-  async generateTokens(identity: IIdentity, onlyAccessToken = false): Promise<ILoginResponse> {
-    let accessToken: string;
-    let refreshToken: string | undefined;
-
-    if (onlyAccessToken) {
-      accessToken = this.jwtService.sign(
-        { sub: identity.id, role: identity.role, isActive: identity.isActive },
-        { expiresIn: this.configService.get<string>('JWT_EXPIRATION_TIME') },
-      );
-    } else {
-      [accessToken, refreshToken] = await Promise.all([
-        Promise.resolve(
-          this.jwtService.sign(
-            { sub: identity.id, role: identity.role, isActive: identity.isActive },
-            { expiresIn: this.configService.get<string>('JWT_EXPIRATION_TIME') },
-          ),
-        ),
-        Promise.resolve(
-          this.jwtService.sign(
-            { sub: identity.id, role: identity.role, isActive: identity.isActive },
-            { expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRATION_TIME') },
-          ),
-        ),
-      ]);
-    }
-
-    return { accessToken, refreshToken };
-  }
-
-  async refreshTokens(refreshToken: string): Promise<ILoginResponse> {
+  async refreshTokens(refreshToken: string): Promise<string> {
     try {
-      const decoded = this.jwtService.verify(refreshToken);
-      const identity: IIdentity = {
-        id: decoded.sub,
-        role: decoded.role,
-        isActive: decoded.isActive,
-      };
+      const identity = this.tokenService.validate(refreshToken);
 
       const valid = await this.validate(identity);
       if (!valid) throw new AuthError.InvalidCredentials();
 
-      const tokens = await this.generateTokens(identity, true);
-      return tokens;
+      const accessToken = this.tokenService.generateAccessToken(identity);
+      return accessToken;
     } catch (error) {
       this.logger.error(error);
       throw error;

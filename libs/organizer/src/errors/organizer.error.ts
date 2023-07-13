@@ -44,4 +44,18 @@ export namespace OrganizerError {
       );
     }
   }
+
+  export class InvalidPassword extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'organizer/invalid-password',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

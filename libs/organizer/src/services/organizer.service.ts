@@ -1,3 +1,7 @@
+import { TOKEN_SERVICE } from '@mulailomba/token/constants';
+import { ITokenService } from '@mulailomba/token/interfaces';
+import { USER_SERVICE } from '@mulailomba/user/constants';
+import { IUserService } from '@mulailomba/user/interfaces';
 import { Inject } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { ORGANIZER_READ_REPOSITORY, ORGANIZER_WRITE_REPOSITORY } from '../constants';
@@ -17,6 +21,10 @@ export class OrganizerService implements IOrganizerService {
     private readonly repository: IOrganizerReadRepository,
     @Inject(ORGANIZER_WRITE_REPOSITORY)
     private readonly writeRepository: IOrganizerWriteRepository,
+    @Inject(USER_SERVICE)
+    private readonly userService: IUserService,
+    @Inject(TOKEN_SERVICE)
+    private readonly tokenService: ITokenService,
   ) {}
 
   async findById(id: string, userId: string): Promise<OrganizerQueryModel | undefined> {

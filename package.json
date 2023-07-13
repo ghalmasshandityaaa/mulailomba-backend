@@ -120,7 +120,8 @@
       "^@mulailomba/user(|/.*)$": "<rootDir>/libs/user/src/$1",
       "^@mulailomba/organizer(|/.*)$": "<rootDir>/libs/organizer/src/$1",
       "^@mulailomba/mailer(|/.*)$": "<rootDir>/libs/mailer/src/$1",
-      "^@mulailomba/banner(|/.*)$": "<rootDir>/libs/banner/src/$1"
+      "^@mulailomba/banner(|/.*)$": "<rootDir>/libs/banner/src/$1",
+      "^@mulailomba/token(|/.*)$": "<rootDir>/libs/token/src/$1"
     }
   }
 }

@@ -16,6 +16,8 @@ import {
   JsonOrganizerProps,
   OrganizerQueryModel,
 } from '@mulailomba/organizer/interfaces';
+import { TOKEN_SERVICE } from '@mulailomba/token/constants';
+import { ITokenService } from '@mulailomba/token/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
 import { IUserService, JsonUserProps, UserQueryModel } from '@mulailomba/user/interfaces';
 import {
@@ -58,13 +60,15 @@ export class AuthController {
     private readonly userService: IUserService,
     @Inject(ORGANIZER_SERVICE)
     private readonly organizerService: IOrganizerService,
+    @Inject(TOKEN_SERVICE)
+    private readonly tokenService: ITokenService,
   ) {}
 
   @Post('user/login')
   @HttpCode(HttpStatus.OK)
   async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
     const identity = await this.authService.validateUser(body.emailAddress, body.password);
-    const tokens = await this.authService.generateTokens({
+    const tokens = await this.tokenService.generateToken({
       id: identity.id,
       isActive: identity.isActive,
       role: RolePermission.USER,
@@ -97,7 +101,7 @@ export class AuthController {
     if (organizerRefreshToken) throw new AuthError.SignedIn();
 
     const organizer = await this.authService.validateOrganizer(body.id, identity.id, body.password);
-    const tokens = await this.authService.generateTokens({
+    const tokens = await this.tokenService.generateToken({
       id: organizer.id,
       isActive: organizer.isActive,
       role: RolePermission.ORGANIZER,
@@ -131,7 +135,7 @@ export class AuthController {
       emailAddress,
       isActive: true,
     });
-    const tokens = await this.authService.generateTokens({
+    const tokens = await this.tokenService.generateToken({
       id: entity.id,
       isActive: entity.props.isActive,
       role: RolePermission.USER,
@@ -187,9 +191,9 @@ export class AuthController {
     const token = type?.toUpperCase() === 'ORGANIZER' ? organizerRefreshToken : refreshToken;
     if (!token) throw new AuthError.ForbiddenAccess();
 
-    const tokens = await this.authService.refreshTokens(token);
+    const accessToken = await this.authService.refreshTokens(token);
 
-    return { access_token: tokens.accessToken };
+    return { access_token: accessToken };
   }
 
   @Post('check-availability-email')

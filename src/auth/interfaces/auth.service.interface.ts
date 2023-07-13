@@ -15,8 +15,7 @@ export interface IAuthService {
     password?: string,
   ): Promise<OrganizerQueryModel>;
   validate(identity: IIdentity): Promise<boolean>;
-  generateTokens(identity: IIdentity): Promise<ILoginResponse>;
-  refreshTokens(refreshToken: string): Promise<ILoginResponse>;
+  refreshTokens(refreshToken: string): Promise<string>;
   checkAvailabilityEmail(emailAddress: string): Promise<void>;
   sendActivationCode(emailAddress: string): Promise<void>;
 }

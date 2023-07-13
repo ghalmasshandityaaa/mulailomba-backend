@@ -1,9 +1,9 @@
 import { MailerModule } from '@mulailomba/mailer';
 import { OrganizerModule } from '@mulailomba/organizer';
+import { TokenModule } from '@mulailomba/token';
 import { UserModule } from '@mulailomba/user';
 import { Module, Provider } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from './constants';
@@ -30,20 +30,10 @@ const Services: Provider<any>[] = [
     ConfigModule,
     TypeOrmModule.forFeature(TypeOrmAuthEntities),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({
-      useFactory: async (configService: ConfigService) => {
-        return {
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: {
-            expiresIn: configService.get<string>('JWT_EXPIRATION_TIME'),
-          },
-        };
-      },
-      inject: [ConfigService],
-    }),
     UserModule,
     MailerModule,
     OrganizerModule,
+    TokenModule,
   ],
   controllers: [AuthController, AuthGoogleController, AuthFacebookController],
   providers: [

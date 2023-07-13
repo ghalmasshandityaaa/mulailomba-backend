@@ -83,7 +83,7 @@ export namespace AuthError {
             details: 'you are already logged in to an account',
           },
         } as HttpErrorResponse,
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.FORBIDDEN,
       );
     }
   }

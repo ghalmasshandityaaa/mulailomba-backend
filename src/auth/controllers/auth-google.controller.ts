@@ -1,11 +1,11 @@
 import { CookieUtils, RolePermission } from '@mulailomba/common';
+import { TOKEN_SERVICE } from '@mulailomba/token/constants';
+import { ITokenService } from '@mulailomba/token/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
 import { IUserService } from '@mulailomba/user/interfaces';
 import { Controller, Get, HttpCode, HttpStatus, Inject, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { AUTH_SERVICE } from '../constants';
 import { GoogleGuard } from '../guard';
-import { IAuthService } from '../interfaces';
 
 @Controller({
   path: 'auth/google',
@@ -15,8 +15,8 @@ export class AuthGoogleController {
   constructor(
     @Inject(USER_SERVICE)
     private readonly userService: IUserService,
-    @Inject(AUTH_SERVICE)
-    private readonly authService: IAuthService,
+    @Inject(TOKEN_SERVICE)
+    private readonly tokenService: ITokenService,
   ) {}
 
   @Get('login')
@@ -32,7 +32,7 @@ export class AuthGoogleController {
   async redirect(@Req() req, @Res({ passthrough: true }) res: Response) {
     const user = await this.userService.findByEmail(req.user.email);
     if (user) {
-      const tokens = await this.authService.generateTokens({
+      const tokens = await this.tokenService.generateToken({
         id: user.id,
         role: RolePermission.USER,
         isActive: user.isActive,

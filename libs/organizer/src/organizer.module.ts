@@ -1,6 +1,9 @@
+import { TokenModule } from '@mulailomba/token';
+import { UserModule } from '@mulailomba/user';
 import { Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommandHandlers } from './commands';
 import {
   ORGANIZER_READ_REPOSITORY,
   ORGANIZER_SERVICE,
@@ -32,9 +35,14 @@ const Repositories = [
 ];
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature(TypeOrmOrganizerEntities)],
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature(TypeOrmOrganizerEntities),
+    TokenModule,
+    UserModule,
+  ],
   controllers: [OrganizerController],
-  providers: [...Services, ...Repositories, ...QueryHandlers, ...Listeners],
+  providers: [...Services, ...Repositories, ...CommandHandlers, ...QueryHandlers, ...Listeners],
   exports: [...Services],
 })
 export class OrganizerModule {}

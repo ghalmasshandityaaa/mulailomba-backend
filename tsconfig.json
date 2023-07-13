@@ -71,6 +71,12 @@
       ],
       "@mulailomba/banner/*": [
         "libs/banner/src/*"
+      ],
+      "@mulailomba/token": [
+        "libs/token/src"
+      ],
+      "@mulailomba/token/*": [
+        "libs/token/src/*"
       ]
     }
   }
