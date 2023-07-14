@@ -58,4 +58,19 @@ export namespace OrganizerError {
       );
     }
   }
+
+  export class SignedIn extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'organizer/signed-in',
+            details: 'you are already logged in to an account',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+  }
 }

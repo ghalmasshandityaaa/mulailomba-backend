@@ -45,6 +45,8 @@ export class SwitchAccountHandler
       throw new OrganizerError.AlreadyDeactivated();
     } else if (newOrganizer.props.userId !== currentOrganizer.props.userId) {
       throw new AuthError.ForbiddenAccess();
+    } else if (newOrganizer.id === currentOrganizer.id) {
+      throw new OrganizerError.SignedIn();
     } else if (newOrganizer.props.isLocked) {
       if (
         !command.password ||
@@ -60,7 +62,10 @@ export class SwitchAccountHandler
       role: RolePermission.ORGANIZER,
     });
 
-    const result = new SwitchAccountResult(token.accessToken, token.refreshToken);
+    const result = new SwitchAccountResult(token.accessToken, token.refreshToken, {
+      id: newOrganizer.id,
+      ...newOrganizer.props,
+    });
 
     this.logger.trace(`END`);
     return result;
