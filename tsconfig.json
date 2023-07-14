@@ -77,6 +77,12 @@
       ],
       "@mulailomba/event/*": [
         "libs/event/src/*"
+      ],
+      "@mulailomba/token": [
+        "libs/token/src"
+      ],
+      "@mulailomba/token/*": [
+        "libs/token/src/*"
       ]
     }
   }

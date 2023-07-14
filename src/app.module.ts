@@ -9,6 +9,8 @@ import {
 } from '@mulailomba/config';
 import { EventModule } from '@mulailomba/event';
 import { LoggerModule } from '@mulailomba/logger';
+import { OrganizerModule } from '@mulailomba/organizer';
+import { TokenModule } from '@mulailomba/token';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -38,6 +40,8 @@ import { TypeOrmOptionsProvider } from './providers';
     AuthModule,
     BannerModule,
     EventModule,
+    OrganizerModule,
+    TokenModule,
   ],
   controllers: [],
   providers: [

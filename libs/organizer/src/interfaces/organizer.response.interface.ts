@@ -2,8 +2,8 @@ export interface JsonOrganizerProps {
   id: string;
   name: string;
   username: string;
-  profile: string;
-  background: string;
+  profile: string | null;
+  background: string | null;
   email_address: string;
   is_locked: boolean;
   is_active: boolean;

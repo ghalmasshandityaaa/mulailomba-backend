@@ -6,7 +6,7 @@ type Props = {
   name: string;
   username: string;
   profile?: string;
-  banner?: string;
+  background?: string;
   emailAddress: string;
   password: string;
   isLocked: boolean;
@@ -20,10 +20,10 @@ type Props = {
 export type CreateOrganizerProps = Required<
   Pick<Props, 'name' | 'emailAddress' | 'password' | 'isLocked' | 'userId'>
 > &
-  Partial<Pick<Props, 'profile' | 'banner'>>;
+  Partial<Pick<Props, 'profile' | 'background'>>;
 
 type UpdatableProps = Partial<
-  Pick<Props, 'name' | 'username' | 'profile' | 'banner' | 'password' | 'isLocked' | 'isActive'>
+  Pick<Props, 'name' | 'username' | 'profile' | 'background' | 'password' | 'isLocked' | 'isActive'>
 >;
 
 /**
@@ -54,7 +54,7 @@ export class OrganizerAggregate extends Aggregate<Props, string> {
   public update(props: UpdatableProps): void {
     this.props.name = props.name || this.props.name;
     this.props.profile = props.profile || this.props.profile;
-    this.props.banner = props.banner || this.props.banner;
+    this.props.background = props.background || this.props.background;
     this.props.password = props.password ? StringUtils.hash(props.password) : this.props.password;
     this.props.isLocked = props.isLocked || this.props.isLocked;
     this.props.isActive = props.isActive || this.props.isActive;
