@@ -25,6 +25,7 @@
     "sync": "git checkout development && git pull origin development && git push github development && git push private development"
   },
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "@nestjs/common": "8.4.7",
     "@nestjs/config": "2.2.0",
     "@nestjs/core": "8.4.7",
@@ -40,6 +41,7 @@
     "cookie": "0.5.0",
     "cookie-parser": "1.4.6",
     "crypto": "^1.0.1",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "handlebars": "4.7.7",
     "joi": "17",

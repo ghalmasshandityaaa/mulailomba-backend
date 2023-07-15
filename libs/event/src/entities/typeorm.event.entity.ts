@@ -18,6 +18,7 @@ export class TypeOrmEventEntity {
 
   @Column({
     name: 'poster',
+    type: 'varchar',
     transformer: {
       from(value) {
         return value ? JSON.parse(value) : null;
@@ -35,11 +36,33 @@ export class TypeOrmEventEntity {
   @Column({ name: 'is_multiple_category', default: false })
   readonly isMultipleCategory: boolean;
 
-  @Column({ name: 'benefits' })
-  readonly benefit: string;
+  @Column({
+    name: 'benefits',
+    type: 'text',
+    transformer: {
+      from(value) {
+        return value ? JSON.parse(value) : [];
+      },
+      to(value) {
+        return value ? JSON.stringify(value) : [];
+      },
+    },
+  })
+  readonly benefit: string[];
 
-  @Column({ name: 'eligibilities' })
-  readonly eligibility: string;
+  @Column({
+    name: 'eligibilities',
+    type: 'text',
+    transformer: {
+      from(value) {
+        return value ? JSON.parse(value) : [];
+      },
+      to(value) {
+        return value ? JSON.stringify(value) : [];
+      },
+    },
+  })
+  readonly eligibility: string[];
 
   @Column({ name: 'steps' })
   readonly steps: string;

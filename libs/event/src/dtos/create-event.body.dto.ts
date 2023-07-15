@@ -1,9 +1,13 @@
-import { Expose } from 'class-transformer';
-import * as joi from 'joi';
+import JoiDate from '@joi/date';
+import { Expose, Type } from 'class-transformer';
+import { subDays } from 'date-fns';
+import * as JoiImport from 'joi';
 import { getClassSchema, JoiSchema } from 'joi-class-decorators';
 import { values } from 'lodash';
-import { EventPosterType } from '../entities/typeorm.event.entity';
+import { DateTime } from 'luxon';
 import { EVENT_ADDITIONAL_INPUT_TYPE, EVENT_TIMELINE_TYPE } from '../event.constants';
+
+const joi: JoiImport.Root = JoiImport.extend(JoiDate);
 
 class PosterDTO {
   @JoiSchema(joi.string().required().label('public_id'))
@@ -41,10 +45,9 @@ class EventAdditionalInputDTO {
           EVENT_ADDITIONAL_INPUT_TYPE.MULTIPLE_CHOICE,
           EVENT_ADDITIONAL_INPUT_TYPE.CHECKBOX,
         ),
-        then: joi.required(),
+        then: joi.array().min(1).required(),
         otherwise: joi.optional(),
       })
-      .min(1)
       .label('answer'),
   )
   readonly answer: string[];
@@ -64,11 +67,13 @@ class EventTimelineDTO {
   @JoiSchema(joi.string().trim().required().label('description'))
   readonly description: string;
 
-  @JoiSchema(joi.date().required().label('start_date'))
+  @JoiSchema(joi.date().format('YYYY-MM-DD').required().label('start_date'))
   @Expose({ name: 'start_date' })
   readonly startDate: Date;
 
-  @JoiSchema(joi.date().greater(joi.ref('start_date')).required().label('start_date'))
+  @JoiSchema(
+    joi.date().format('YYYY-MM-DD').greater(joi.ref('startDate')).required().label('end_date'),
+  )
   @Expose({ name: 'end_date' })
   readonly endDate: Date;
 
@@ -85,20 +90,15 @@ class EventTimelineDTO {
   @JoiSchema(
     joi
       .when('type', {
-        is: joi.valid(EVENT_TIMELINE_TYPE.ONLINE),
-        then: joi.string().uri().required(),
-      })
-      .when('type', {
-        is: EVENT_TIMELINE_TYPE.OFFLINE,
-        then: joi.string().required(),
-        otherwise: joi.optional(),
+        switch: [
+          { is: EVENT_TIMELINE_TYPE.ONLINE, then: joi.string().uri().required() },
+          { is: EVENT_TIMELINE_TYPE.OFFLINE, then: joi.string().required() },
+        ],
+        otherwise: joi.string().allow(null).optional(),
       })
       .label('input'),
   )
   readonly input: string;
-
-  @JoiSchema(joi.number().min(0).required().label('index'))
-  readonly index: number;
 }
 
 class EventCategoryDTO {
@@ -108,42 +108,65 @@ class EventCategoryDTO {
   @JoiSchema(joi.number().min(0).required().label('price'))
   readonly price: number;
 
-  @JoiSchema(joi.number().positive().allow(NaN).required().label('price'))
-  readonly participant: number;
+  @JoiSchema(joi.number().positive().allow(null).required().label('participant'))
+  readonly participant: number | null;
 
-  @JoiSchema(joi.date().required().label('registration_start'))
+  @JoiSchema(
+    joi
+      .date()
+      .format('YYYY-MM-DD')
+      .greater(DateTime.fromJSDate(subDays(new Date(), 1)).toFormat('yyyy-LL-dd'))
+      .required()
+      .label('registration_start'),
+  )
   @Expose({ name: 'registration_start' })
   readonly registrationStart: Date;
 
-  @JoiSchema(joi.date().greater(joi.ref('registration_start')).required().label('registration_end'))
+  @JoiSchema(
+    joi
+      .date()
+      .format('YYYY-MM-DD')
+      .greater(joi.ref('registrationStart'))
+      .required()
+      .label('registration_end'),
+  )
   @Expose({ name: 'registration_end' })
   readonly registrationEnd: Date;
 
-  @JoiSchema(joi.date().greater(joi.ref('registration_end')).required().label('start_date'))
+  @JoiSchema(
+    joi
+      .date()
+      .format('YYYY-MM-DD')
+      .greater(joi.ref('registrationEnd'))
+      .required()
+      .label('start_date'),
+  )
   @Expose({ name: 'start_date' })
   readonly startDate: Date;
 
-  @JoiSchema(joi.date().greater(joi.ref('start_date')).required().label('end_date'))
+  @JoiSchema(
+    joi.date().format('YYYY-MM-DD').greater(joi.ref('startDate')).required().label('end_date'),
+  )
   @Expose({ name: 'end_date' })
   readonly endDate: Date;
-
-  @JoiSchema(joi.number().min(0).required().label('index'))
-  readonly index: number;
 
   @JoiSchema(
     joi
       .array()
       .items(getClassSchema(EventAdditionalInputDTO))
-      .min(1)
       .optional()
       .label('additional_inputs'),
   )
+  @Expose({ name: 'additional_inputs' })
+  @Type(() => EventAdditionalInputDTO)
   readonly additionalInputs: EventAdditionalInputDTO[];
 
   // step 4
   @JoiSchema(
-    joi.array().items(getClassSchema(EventTimelineDTO)).min(1).optional().label('event_timelines'),
+    joi.array().items(getClassSchema(EventTimelineDTO)).optional().label('event_timelines'),
   )
+  @Expose({ name: 'event_timelines' })
+  @Type(() => EventTimelineDTO)
   readonly eventTimelines: EventTimelineDTO[];
 }
 
@@ -152,25 +175,31 @@ export class CreateEventBodyDTO {
   @JoiSchema(joi.string().trim().required().label('name'))
   readonly name: string;
 
-  @JoiSchema(joi.string().required().label('category_id'))
+  @JoiSchema(joi.string().uuid().required().label('category_id'))
+  @Expose({ name: 'category_id' })
   readonly categoryId: string;
 
-  @JoiSchema(joi.object(getClassSchema(PosterDTO)).required().label('poster'))
-  readonly poster: EventPosterType;
+  @JoiSchema(getClassSchema(PosterDTO).required().label('poster'))
+  @Type(() => PosterDTO)
+  readonly poster: PosterDTO;
 
-  @JoiSchema(joi.array().items(joi.string().uuid()).required().label('benefits'))
+  @JoiSchema(joi.array().items(joi.string().uuid()).min(1).unique().required().label('benefits'))
   readonly benefits: string[];
 
-  @JoiSchema(joi.array().items(joi.string().uuid()).required().label('eligibilities'))
+  @JoiSchema(
+    joi.array().items(joi.string().uuid()).min(1).unique().required().label('eligibilities'),
+  )
   readonly eligibilities: string[];
 
   // step 2
   @JoiSchema(
     joi.array().items(getClassSchema(EventCategoryDTO)).min(1).required().label('event_categories'),
   )
+  @Expose({ name: 'event_categories' })
+  @Type(() => EventCategoryDTO)
   readonly eventCategories: EventCategoryDTO[];
 
   // step 3
-  @JoiSchema(joi.string().required().label('description'))
-  readonly description: string;
+  @JoiSchema(joi.string().required().allow('').allow(null).label('description'))
+  readonly description: string | null;
 }
