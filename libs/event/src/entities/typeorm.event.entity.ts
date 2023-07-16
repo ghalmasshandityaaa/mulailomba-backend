@@ -3,7 +3,7 @@ import { TypeOrmEventBenefitEntity } from './typeorm.event-benefit.entity';
 import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
 import { TypeOrmEventEligibilityEntity } from './typeorm.event-eligibility.entity';
 
-export type EventPosterType = {
+export type FileType = {
   publicId: string;
   secureUrl: string;
 };
@@ -18,7 +18,7 @@ export class TypeOrmEventEntity {
 
   @Column({
     name: 'poster',
-    type: 'varchar',
+    type: 'text',
     transformer: {
       from(value) {
         return value ? JSON.parse(value) : null;
@@ -28,7 +28,7 @@ export class TypeOrmEventEntity {
       },
     },
   })
-  readonly poster: EventPosterType;
+  readonly poster: FileType;
 
   @Column({ name: 'description' })
   readonly description: string;

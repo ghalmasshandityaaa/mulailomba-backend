@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { EVENT_TIMELINE_TYPE } from '../event.constants';
 import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
+import { FileType } from './typeorm.event.entity';
 
 @Entity({ name: 'event_timeline' })
 export class TypeOrmEventTimelineEntity {
@@ -25,8 +26,19 @@ export class TypeOrmEventTimelineEntity {
   @Column({ name: 'link' })
   readonly link: string;
 
-  @Column({ name: 'index' })
-  readonly index: number;
+  @Column({
+    name: 'additional_file',
+    type: 'text',
+    transformer: {
+      from(value) {
+        return value ? JSON.parse(value) : null;
+      },
+      to(value) {
+        return value ? JSON.stringify(value) : null;
+      },
+    },
+  })
+  readonly additionalFile: FileType;
 
   @Column({ name: 'created_at' })
   readonly createdAt: Date;

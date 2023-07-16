@@ -17,7 +17,14 @@ export class EventController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RolePermission.ORGANIZER)
   async createEvent(@Identity() identity: IIdentity, @Body() body: CreateEventBodyDTO) {
-    const command = new CreateEventCommand({ ...body, userId: identity.id });
+    const command = new CreateEventCommand({
+      ...body,
+      userId: identity.id,
+      categories: body.eventCategories.map((category) => ({
+        ...category,
+        timelines: category.eventTimelines,
+      })),
+    });
     return this.commandBus.execute(command);
   }
 }

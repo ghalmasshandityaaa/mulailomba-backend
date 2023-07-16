@@ -9,7 +9,7 @@ import { EVENT_ADDITIONAL_INPUT_TYPE, EVENT_TIMELINE_TYPE } from '../event.const
 
 const joi: JoiImport.Root = JoiImport.extend(JoiDate);
 
-class PosterDTO {
+class FileDto {
   @JoiSchema(joi.string().required().label('public_id'))
   @Expose({ name: 'public_id' })
   readonly publicId: string;
@@ -89,16 +89,28 @@ class EventTimelineDTO {
 
   @JoiSchema(
     joi
+      .string()
       .when('type', {
-        switch: [
-          { is: EVENT_TIMELINE_TYPE.ONLINE, then: joi.string().uri().required() },
-          { is: EVENT_TIMELINE_TYPE.OFFLINE, then: joi.string().required() },
-        ],
+        switch: [{ is: EVENT_TIMELINE_TYPE.ONLINE, then: joi.string().uri().required() }],
         otherwise: joi.string().allow(null).optional(),
       })
+      .required()
       .label('input'),
   )
   readonly input: string;
+
+  @JoiSchema(
+    joi
+      .when('type', {
+        is: EVENT_TIMELINE_TYPE.INFORMATION,
+        then: getClassSchema(FileDto),
+        otherwise: joi.valid(null),
+      })
+      .label('additional_file'),
+  )
+  @Expose({ name: 'additional_file' })
+  @Type(() => FileDto)
+  readonly additionalFile: FileDto;
 }
 
 class EventCategoryDTO {
@@ -179,9 +191,9 @@ export class CreateEventBodyDTO {
   @Expose({ name: 'category_id' })
   readonly categoryId: string;
 
-  @JoiSchema(getClassSchema(PosterDTO).required().label('poster'))
-  @Type(() => PosterDTO)
-  readonly poster: PosterDTO;
+  @JoiSchema(getClassSchema(FileDto).required().label('poster'))
+  @Type(() => FileDto)
+  readonly poster: FileDto;
 
   @JoiSchema(joi.array().items(joi.string().uuid()).min(1).unique().required().label('benefits'))
   readonly benefits: string[];
