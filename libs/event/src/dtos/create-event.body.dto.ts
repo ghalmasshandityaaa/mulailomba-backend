@@ -61,21 +61,60 @@ class EventAdditionalInputDTO {
 }
 
 class EventTimelineDTO {
-  @JoiSchema(joi.string().trim().required().label('name'))
-  readonly name: string;
-
-  @JoiSchema(joi.string().trim().required().label('description'))
-  readonly description: string;
-
-  @JoiSchema(joi.date().format('YYYY-MM-DD').required().label('start_date'))
-  @Expose({ name: 'start_date' })
-  readonly startDate: Date;
+  @JoiSchema(
+    joi
+      .string()
+      .trim()
+      .when('timelineSetting', {
+        is: true,
+        then: joi.required(),
+        otherwise: joi.optional().allow(null),
+      })
+      .label('name'),
+  )
+  readonly name: string | null;
 
   @JoiSchema(
-    joi.date().format('YYYY-MM-DD').greater(joi.ref('startDate')).required().label('end_date'),
+    joi
+      .string()
+      .trim()
+      .when('timelineSetting', {
+        is: true,
+        then: joi.required(),
+        otherwise: joi.optional().allow(null),
+      })
+      .label('description'),
+  )
+  readonly description: string | null;
+
+  @JoiSchema(
+    joi
+      .date()
+      .format('YYYY-MM-DD')
+      .when('timelineSetting', {
+        is: true,
+        then: joi.required(),
+        otherwise: joi.optional().allow(null),
+      })
+      .label('start_date'),
+  )
+  @Expose({ name: 'start_date' })
+  readonly startDate: Date | null;
+
+  @JoiSchema(
+    joi
+      .date()
+      .format('YYYY-MM-DD')
+      .greater(joi.ref('startDate'))
+      .when('timelineSetting', {
+        is: true,
+        then: joi.required(),
+        otherwise: joi.optional().allow(null),
+      })
+      .label('end_date'),
   )
   @Expose({ name: 'end_date' })
-  readonly endDate: Date;
+  readonly endDate: Date | null;
 
   @JoiSchema(
     joi
@@ -97,7 +136,7 @@ class EventTimelineDTO {
       .required()
       .label('input'),
   )
-  readonly input: string;
+  readonly input: string | null;
 
   @JoiSchema(
     joi
@@ -114,8 +153,18 @@ class EventTimelineDTO {
 }
 
 class EventCategoryDTO {
-  @JoiSchema(joi.string().trim().required().label('name'))
-  readonly name: string;
+  @JoiSchema(
+    joi
+      .string()
+      .trim()
+      .when('isMultipleCategory', {
+        is: true,
+        then: joi.required(),
+        otherwise: joi.optional().allow(null),
+      })
+      .label('name'),
+  )
+  readonly name: string | null;
 
   @JoiSchema(joi.number().min(0).required().label('price'))
   readonly price: number;
@@ -161,6 +210,10 @@ class EventCategoryDTO {
   )
   @Expose({ name: 'end_date' })
   readonly endDate: Date;
+
+  @JoiSchema(joi.boolean().required().label('timeline_setting'))
+  @Expose({ name: 'timeline_setting' })
+  readonly timelineSetting: boolean;
 
   @JoiSchema(
     joi
@@ -214,4 +267,8 @@ export class CreateEventBodyDTO {
   // step 3
   @JoiSchema(joi.string().required().allow('').allow(null).label('description'))
   readonly description: string | null;
+
+  @JoiSchema(joi.boolean().required().label('is_multiple_category'))
+  @Expose({ name: 'is_multiple_category' })
+  readonly isMultipleCategory: boolean;
 }

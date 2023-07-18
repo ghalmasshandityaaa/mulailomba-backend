@@ -19,7 +19,7 @@ export class EventController {
   async createEvent(@Identity() identity: IIdentity, @Body() body: CreateEventBodyDTO) {
     const command = new CreateEventCommand({
       ...body,
-      userId: identity.id,
+      organizerId: identity.id,
       categories: body.eventCategories.map((category) => ({
         ...category,
         timelines: category.eventTimelines,
