@@ -8,23 +8,23 @@ export class TypeOrmEventTimelineEntity {
   @PrimaryColumn({ type: 'uuid' })
   readonly id: string;
 
-  @Column({ name: 'name' })
-  readonly name: string;
+  @Column({ name: 'name', type: 'varchar', nullable: true })
+  readonly name: string | null;
 
-  @Column({ name: 'description' })
-  readonly description: string;
+  @Column({ name: 'description', type: 'varchar', nullable: true })
+  readonly description: string | null;
 
-  @Column({ name: 'start_date' })
-  readonly startDate: Date;
+  @Column({ name: 'start_date', type: 'timestamp with time zone', nullable: true })
+  readonly startDate: Date | null;
 
-  @Column({ name: 'end_date' })
-  readonly endDate: Date;
+  @Column({ name: 'end_date', type: 'timestamp with time zone', nullable: true })
+  readonly endDate: Date | null;
 
   @Column({ name: 'type', type: 'enum', enum: EVENT_TIMELINE_TYPE })
   readonly type: EVENT_TIMELINE_TYPE;
 
-  @Column({ name: 'link' })
-  readonly link: string;
+  @Column({ name: 'input', type: 'varchar', nullable: true })
+  readonly input: string | null;
 
   @Column({
     name: 'additional_file',
@@ -38,7 +38,7 @@ export class TypeOrmEventTimelineEntity {
       },
     },
   })
-  readonly additionalFile: FileType;
+  readonly additionalFile: FileType | null;
 
   @Column({ name: 'created_at' })
   readonly createdAt: Date;

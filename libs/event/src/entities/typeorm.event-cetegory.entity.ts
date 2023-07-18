@@ -8,8 +8,8 @@ export class TypeOrmEventCategoryEntity {
   @PrimaryColumn({ type: 'uuid' })
   readonly id: string;
 
-  @Column({ name: 'name' })
-  readonly name: string;
+  @Column({ name: 'name', type: 'varchar', nullable: true })
+  readonly name: string | null;
 
   @Column({ name: 'price', default: 0 })
   readonly price: number;
@@ -28,6 +28,12 @@ export class TypeOrmEventCategoryEntity {
   })
   readonly quota: number;
 
+  @Column({ name: 'registration_start' })
+  readonly registrationStart: Date;
+
+  @Column({ name: 'registration_end' })
+  readonly registrationEnd: Date;
+
   @Column({ name: 'start_date' })
   readonly startDate: Date;
 
@@ -36,9 +42,6 @@ export class TypeOrmEventCategoryEntity {
 
   @Column({ name: 'timeline_setting', default: false })
   readonly timelineSetting: boolean;
-
-  @Column({ name: 'index' })
-  readonly index: number;
 
   @Column({ name: 'created_at' })
   readonly createdAt: Date;

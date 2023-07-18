@@ -30,8 +30,8 @@ export class TypeOrmEventEntity {
   })
   readonly poster: FileType;
 
-  @Column({ name: 'description' })
-  readonly description: string;
+  @Column({ name: 'description', type: 'varchar', nullable: true })
+  readonly description: string | null;
 
   @Column({ name: 'is_multiple_category', default: false })
   readonly isMultipleCategory: boolean;
@@ -63,9 +63,6 @@ export class TypeOrmEventEntity {
     },
   })
   readonly eligibility: string[];
-
-  @Column({ name: 'steps' })
-  readonly steps: string;
 
   @Column({ name: 'created_at' })
   readonly createdAt: Date;

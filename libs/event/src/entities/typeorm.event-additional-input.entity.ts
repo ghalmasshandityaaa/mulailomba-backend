@@ -18,9 +18,18 @@ export class TypeOrmEventAdditionalInputEntity {
 
   @Column({
     name: 'answer',
+    type: 'text',
     nullable: true,
+    transformer: {
+      from(value) {
+        return value ? JSON.parse(value) : [];
+      },
+      to(value) {
+        return value ? JSON.stringify(value) : [];
+      },
+    },
   })
-  readonly answer: string;
+  readonly answer: string[] | null;
 
   @Column({ name: 'is_required' })
   readonly isRequired: boolean;
