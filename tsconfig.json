@@ -72,6 +72,12 @@
       "@mulailomba/banner/*": [
         "libs/banner/src/*"
       ],
+      "@mulailomba/event": [
+        "libs/event/src"
+      ],
+      "@mulailomba/event/*": [
+        "libs/event/src/*"
+      ],
       "@mulailomba/token": [
         "libs/token/src"
       ],
