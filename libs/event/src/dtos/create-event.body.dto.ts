@@ -41,10 +41,7 @@ class EventAdditionalInputDTO {
       .array()
       .items(joi.string())
       .when('type', {
-        is: joi.valid(
-          EVENT_ADDITIONAL_INPUT_TYPE.MULTIPLE_CHOICE,
-          EVENT_ADDITIONAL_INPUT_TYPE.CHECKBOX,
-        ),
+        is: joi.valid(EVENT_ADDITIONAL_INPUT_TYPE.MULTIPLE, EVENT_ADDITIONAL_INPUT_TYPE.SINGLE),
         then: joi.array().min(1).required(),
         otherwise: joi.optional(),
       })
@@ -248,7 +245,7 @@ export class CreateEventBodyDTO {
   @Type(() => FileDto)
   readonly poster: FileDto;
 
-  @JoiSchema(joi.array().items(joi.string().uuid()).min(1).unique().required().label('benefits'))
+  @JoiSchema(joi.array().items(joi.string()).min(1).unique().required().label('benefits'))
   readonly benefits: string[];
 
   @JoiSchema(
