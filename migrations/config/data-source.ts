@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
-import { Migrations } from 'migrations';
 import { resolve } from 'path';
 import { DataSource } from 'typeorm';
+import { Migrations } from '..';
 
 dotenv.config({
   path: resolve(process.cwd(), '.env'),
