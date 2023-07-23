@@ -24,7 +24,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "sync": "git checkout development && git pull origin development && git push github development && git push private development",
     "prepare": "husky install",
-    "tsc": "./node_modules/.bin/tsc --noEmit"
+    "tsc": "./node_modules/.bin/tsc --noEmit",
+    "typeorm": "typeorm",
+    "migration:create": "typeorm migration:create",
+    "migration:show": "tsc && typeorm migration:show -d dist/migrations/config/data-source.js",
+    "migration:run": "tsc && typeorm migration:run -t -d dist/migrations/config/data-source.js",
+    "migration:revert": "tsc && typeorm migration:revert -d dist/migrations/config/data-source.js"
   },
   "dependencies": {
     "@joi/date": "^2.1.0",
