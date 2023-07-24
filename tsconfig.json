@@ -24,66 +24,28 @@
       }
     ],
     "paths": {
-      "@test": [
-        "tests"
-      ],
-      "@test/*": [
-        "tests/*"
-      ],
-      "@mulailomba/common": [
-        "libs/common/src"
-      ],
-      "@mulailomba/common/*": [
-        "libs/common/src/*"
-      ],
-      "@mulailomba/logger": [
-        "libs/logger/src"
-      ],
-      "@mulailomba/logger/*": [
-        "libs/logger/src/*"
-      ],
-      "@mulailomba/config": [
-        "libs/config/src"
-      ],
-      "@mulailomba/config/*": [
-        "libs/config/src/*"
-      ],
-      "@mulailomba/user": [
-        "libs/user/src"
-      ],
-      "@mulailomba/user/*": [
-        "libs/user/src/*"
-      ],
-      "@mulailomba/organizer": [
-        "libs/organizer/src"
-      ],
-      "@mulailomba/organizer/*": [
-        "libs/organizer/src/*"
-      ],
-      "@mulailomba/mailer": [
-        "libs/mailer/src"
-      ],
-      "@mulailomba/mailer/*": [
-        "libs/mailer/src/*"
-      ],
-      "@mulailomba/banner": [
-        "libs/banner/src"
-      ],
-      "@mulailomba/banner/*": [
-        "libs/banner/src/*"
-      ],
-      "@mulailomba/event": [
-        "libs/event/src"
-      ],
-      "@mulailomba/event/*": [
-        "libs/event/src/*"
-      ],
-      "@mulailomba/token": [
-        "libs/token/src"
-      ],
-      "@mulailomba/token/*": [
-        "libs/token/src/*"
-      ]
+      "@test": ["tests"],
+      "@test/*": ["tests/*"],
+      "@mulailomba/common": ["libs/common/src"],
+      "@mulailomba/common/*": ["libs/common/src/*"],
+      "@mulailomba/logger": ["libs/logger/src"],
+      "@mulailomba/logger/*": ["libs/logger/src/*"],
+      "@mulailomba/config": ["libs/config/src"],
+      "@mulailomba/config/*": ["libs/config/src/*"],
+      "@mulailomba/user": ["libs/user/src"],
+      "@mulailomba/user/*": ["libs/user/src/*"],
+      "@mulailomba/organizer": ["libs/organizer/src"],
+      "@mulailomba/organizer/*": ["libs/organizer/src/*"],
+      "@mulailomba/mailer": ["libs/mailer/src"],
+      "@mulailomba/mailer/*": ["libs/mailer/src/*"],
+      "@mulailomba/banner": ["libs/banner/src"],
+      "@mulailomba/banner/*": ["libs/banner/src/*"],
+      "@mulailomba/event": ["libs/event/src"],
+      "@mulailomba/event/*": ["libs/event/src/*"],
+      "@mulailomba/token": ["libs/token/src"],
+      "@mulailomba/token/*": ["libs/token/src/*"],
+      "@mulailomba/core": ["libs/core/src"],
+      "@mulailomba/core/*": ["libs/core/src/*"]
     }
   }
 }

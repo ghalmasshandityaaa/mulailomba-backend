@@ -131,7 +131,8 @@
       "^@mulailomba/mailer(|/.*)$": "<rootDir>/libs/mailer/src/$1",
       "^@mulailomba/banner(|/.*)$": "<rootDir>/libs/banner/src/$1",
       "^@mulailomba/event(|/.*)$": "<rootDir>/libs/event/src/$1",
-      "^@mulailomba/token(|/.*)$": "<rootDir>/libs/token/src/$1"
+      "^@mulailomba/token(|/.*)$": "<rootDir>/libs/token/src/$1",
+      "^@mulailomba/core(|/.*)$": "<rootDir>/libs/core/src/$1"
     }
   },
   "lint-staged": {
