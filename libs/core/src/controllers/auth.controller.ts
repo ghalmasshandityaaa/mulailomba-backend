@@ -20,7 +20,7 @@ import {
 import { TOKEN_SERVICE } from '@mulailomba/token/constants';
 import { ITokenService } from '@mulailomba/token/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
-import { IUserService, JsonUserProps, UserQueryModel } from '@mulailomba/user/interfaces';
+import { IUserService } from '@mulailomba/user/interfaces';
 import {
   Body,
   Controller,
@@ -32,8 +32,10 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { Response } from 'express';
 import { omit } from 'lodash';
+import { LoginUserCommand } from '../commands';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
   CheckAvailabilityEmailBodyDTO,
@@ -62,30 +64,18 @@ export class AuthController {
     private readonly organizerService: IOrganizerService,
     @Inject(TOKEN_SERVICE)
     private readonly tokenService: ITokenService,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Post('user/login')
   @HttpCode(HttpStatus.OK)
   async loginUser(@Res({ passthrough: true }) res: Response, @Body() body: UserLoginBodyDTO) {
-    const identity = await this.authService.validateUser(body.emailAddress, body.password);
-    const tokens = await this.tokenService.generateToken({
-      id: identity.id,
-      isActive: identity.isActive,
-      role: RolePermission.USER,
-    });
+    const command = new LoginUserCommand({ ...body });
+    const token = await this.commandBus.execute(command);
 
-    CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
+    CookieUtils.set(res, 'refresh_token', token.refreshToken);
 
-    const response = JsonUtils.toSnakeCase<UserQueryModel, JsonUserProps>(identity);
-
-    return {
-      access_token: tokens.accessToken,
-      identity: {
-        ...omit(response, 'password'),
-        created_at: DateUtils.toUnix(identity.createdAt),
-        updated_at: DateUtils.toUnix(identity.updatedAt),
-      },
-    };
+    return token;
   }
 
   @Post('organizer/login')

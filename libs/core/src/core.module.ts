@@ -4,10 +4,12 @@ import { TokenModule } from '@mulailomba/token';
 import { UserModule } from '@mulailomba/user';
 import { Module, Provider } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { CqrsModule } from '@nestjs/cqrs';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoogleGuard, JwtAuthGuard, RoleGuard } from '../../common/src/guards';
 import { FacebookGuard } from '../../common/src/guards/facebook.guard';
+import { CommandHandlers } from './commands';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from './constants';
 import { AuthController, AuthFacebookController, AuthGoogleController } from './controllers';
 import { TypeOrmAuthEntities } from './entities';
@@ -27,6 +29,7 @@ const Services: Provider<any>[] = [
 
 @Module({
   imports: [
+    CqrsModule,
     ConfigModule,
     TypeOrmModule.forFeature(TypeOrmAuthEntities),
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -37,6 +40,7 @@ const Services: Provider<any>[] = [
   ],
   controllers: [AuthController, AuthGoogleController, AuthFacebookController],
   providers: [
+    ...CommandHandlers,
     ...Services,
     JwtStrategy,
     GoogleStrategy,
