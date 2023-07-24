@@ -1,10 +1,8 @@
 import {
   Cookies,
   CookieUtils,
-  DateUtils,
   Identity,
   IIdentity,
-  JsonUtils,
   RolePermission,
   Roles,
   StringUtils,
@@ -12,11 +10,7 @@ import {
 import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
 import { OrganizerError } from '@mulailomba/organizer/errors';
-import {
-  IOrganizerService,
-  JsonOrganizerProps,
-  OrganizerQueryModel,
-} from '@mulailomba/organizer/interfaces';
+import { IOrganizerService } from '@mulailomba/organizer/interfaces';
 import { TOKEN_SERVICE } from '@mulailomba/token/constants';
 import { ITokenService } from '@mulailomba/token/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
@@ -34,8 +28,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Response } from 'express';
-import { omit } from 'lodash';
-import { LoginUserCommand } from '../commands';
+import { LoginOrganizerCommand, LoginUserCommand } from '../commands';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
   CheckAvailabilityEmailBodyDTO,
@@ -90,25 +83,12 @@ export class AuthController {
   ) {
     if (organizerRefreshToken) throw new AuthError.SignedIn();
 
-    const organizer = await this.authService.validateOrganizer(body.id, identity.id, body.password);
-    const tokens = await this.tokenService.generateToken({
-      id: organizer.id,
-      isActive: organizer.isActive,
-      role: RolePermission.ORGANIZER,
-    });
+    const command = new LoginOrganizerCommand({ ...body, userId: identity.id });
+    const token = await this.commandBus.execute(command);
 
-    CookieUtils.set(res, 'organizer_refresh_token', tokens.refreshToken);
+    CookieUtils.set(res, 'organizer_refresh_token', token.refreshToken);
 
-    const response = JsonUtils.toSnakeCase<OrganizerQueryModel, JsonOrganizerProps>(organizer);
-
-    return {
-      access_token: tokens.accessToken,
-      identity: {
-        ...omit(response, 'password'),
-        created_at: DateUtils.toUnix(organizer.createdAt),
-        updated_at: DateUtils.toUnix(organizer.updatedAt),
-      },
-    };
+    return token;
   }
 
   @Post('user/register')
