@@ -8,10 +8,9 @@ Project Description
 
 ### In Progress
 
-- [ ] refactor/refresh-token
-
 ### Done ✓
 
+- [x] refactor/refresh-token
 - [x] refactor/register-organizer
 - [x] refactor/organizer-logout
 - [x] refactor/user-logout
