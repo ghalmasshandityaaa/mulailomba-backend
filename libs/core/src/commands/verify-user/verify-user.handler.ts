@@ -7,9 +7,9 @@ import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { VerifyUserCommand } from './verify-user.command';
 
 @CommandHandler(VerifyUserCommand)
-export class ResendActivationCodeHandler implements ICommandHandler<VerifyUserCommand, void> {
+export class VerifyUserCodeHandler implements ICommandHandler<VerifyUserCommand, void> {
   constructor(
-    @InjectPinoLogger(ResendActivationCodeHandler.name)
+    @InjectPinoLogger(VerifyUserCodeHandler.name)
     private readonly logger: PinoLogger,
     @Inject(ACTIVATION_CODE_SERVICE)
     private readonly service: IActivationCodeService,

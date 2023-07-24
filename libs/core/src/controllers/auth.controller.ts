@@ -34,6 +34,7 @@ import {
   ResendActivationCodeCommand,
 } from '../commands';
 import { CheckAvailabilityEmailCommand } from '../commands/check-availability-email/check-availability-email.command';
+import { OrganizerLogoutCommand } from '../commands/organizer-logout/organizer-logout.command';
 import { VerifyUserCommand } from '../commands/verify-user/verify-user.command';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
@@ -140,11 +141,8 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Identity() identity: IIdentity,
   ) {
-    const organizer = await this.organizerService.findAggregateById(identity.id);
-    if (!organizer) throw new OrganizerError.NotFound();
-
-    organizer.logout();
-    organizer.commit();
+    const command = new OrganizerLogoutCommand({ id: identity.id });
+    await this.commandBus.execute(command);
 
     CookieUtils.delete(res, ['organizer_refresh_token']);
   }
