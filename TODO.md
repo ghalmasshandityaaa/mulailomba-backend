@@ -7,12 +7,12 @@ Project Description
 ### Todo
 
 - [ ] refactor/refresh-token
-- [ ] refactor/register-organizer
 
 ### In Progress
 
 ### Done ✓
 
+- [x] refactor/register-organizer
 - [x] refactor/organizer-logout
 - [x] refactor/user-logout
 - [x] refactor/user-verify

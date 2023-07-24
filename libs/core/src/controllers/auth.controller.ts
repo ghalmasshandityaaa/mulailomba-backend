@@ -8,7 +8,6 @@ import {
 } from '@mulailomba/common';
 import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
-import { OrganizerError } from '@mulailomba/organizer/errors';
 import { IOrganizerService } from '@mulailomba/organizer/interfaces';
 import { TOKEN_SERVICE } from '@mulailomba/token/constants';
 import { ITokenService } from '@mulailomba/token/interfaces';
@@ -35,6 +34,7 @@ import {
 } from '../commands';
 import { CheckAvailabilityEmailCommand } from '../commands/check-availability-email/check-availability-email.command';
 import { OrganizerLogoutCommand } from '../commands/organizer-logout/organizer-logout.command';
+import { RegisterOrganizerCommand } from '../commands/register-organizer/register-organizer.command';
 import { VerifyUserCommand } from '../commands/verify-user/verify-user.command';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
@@ -120,9 +120,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RolePermission.USER)
   async registerOrganizer(@Body() body: OrganizerRegisterBodyDTO, @Identity() identity: IIdentity) {
-    const organizer = await this.organizerService.findByEmail(body.emailAddress);
-    if (organizer) throw new OrganizerError.EmailTaken();
-    await this.organizerService.create({ ...body, userId: identity.id });
+    const command = new RegisterOrganizerCommand({ ...body, userId: identity.id });
+    return await this.commandBus.execute(command);
   }
 
   @Post('user/logout')
