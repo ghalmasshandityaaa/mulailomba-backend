@@ -28,7 +28,12 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Response } from 'express';
-import { LoginOrganizerCommand, LoginUserCommand, RegisterUserCommand } from '../commands';
+import {
+  LoginOrganizerCommand,
+  LoginUserCommand,
+  RegisterUserCommand,
+  ResendActivationCodeCommand,
+} from '../commands';
 import { CheckAvailabilityEmailCommand } from '../commands/check-availability-email/check-availability-email.command';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
@@ -182,6 +187,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resendActivationCode(@Cookies('email') email: any) {
     if (!email) throw new AuthError.ForbiddenAccess();
-    await this.authService.sendActivationCode(email as string);
+
+    const command = new ResendActivationCodeCommand({ email });
+    return await this.commandBus.execute(command);
   }
 }

@@ -6,7 +6,6 @@ Project Description
 
 ### Todo
 
-- [ ] refactor/resend-activation-code
 - [ ] refactor/user-verify
 - [ ] refactor/refresh-token
 - [ ] refactor/organizer-logout
@@ -15,6 +14,7 @@ Project Description
 
 ### In Progress
 
-- [ ] refactor/register-user
-
 ### Done ✓
+
+- [x] refactor/resend-activation-code
+- [x] refactor/register-user
