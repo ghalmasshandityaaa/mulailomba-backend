@@ -28,7 +28,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Response } from 'express';
-import { LoginOrganizerCommand, LoginUserCommand } from '../commands';
+import { LoginOrganizerCommand, LoginUserCommand, RegisterUserCommand } from '../commands';
 import { CheckAvailabilityEmailCommand } from '../commands/check-availability-email/check-availability-email.command';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
@@ -100,21 +100,13 @@ export class AuthController {
     @Body() body: UserRegisterBodyDTO,
   ) {
     if (!emailAddress) throw new AuthError.ForbiddenAccess();
-    const entity = await this.userService.create({
-      ...body,
-      phone: body.phoneNumber,
-      emailAddress,
-      isActive: true,
-    });
-    const tokens = await this.tokenService.generateToken({
-      id: entity.id,
-      isActive: entity.props.isActive,
-      role: RolePermission.USER,
-    });
+    const command = new RegisterUserCommand({ ...body, phone: body.phoneNumber, emailAddress });
+    const tokens = await this.commandBus.execute(command);
+
     CookieUtils.delete(res, ['email']);
     CookieUtils.set(res, 'refresh_token', tokens.refreshToken);
 
-    return { access_token: tokens.accessToken };
+    return tokens;
   }
 
   @Post('organizer/register')
