@@ -29,6 +29,7 @@ import {
 import { CommandBus } from '@nestjs/cqrs';
 import { Response } from 'express';
 import { LoginOrganizerCommand, LoginUserCommand } from '../commands';
+import { CheckAvailabilityEmailCommand } from '../commands/check-availability-email/check-availability-email.command';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
   CheckAvailabilityEmailBodyDTO,
@@ -172,8 +173,10 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Body() body: CheckAvailabilityEmailBodyDTO,
   ) {
-    await this.authService.checkAvailabilityEmail(body.emailAddress);
+    const command = new CheckAvailabilityEmailCommand({ ...body });
+    await this.commandBus.execute(command);
     CookieUtils.set(res, 'email', body.emailAddress);
+    return;
   }
 
   @Post('user/verify')
