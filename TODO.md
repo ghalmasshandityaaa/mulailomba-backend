@@ -6,7 +6,6 @@ Project Description
 
 ### Todo
 
-- [ ] refactor/user-verify
 - [ ] refactor/refresh-token
 - [ ] refactor/organizer-logout
 - [ ] refactor/user-logout
@@ -16,5 +15,6 @@ Project Description
 
 ### Done ✓
 
+- [x] refactor/user-verify
 - [x] refactor/resend-activation-code
 - [x] refactor/register-user

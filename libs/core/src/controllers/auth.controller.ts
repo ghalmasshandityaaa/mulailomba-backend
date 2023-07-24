@@ -5,7 +5,6 @@ import {
   IIdentity,
   RolePermission,
   Roles,
-  StringUtils,
 } from '@mulailomba/common';
 import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
@@ -35,6 +34,7 @@ import {
   ResendActivationCodeCommand,
 } from '../commands';
 import { CheckAvailabilityEmailCommand } from '../commands/check-availability-email/check-availability-email.command';
+import { VerifyUserCommand } from '../commands/verify-user/verify-user.command';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
   CheckAvailabilityEmailBodyDTO,
@@ -179,8 +179,8 @@ export class AuthController {
   @Post('user/verify')
   @HttpCode(HttpStatus.OK)
   async verifyActivationCode(@Body() body: VerifyAccountBodyDTO) {
-    const [email, code] = StringUtils.decrypt(body.id).split(':');
-    await this.acService.verify(email, code);
+    const command = new VerifyUserCommand({ ...body });
+    return await this.commandBus.execute(command);
   }
 
   @Post('resend-activation-code')
