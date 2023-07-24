@@ -7,19 +7,12 @@ import {
   Roles,
 } from '@mulailomba/common';
 import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
-import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
-import { IOrganizerService } from '@mulailomba/organizer/interfaces';
-import { TOKEN_SERVICE } from '@mulailomba/token/constants';
-import { ITokenService } from '@mulailomba/token/interfaces';
-import { USER_SERVICE } from '@mulailomba/user/constants';
-import { IUserService } from '@mulailomba/user/interfaces';
 import {
   Body,
   Controller,
   Headers,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
   Res,
   UseGuards,
@@ -29,6 +22,7 @@ import { Response } from 'express';
 import {
   LoginOrganizerCommand,
   LoginUserCommand,
+  RefreshTokenCommand,
   RegisterUserCommand,
   ResendActivationCodeCommand,
 } from '../commands';
@@ -36,7 +30,6 @@ import { CheckAvailabilityEmailCommand } from '../commands/check-availability-em
 import { OrganizerLogoutCommand } from '../commands/organizer-logout/organizer-logout.command';
 import { RegisterOrganizerCommand } from '../commands/register-organizer/register-organizer.command';
 import { VerifyUserCommand } from '../commands/verify-user/verify-user.command';
-import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from '../constants';
 import {
   CheckAvailabilityEmailBodyDTO,
   OrganizerLoginBodyDTO,
@@ -46,26 +39,13 @@ import {
   VerifyAccountBodyDTO,
 } from '../dtos';
 import { AuthError } from '../errors';
-import { IActivationCodeService, IAuthService } from '../interfaces';
 
 @Controller({
   path: 'auth',
   version: '1',
 })
 export class AuthController {
-  constructor(
-    @Inject(AUTH_SERVICE)
-    private readonly authService: IAuthService,
-    @Inject(ACTIVATION_CODE_SERVICE)
-    private readonly acService: IActivationCodeService,
-    @Inject(USER_SERVICE)
-    private readonly userService: IUserService,
-    @Inject(ORGANIZER_SERVICE)
-    private readonly organizerService: IOrganizerService,
-    @Inject(TOKEN_SERVICE)
-    private readonly tokenService: ITokenService,
-    private readonly commandBus: CommandBus,
-  ) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Post('user/login')
   @HttpCode(HttpStatus.OK)
@@ -156,9 +136,8 @@ export class AuthController {
     const token = type?.toUpperCase() === 'ORGANIZER' ? organizerRefreshToken : refreshToken;
     if (!token) throw new AuthError.ForbiddenAccess();
 
-    const accessToken = await this.authService.refreshTokens(token);
-
-    return { access_token: accessToken };
+    const command = new RefreshTokenCommand({ token });
+    return await this.commandBus.execute(command);
   }
 
   @Post('check-availability-email')

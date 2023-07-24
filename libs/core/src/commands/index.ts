@@ -6,6 +6,8 @@ import { LoginUserCommand } from './login-user/login-user.command';
 import { LoginUserHandler } from './login-user/login-user.handler';
 import { OrganizerLogoutCommand } from './organizer-logout/organizer-logout.command';
 import { OrganizerLogoutHandler } from './organizer-logout/organizer-logout.handler';
+import { RefreshTokenCommand } from './refresh-token/refresh-token.command';
+import { RefreshTokenHandler } from './refresh-token/refresh-token.handler';
 import { RegisterOrganizerCommand } from './register-organizer/register-organizer.command';
 import { RegisterOrganizerCodeHandler } from './register-organizer/register-organizer.handler';
 import { RegisterUserCommand } from './register-user/register-user.command';
@@ -24,6 +26,7 @@ export {
   OrganizerLogoutCommand,
   RegisterOrganizerCommand,
   VerifyUserCommand,
+  RefreshTokenCommand,
 };
 
 export const CommandHandlers = [
@@ -35,4 +38,5 @@ export const CommandHandlers = [
   OrganizerLogoutHandler,
   RegisterOrganizerCodeHandler,
   VerifyUserHandler,
+  RefreshTokenHandler,
 ];

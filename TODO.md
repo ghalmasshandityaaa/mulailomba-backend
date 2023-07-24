@@ -6,9 +6,9 @@ Project Description
 
 ### Todo
 
-- [ ] refactor/refresh-token
-
 ### In Progress
+
+- [ ] refactor/refresh-token
 
 ### Done ✓
 
