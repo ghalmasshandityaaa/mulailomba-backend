@@ -7,6 +7,7 @@ import {
   LoggerConfigService,
   ServerConfigModule,
 } from '@mulailomba/config';
+import { CoreModule } from '@mulailomba/core/core.module';
 import { EventModule } from '@mulailomba/event';
 import { LoggerModule } from '@mulailomba/logger';
 import { OrganizerModule } from '@mulailomba/organizer';
@@ -15,7 +16,6 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health';
 import { TypeOrmOptionsProvider } from './providers';
 
@@ -37,7 +37,7 @@ import { TypeOrmOptionsProvider } from './providers';
       }),
       inject: [LoggerConfigService],
     }),
-    AuthModule,
+    CoreModule,
     BannerModule,
     EventModule,
     OrganizerModule,

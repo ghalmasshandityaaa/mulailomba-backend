@@ -6,11 +6,11 @@ import { Module, Provider } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GoogleGuard, JwtAuthGuard, RoleGuard } from '../../common/src/guards';
+import { FacebookGuard } from '../../common/src/guards/facebook.guard';
 import { ACTIVATION_CODE_SERVICE, AUTH_SERVICE } from './constants';
 import { AuthController, AuthFacebookController, AuthGoogleController } from './controllers';
 import { TypeOrmAuthEntities } from './entities';
-import { GoogleGuard, JwtAuthGuard, RoleGuard } from './guard';
-import { FacebookGuard } from './guard/facebook.guard';
 import { ActivationCodeService, AuthService } from './services';
 import { FacebookStrategy, GoogleStrategy, JwtStrategy } from './strategies';
 
@@ -48,4 +48,4 @@ const Services: Provider<any>[] = [
   ],
   exports: [...Services],
 })
-export class AuthModule {}
+export class CoreModule {}

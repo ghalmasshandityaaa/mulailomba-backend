@@ -1,7 +1,7 @@
 import { Identity, IIdentity, RolePermission, Roles } from '@mulailomba/common';
+import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
 import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { JwtAuthGuard, RoleGuard } from 'src/auth/guard';
 import { CreateEventCommand } from '../commands/create-event/create-event.command';
 import { CreateEventBodyDTO } from '../dtos';
 

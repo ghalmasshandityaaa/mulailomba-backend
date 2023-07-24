@@ -1,4 +1,5 @@
 import { RolePermission, StringUtils } from '@mulailomba/common';
+import { AuthError } from '@mulailomba/core/errors';
 import { ORGANIZER_SERVICE, ORGANIZER_WRITE_REPOSITORY } from '@mulailomba/organizer/constants';
 import { OrganizerError } from '@mulailomba/organizer/errors';
 import { IOrganizerService, IOrganizerWriteRepository } from '@mulailomba/organizer/interfaces';
@@ -7,7 +8,6 @@ import { ITokenService } from '@mulailomba/token/interfaces';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { AuthError } from 'src/auth/errors';
 import { SwitchAccountCommand } from './switch-account.command';
 import { SwitchAccountResult } from './switch-account.result';
 

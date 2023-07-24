@@ -6,11 +6,11 @@ import {
   RolePermission,
   Roles,
 } from '@mulailomba/common';
+import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
+import { AuthError } from '@mulailomba/core/errors';
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Response } from 'express';
-import { AuthError } from 'src/auth/errors';
-import { JwtAuthGuard, RoleGuard } from 'src/auth/guard';
 import { SwitchAccountCommand } from '../commands';
 import { SwitchAccountBodyDTO } from '../dtos';
 import { FindOrganizerQuery } from '../queries';

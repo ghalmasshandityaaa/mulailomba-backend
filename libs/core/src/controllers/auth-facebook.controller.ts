@@ -1,11 +1,11 @@
 import { CookieUtils, RolePermission } from '@mulailomba/common';
+import { FacebookGuard } from '@mulailomba/common/guards';
 import { TOKEN_SERVICE } from '@mulailomba/token/constants';
 import { ITokenService } from '@mulailomba/token/interfaces';
 import { USER_SERVICE } from '@mulailomba/user/constants';
 import { IUserService } from '@mulailomba/user/interfaces';
 import { Controller, Get, HttpCode, HttpStatus, Inject, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { FacebookGuard } from '../guard/facebook.guard';
 
 @Controller({
   path: 'auth/facebook',

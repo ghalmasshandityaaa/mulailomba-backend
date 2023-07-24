@@ -1,8 +1,8 @@
 import { IIdentity } from '@mulailomba/common';
+import { AuthError } from '@mulailomba/core/errors';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
-import { AuthError } from '../errors';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

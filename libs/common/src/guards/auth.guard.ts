@@ -1,6 +1,6 @@
+import { AuthError } from '@mulailomba/core/errors';
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthError } from '../errors';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

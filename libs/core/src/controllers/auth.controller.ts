@@ -9,6 +9,7 @@ import {
   Roles,
   StringUtils,
 } from '@mulailomba/common';
+import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
 import { OrganizerError } from '@mulailomba/organizer/errors';
 import {
@@ -43,7 +44,6 @@ import {
   VerifyAccountBodyDTO,
 } from '../dtos';
 import { AuthError } from '../errors';
-import { JwtAuthGuard, RoleGuard } from '../guard';
 import { IActivationCodeService, IAuthService } from '../interfaces';
 
 @Controller({

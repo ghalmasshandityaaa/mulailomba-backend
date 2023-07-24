@@ -1,7 +1,7 @@
 import { Identity, IIdentity, RolePermission, Roles } from '@mulailomba/common';
+import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
 import { Controller, Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { JwtAuthGuard, RoleGuard } from 'src/auth/guard';
 import { FindUserByIdQuery } from '../queries';
 
 @Controller({
