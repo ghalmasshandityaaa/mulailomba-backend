@@ -22,7 +22,6 @@ export class TypeOrmEventReadRepository extends BaseReadRepository implements IE
     organizerId: string,
     params: IPaginatedQuery & ISortableQuery & IFilterableQuery & ISearchableQuery,
   ): Promise<PaginatedCollection<EventQueryModel>> {
-    console.log(0, params);
     const { page, pageSize, offset } = this.getPaginationParams(params.page, params.pageSize);
 
     const query = this.dataSource
