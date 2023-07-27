@@ -51,7 +51,6 @@ export class EventController {
       organizerId: identity.id,
     });
 
-    console.log(10, params);
     return this.queryBus.execute(query);
   }
 }
