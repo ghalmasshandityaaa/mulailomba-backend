@@ -1,7 +1,17 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import { TypeOrmEventBenefitEntity } from './typeorm.event-benefit.entity';
 import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
 import { TypeOrmEventEligibilityEntity } from './typeorm.event-eligibility.entity';
+import { TypeOrmOrganizerEntity } from './typeorm.organizer.entity';
 
 export type FileType = {
   publicId: string;
@@ -87,4 +97,8 @@ export class TypeOrmEventEntity {
 
   @OneToMany(() => TypeOrmEventCategoryEntity, (eventCategory) => eventCategory.event)
   readonly categories: TypeOrmEventCategoryEntity[];
+
+  @ManyToOne(() => TypeOrmOrganizerEntity, (organizer) => organizer.events)
+  @JoinColumn({ name: 'organizer_id' })
+  readonly organizer: TypeOrmOrganizerEntity;
 }

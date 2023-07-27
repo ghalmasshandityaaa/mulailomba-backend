@@ -1,3 +1,4 @@
+export * from './collection.interface';
 export * from './http-response.interface';
 export * from './identity.interface';
 export * from './query.interface';

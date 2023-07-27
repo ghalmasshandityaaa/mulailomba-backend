@@ -4,7 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommandHandlers } from './commands';
 import { EventController } from './controllers';
 import { TypeOrmEventEntities } from './entities';
-import { CREATE_EVENT_UNIT_OF_WORK_FACTORY } from './event.constants';
+import { CREATE_EVENT_UNIT_OF_WORK_FACTORY, EVENT_READ_REPOSITORY } from './event.constants';
+import { QueryHandlers } from './queries';
+import { TypeOrmEventReadRepository } from './repositories';
 import { CreateEventUnitOfWorkFactory } from './unit-of-work';
 
 const Domains: Provider[] = [
@@ -14,10 +16,17 @@ const Domains: Provider[] = [
   },
 ];
 
+const Repositories: Provider[] = [
+  {
+    provide: EVENT_READ_REPOSITORY,
+    useClass: TypeOrmEventReadRepository,
+  },
+];
+
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature(TypeOrmEventEntities)],
   controllers: [EventController],
-  providers: [...Domains, ...CommandHandlers],
+  providers: [...Domains, ...CommandHandlers, ...QueryHandlers, ...Repositories],
   exports: [],
 })
 export class EventModule {}

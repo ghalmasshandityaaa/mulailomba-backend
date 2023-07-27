@@ -52,5 +52,5 @@ export class TypeOrmEventTimelineEntity {
   // relations
   @ManyToOne(() => TypeOrmEventCategoryEntity, (eventCategory) => eventCategory.timelines)
   @JoinColumn({ name: 'event_category_id' })
-  readonly categories: TypeOrmEventCategoryEntity;
+  readonly category: TypeOrmEventCategoryEntity;
 }
