@@ -57,7 +57,7 @@ export class TypeOrmEventCategoryEntity {
   @JoinColumn({ name: 'event_id' })
   readonly event: TypeOrmEventEntity;
 
-  @OneToMany(() => TypeOrmEventTimelineEntity, (timeline) => timeline.categories)
+  @OneToMany(() => TypeOrmEventTimelineEntity, (timeline) => timeline.category)
   readonly timelines: TypeOrmEventTimelineEntity[];
 
   @OneToMany(() => TypeOrmEventAdditionalInputEntity, (input) => input.category)

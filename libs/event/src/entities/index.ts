@@ -4,6 +4,7 @@ import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
 import { TypeOrmEventEligibilityEntity } from './typeorm.event-eligibility.entity';
 import { TypeOrmEventTimelineEntity } from './typeorm.event-timeline.entity';
 import { TypeOrmEventEntity } from './typeorm.event.entity';
+import { TypeOrmOrganizerEntity } from './typeorm.organizer.entity';
 
 export const TypeOrmEventEntities = [
   TypeOrmEventEntity,
@@ -12,4 +13,5 @@ export const TypeOrmEventEntities = [
   TypeOrmEventBenefitEntity,
   TypeOrmEventCategoryEntity,
   TypeOrmEventEligibilityEntity,
+  TypeOrmOrganizerEntity,
 ];
