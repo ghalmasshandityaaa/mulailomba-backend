@@ -3,6 +3,7 @@ import {
   JoiSchemaErrorFilter,
   JoiSchemaValidationPipe,
   NotFoundErrorFilter,
+  PayloadTooLargeExceptionErrorFilter,
 } from '@mulailomba/common';
 import { ServerConfigService } from '@mulailomba/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
@@ -31,7 +32,11 @@ async function bootstrap() {
       new JoiSchemaValidationPipe(),
     )
     .useGlobalInterceptors(new ApiVersionInterceptor('1.0.0'))
-    .useGlobalFilters(new JoiSchemaErrorFilter(), new NotFoundErrorFilter())
+    .useGlobalFilters(
+      new JoiSchemaErrorFilter(),
+      new NotFoundErrorFilter(),
+      new PayloadTooLargeExceptionErrorFilter(),
+    )
     .enableVersioning({
       type: VersioningType.URI,
     })

@@ -45,7 +45,9 @@
       "@mulailomba/token": ["libs/token/src"],
       "@mulailomba/token/*": ["libs/token/src/*"],
       "@mulailomba/core": ["libs/core/src"],
-      "@mulailomba/core/*": ["libs/core/src/*"]
+      "@mulailomba/core/*": ["libs/core/src/*"],
+      "@mulailomba/cloudinary": ["libs/cloudinary/src"],
+      "@mulailomba/cloudinary/*": ["libs/cloudinary/src/*"]
     }
   }
 }

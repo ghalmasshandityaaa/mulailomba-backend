@@ -16,6 +16,7 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FileModule } from './file';
 import { HealthModule } from './health';
 import { TypeOrmOptionsProvider } from './providers';
 
@@ -42,6 +43,7 @@ import { TypeOrmOptionsProvider } from './providers';
     EventModule,
     OrganizerModule,
     TokenModule,
+    FileModule,
   ],
   controllers: [],
   providers: [
