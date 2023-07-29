@@ -14,7 +14,7 @@ export class FileUtils {
         params = { type: 'IMAGES' };
       }
 
-      const type = req?.headers?.[`x-resource-type`];
+      const type = req?.headers?.[`x-file-type`];
       if (type) params.type = type.toUpperCase();
 
       let regex: RegExp;
