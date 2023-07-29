@@ -20,7 +20,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { omit } from 'lodash';
 import { UploadFileBodyDTO } from './file.dto';
 
 @Controller({
@@ -46,9 +45,7 @@ export class FileController {
     @UploadedFile() file: UploadedFileType,
     @Body() body: UploadFileBodyDTO,
   ) {
-    console.log(1, omit(file, 'buffer', 'base64'));
     const { filename } = FileUtils.generateFilename(file, identity.id);
-    console.log(2, omit(file, 'buffer', 'base64'));
     const result = await this.cloudinary.signedUpload(file, {
       use_filename: true,
       unique_filename: false,
