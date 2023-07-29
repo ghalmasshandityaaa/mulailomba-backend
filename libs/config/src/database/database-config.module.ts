@@ -9,6 +9,7 @@ import { DatabaseConfigService } from './database-config.service';
       cache: true,
       validationSchema: Joi.object({
         PG_DATABASE_URL: Joi.string().required(),
+        PG_DATABASE_SSL: Joi.boolean().default(false),
       }),
       validationOptions: {
         abortEarly: false,

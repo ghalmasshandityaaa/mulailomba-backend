@@ -9,4 +9,8 @@ export class DatabaseConfigService implements DatabaseConfig {
   get url() {
     return this.config.getOrThrow('PG_DATABASE_URL');
   }
+
+  get ssl() {
+    return this.config.getOrThrow('PG_DATABASE_SSL') === 'true';
+  }
 }

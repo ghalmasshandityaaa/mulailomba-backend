@@ -21,6 +21,11 @@ export class TypeOrmOptionsProvider implements TypeOrmOptionsFactory {
       synchronize: false,
       logging: true,
       logger: this.logger,
+      ssl: this.config.ssl
+        ? {
+            rejectUnauthorized: false,
+          }
+        : false,
     };
   }
 }
