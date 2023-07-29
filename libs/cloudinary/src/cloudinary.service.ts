@@ -30,9 +30,9 @@ export class CloudinaryService {
       const res = await cloudinary.api.ping();
       this.logger.info(`Cloudinary connection ${res.status}`);
       return 'ok';
-    } catch (err) {
+    } catch (error) {
       this.logger.warn('Cloudinary connection failed.');
-      this.logger.error(err.error);
+      this.logger.error({ error });
       return 'error';
     }
   }
