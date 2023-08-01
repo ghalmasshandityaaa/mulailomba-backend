@@ -134,7 +134,8 @@
       "^@mulailomba/event(|/.*)$": "<rootDir>/libs/event/src/$1",
       "^@mulailomba/token(|/.*)$": "<rootDir>/libs/token/src/$1",
       "^@mulailomba/core(|/.*)$": "<rootDir>/libs/core/src/$1",
-      "^@mulailomba/cloudinary(|/.*)$": "<rootDir>/libs/cloudinary/src/$1"
+      "^@mulailomba/cloudinary(|/.*)$": "<rootDir>/libs/cloudinary/src/$1",
+      "^@mulailomba/file(|/.*)$": "<rootDir>/libs/file/src/$1"
     }
   },
   "lint-staged": {

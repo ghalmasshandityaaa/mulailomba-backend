@@ -47,7 +47,9 @@
       "@mulailomba/core": ["libs/core/src"],
       "@mulailomba/core/*": ["libs/core/src/*"],
       "@mulailomba/cloudinary": ["libs/cloudinary/src"],
-      "@mulailomba/cloudinary/*": ["libs/cloudinary/src/*"]
+      "@mulailomba/cloudinary/*": ["libs/cloudinary/src/*"],
+      "@mulailomba/file": ["libs/file/src"],
+      "@mulailomba/file/*": ["libs/file/src/*"]
     }
   }
 }
