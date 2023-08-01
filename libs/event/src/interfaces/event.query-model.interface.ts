@@ -1,5 +1,5 @@
 import { FileType } from '../entities/typeorm.event.entity';
-import { EVENT_ADDITIONAL_INPUT_TYPE, EVENT_TIMELINE_TYPE } from '../event.constants';
+import { EVENT_PREREQUISITE_TYPE, EVENT_TIMELINE_TYPE } from '../event.constants';
 
 export interface EventQueryModel {
   id: string;
@@ -32,7 +32,7 @@ export interface EventCategoryQueryModel {
   eventId: string;
   event: EventQueryModel;
   timelines: EventTimelineQueryModel[];
-  additionalInputs: EventAdditionalInputs[];
+  prerequisites: EventPrerequisiteQueryModel[];
 }
 
 export interface EventTimelineQueryModel {
@@ -50,11 +50,11 @@ export interface EventTimelineQueryModel {
   category: EventCategoryQueryModel;
 }
 
-interface EventAdditionalInputs {
+interface EventPrerequisiteQueryModel {
   id: string;
   name: string;
   description: string;
-  type: EVENT_ADDITIONAL_INPUT_TYPE;
+  type: EVENT_PREREQUISITE_TYPE;
   answer: string[] | null;
   isRequired: boolean;
   index: number;

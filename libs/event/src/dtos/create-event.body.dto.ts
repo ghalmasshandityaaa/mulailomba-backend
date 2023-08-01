@@ -5,7 +5,7 @@ import * as JoiImport from 'joi';
 import { getClassSchema, JoiSchema } from 'joi-class-decorators';
 import { values } from 'lodash';
 import { DateTime } from 'luxon';
-import { EVENT_ADDITIONAL_INPUT_TYPE, EVENT_TIMELINE_TYPE } from '../event.constants';
+import { EVENT_PREREQUISITE_TYPE, EVENT_TIMELINE_TYPE } from '../event.constants';
 
 const joi: JoiImport.Root = JoiImport.extend(JoiDate);
 
@@ -19,7 +19,7 @@ class FileDto {
   readonly secureUrl: string;
 }
 
-class EventAdditionalInputDTO {
+class EventPrerequisiteDTO {
   @JoiSchema(joi.string().trim().required().label('name'))
   readonly name: string;
 
@@ -30,18 +30,18 @@ class EventAdditionalInputDTO {
     joi
       .string()
       .trim()
-      .valid(...values(EVENT_ADDITIONAL_INPUT_TYPE))
+      .valid(...values(EVENT_PREREQUISITE_TYPE))
       .required()
       .label('type'),
   )
-  readonly type: EVENT_ADDITIONAL_INPUT_TYPE;
+  readonly type: EVENT_PREREQUISITE_TYPE;
 
   @JoiSchema(
     joi
       .array()
       .items(joi.string())
       .when('type', {
-        is: joi.valid(EVENT_ADDITIONAL_INPUT_TYPE.MULTIPLE, EVENT_ADDITIONAL_INPUT_TYPE.SINGLE),
+        is: joi.valid(EVENT_PREREQUISITE_TYPE.MULTIPLE, EVENT_PREREQUISITE_TYPE.SINGLE),
         then: joi.array().min(1).required(),
         otherwise: joi.optional(),
       })
@@ -213,15 +213,11 @@ class EventCategoryDTO {
   readonly timelineSetting: boolean;
 
   @JoiSchema(
-    joi
-      .array()
-      .items(getClassSchema(EventAdditionalInputDTO))
-      .optional()
-      .label('additional_inputs'),
+    joi.array().items(getClassSchema(EventPrerequisiteDTO)).optional().label('prerequisites'),
   )
-  @Expose({ name: 'additional_inputs' })
-  @Type(() => EventAdditionalInputDTO)
-  readonly additionalInputs: EventAdditionalInputDTO[];
+  @Expose({ name: 'prerequisites' })
+  @Type(() => EventPrerequisiteDTO)
+  readonly prerequisite: EventPrerequisiteDTO[];
 
   // step 4
   @JoiSchema(

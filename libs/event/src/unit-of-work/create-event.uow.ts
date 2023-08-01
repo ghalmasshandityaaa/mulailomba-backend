@@ -1,13 +1,13 @@
 import { TypeOrmUnitOfWork } from '@mulailomba/common/unit-of-works';
 import { DataSource, Repository } from 'typeorm';
 import {
-  EventAdditionalInputEntity,
   EventCategoryEntity,
   EventEntity,
+  EventPrerequisiteEntity,
   EventTimelineEntity,
 } from '../domains';
-import { TypeOrmEventAdditionalInputEntity } from '../entities/typeorm.event-additional-input.entity';
 import { TypeOrmEventCategoryEntity } from '../entities/typeorm.event-cetegory.entity';
+import { TypeOrmEventPrerequisiteEntity } from '../entities/typeorm.event-prerequisite.entity';
 import { TypeOrmEventTimelineEntity } from '../entities/typeorm.event-timeline.entity';
 import { TypeOrmEventEntity } from '../entities/typeorm.event.entity';
 import { ICreateEventUnitOfWork } from '../interfaces/unit-of-work';
@@ -24,8 +24,8 @@ export class CreateEventUnitOfWork extends TypeOrmUnitOfWork implements ICreateE
   get eventTimelineRepository(): Repository<TypeOrmEventTimelineEntity> {
     return this.getRepository(TypeOrmEventTimelineEntity);
   }
-  get eventAdditionalInputRepository(): Repository<TypeOrmEventAdditionalInputEntity> {
-    return this.getRepository(TypeOrmEventAdditionalInputEntity);
+  get eventPrerequisiteRepository(): Repository<TypeOrmEventPrerequisiteEntity> {
+    return this.getRepository(TypeOrmEventPrerequisiteEntity);
   }
 
   // #end_region
@@ -46,11 +46,9 @@ export class CreateEventUnitOfWork extends TypeOrmUnitOfWork implements ICreateE
     await this.eventTimelineRepository.insert(eventTimeline.map((e) => ({ id: e.id, ...e.props })));
   }
 
-  async saveEventAdditionalInput(
-    eventAdditionalInput: EventAdditionalInputEntity[],
-  ): Promise<void> {
-    await this.eventAdditionalInputRepository.insert(
-      eventAdditionalInput.map((e) => ({ id: e.id, ...e.props })),
+  async saveEventPrerequisite(prerequisite: EventPrerequisiteEntity[]): Promise<void> {
+    await this.eventPrerequisiteRepository.insert(
+      prerequisite.map((e) => ({ id: e.id, ...e.props })),
     );
   }
 }

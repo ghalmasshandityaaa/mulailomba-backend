@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
-export class eventAdditionalInput1690034852061 implements MigrationInterface {
+export class eventPrerequisite1690034852061 implements MigrationInterface {
   private table: Table = new Table({
-    name: 'event_additional_input',
+    name: 'event_prerequisite',
     columns: [
       {
         name: 'id',
@@ -22,7 +22,7 @@ export class eventAdditionalInput1690034852061 implements MigrationInterface {
       {
         name: 'type',
         type: 'enum',
-        enumName: 'event_additional_input_type_enum',
+        enumName: 'event_prerequisite_type_enum',
         enum: ['INPUT', 'FILE', 'TEXT_AREA', 'SINGLE', 'MULTIPLE'],
         default: `'INPUT'`,
         isNullable: false,
