@@ -1,4 +1,3 @@
-import { CloudinaryService } from '@mulailomba/cloudinary';
 import {
   Base64FileInterceptor,
   FileUtils,
@@ -19,15 +18,17 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadFileBodyDTO } from './file.dto';
+import { UploadFileCommand } from '../commands';
+import { UploadFileBodyDTO } from '../dtos';
 
 @Controller({
   path: 'files',
   version: '1',
 })
 export class FileController {
-  constructor(private readonly cloudinary: CloudinaryService) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @UseInterceptors(
     FileInterceptor('file', {
@@ -45,14 +46,12 @@ export class FileController {
     @UploadedFile() file: UploadedFileType,
     @Body() body: UploadFileBodyDTO,
   ) {
-    const { filename } = FileUtils.generateFilename(file, identity.id);
-    const result = await this.cloudinary.signedUpload(file, {
-      use_filename: true,
-      unique_filename: false,
-      public_id: filename,
-      folder: body.topic,
+    const command = new UploadFileCommand({
+      file,
+      topic: body.topic,
+      identityId: identity.id,
     });
 
-    return { file: result };
+    return await this.commandBus.execute(command);
   }
 }

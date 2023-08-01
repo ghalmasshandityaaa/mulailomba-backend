@@ -1,8 +1,8 @@
 import { Transform } from 'class-transformer';
 import * as joi from 'joi';
 import { JoiSchema } from 'joi-class-decorators';
+import { FILE_TOPIC_TYPE } from '../file.constants';
 
-export type FILE_TOPIC_TYPE = 'UPLOADS' | 'POSTER' | 'PROFILES' | 'BANNERS' | 'TIMELINES';
 export class UploadFileBodyDTO {
   @JoiSchema(
     joi
@@ -14,6 +14,6 @@ export class UploadFileBodyDTO {
       .default('UPLOADS')
       .label('topic'),
   )
-  @Transform(({ value }) => value.toUpperCase())
-  readonly topic: string;
+  @Transform(({ value }) => value as FILE_TOPIC_TYPE)
+  readonly topic: FILE_TOPIC_TYPE;
 }

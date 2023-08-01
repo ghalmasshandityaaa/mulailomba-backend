@@ -9,6 +9,7 @@ import {
 } from '@mulailomba/config';
 import { CoreModule } from '@mulailomba/core/core.module';
 import { EventModule } from '@mulailomba/event';
+import { FileModule } from '@mulailomba/file/file.module';
 import { LoggerModule } from '@mulailomba/logger';
 import { OrganizerModule } from '@mulailomba/organizer';
 import { TokenModule } from '@mulailomba/token';
@@ -16,7 +17,6 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FileModule } from './file';
 import { HealthModule } from './health';
 import { TypeOrmOptionsProvider } from './providers';
 
