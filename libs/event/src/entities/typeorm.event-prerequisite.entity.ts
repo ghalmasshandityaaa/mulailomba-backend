@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { EVENT_PREREQUISITE_TYPE } from '../event.constants';
+import { EVENT_PREREQUISITE_TYPE_ENUM } from '../event.constants';
 import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
 
 @Entity({ name: 'event_prerequisite' })
@@ -13,8 +13,8 @@ export class TypeOrmEventPrerequisiteEntity {
   @Column({ name: 'description' })
   readonly description: string;
 
-  @Column({ name: 'type', type: 'enum', enum: EVENT_PREREQUISITE_TYPE })
-  readonly type: EVENT_PREREQUISITE_TYPE;
+  @Column({ name: 'type', type: 'enum', enum: EVENT_PREREQUISITE_TYPE_ENUM })
+  readonly type: EVENT_PREREQUISITE_TYPE_ENUM;
 
   @Column({
     name: 'answer',

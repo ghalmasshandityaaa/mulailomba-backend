@@ -1,7 +1,10 @@
 import { DateUtils, PaginatedCollection } from '@mulailomba/common';
 import { PaginatedQueryResult } from '@mulailomba/common/queries';
 import { FileType } from '@mulailomba/event/entities/typeorm.event.entity';
-import { EVENT_CATEGORY_STATUS_ENUM, EVENT_TIMELINE_TYPE } from '@mulailomba/event/event.constants';
+import {
+  EVENT_CATEGORY_STATUS_ENUM,
+  EVENT_TIMELINE_TYPE_ENUM,
+} from '@mulailomba/event/event.constants';
 import { EventCategoryQueryModel, EventQueryModel } from '@mulailomba/event/interfaces';
 import { isWithinInterval } from 'date-fns';
 import { flattenDeep, orderBy, sortBy, uniq } from 'lodash';
@@ -80,7 +83,7 @@ export class FindEventsByOrganizerIdResult extends PaginatedQueryResult<EventQue
     const eventTimelines = flattenDeep(eventCategories.map((c) => c.timelines));
     const eventTypes = eventTimelines
       .map((timeline) => timeline.type)
-      .filter((type) => type !== EVENT_TIMELINE_TYPE.INFORMATION);
+      .filter((type) => type !== EVENT_TIMELINE_TYPE_ENUM.INFORMATION);
 
     return uniq(eventTypes.sort()).join(', ');
   }

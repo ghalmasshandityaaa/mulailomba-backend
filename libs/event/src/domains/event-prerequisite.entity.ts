@@ -1,10 +1,10 @@
 import { Entity } from '@mulailomba/common';
-import { EVENT_PREREQUISITE_TYPE } from '../event.constants';
+import { EVENT_PREREQUISITE_TYPE_ENUM } from '../event.constants';
 
 type Props = {
   name: string;
   description: string;
-  type: EVENT_PREREQUISITE_TYPE;
+  type: EVENT_PREREQUISITE_TYPE_ENUM;
   answer?: string[] | null;
   isRequired: boolean;
   index: number;
