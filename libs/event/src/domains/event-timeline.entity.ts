@@ -1,13 +1,13 @@
 import { Entity } from '@mulailomba/common';
 import { FileType } from '../entities/typeorm.event.entity';
-import { EVENT_TIMELINE_TYPE } from '../event.constants';
+import { EVENT_TIMELINE_TYPE_ENUM } from '../event.constants';
 
 type Props = {
   name?: string | null;
   description?: string | null;
   startDate?: Date | null;
   endDate?: Date | null;
-  type: EVENT_TIMELINE_TYPE;
+  type: EVENT_TIMELINE_TYPE_ENUM;
   input?: string | null;
   additionalFile?: FileType | null;
   createdAt?: Date;

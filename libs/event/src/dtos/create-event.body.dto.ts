@@ -5,7 +5,7 @@ import * as JoiImport from 'joi';
 import { getClassSchema, JoiSchema } from 'joi-class-decorators';
 import { values } from 'lodash';
 import { DateTime } from 'luxon';
-import { EVENT_PREREQUISITE_TYPE, EVENT_TIMELINE_TYPE } from '../event.constants';
+import { EVENT_PREREQUISITE_TYPE_ENUM, EVENT_TIMELINE_TYPE_ENUM } from '../event.constants';
 
 const joi: JoiImport.Root = JoiImport.extend(JoiDate);
 
@@ -30,18 +30,18 @@ class EventPrerequisiteDTO {
     joi
       .string()
       .trim()
-      .valid(...values(EVENT_PREREQUISITE_TYPE))
+      .valid(...values(EVENT_PREREQUISITE_TYPE_ENUM))
       .required()
       .label('type'),
   )
-  readonly type: EVENT_PREREQUISITE_TYPE;
+  readonly type: EVENT_PREREQUISITE_TYPE_ENUM;
 
   @JoiSchema(
     joi
       .array()
       .items(joi.string())
       .when('type', {
-        is: joi.valid(EVENT_PREREQUISITE_TYPE.MULTIPLE, EVENT_PREREQUISITE_TYPE.SINGLE),
+        is: joi.valid(EVENT_PREREQUISITE_TYPE_ENUM.MULTIPLE, EVENT_PREREQUISITE_TYPE_ENUM.SINGLE),
         then: joi.array().min(1).required(),
         otherwise: joi.optional(),
       })
@@ -117,17 +117,17 @@ class EventTimelineDTO {
     joi
       .string()
       .trim()
-      .valid(...values(EVENT_TIMELINE_TYPE))
+      .valid(...values(EVENT_TIMELINE_TYPE_ENUM))
       .required()
       .label('type'),
   )
-  readonly type: EVENT_TIMELINE_TYPE;
+  readonly type: EVENT_TIMELINE_TYPE_ENUM;
 
   @JoiSchema(
     joi
       .string()
       .when('type', {
-        switch: [{ is: EVENT_TIMELINE_TYPE.ONLINE, then: joi.string().uri().required() }],
+        switch: [{ is: EVENT_TIMELINE_TYPE_ENUM.ONLINE, then: joi.string().uri().required() }],
         otherwise: joi.string().allow(null).optional(),
       })
       .required()
@@ -138,7 +138,7 @@ class EventTimelineDTO {
   @JoiSchema(
     joi
       .when('type', {
-        is: EVENT_TIMELINE_TYPE.INFORMATION,
+        is: EVENT_TIMELINE_TYPE_ENUM.INFORMATION,
         then: getClassSchema(FileDto),
         otherwise: joi.valid(null),
       })

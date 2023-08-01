@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { EVENT_TIMELINE_TYPE } from '../event.constants';
+import { EVENT_TIMELINE_TYPE_ENUM } from '../event.constants';
 import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
 import { FileType } from './typeorm.event.entity';
 
@@ -20,8 +20,8 @@ export class TypeOrmEventTimelineEntity {
   @Column({ name: 'end_date', type: 'timestamp with time zone', nullable: true })
   readonly endDate: Date | null;
 
-  @Column({ name: 'type', type: 'enum', enum: EVENT_TIMELINE_TYPE })
-  readonly type: EVENT_TIMELINE_TYPE;
+  @Column({ name: 'type', type: 'enum', enum: EVENT_TIMELINE_TYPE_ENUM })
+  readonly type: EVENT_TIMELINE_TYPE_ENUM;
 
   @Column({ name: 'input', type: 'varchar', nullable: true })
   readonly input: string | null;

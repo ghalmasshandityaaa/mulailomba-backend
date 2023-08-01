@@ -1,8 +1,12 @@
 import { DateUtils, PaginatedCollection } from '@mulailomba/common';
 import { PaginatedQueryResult } from '@mulailomba/common/queries';
 import { FileType } from '@mulailomba/event/entities/typeorm.event.entity';
-import { EVENT_TIMELINE_TYPE } from '@mulailomba/event/event.constants';
+import {
+  EVENT_CATEGORY_STATUS_ENUM,
+  EVENT_TIMELINE_TYPE_ENUM,
+} from '@mulailomba/event/event.constants';
 import { EventCategoryQueryModel, EventQueryModel } from '@mulailomba/event/interfaces';
+import { isWithinInterval } from 'date-fns';
 import { flattenDeep, orderBy, sortBy, uniq } from 'lodash';
 
 type JsonEventProps = {
@@ -40,7 +44,7 @@ export class FindEventsByOrganizerIdResult extends PaginatedQueryResult<EventQue
       poster: data.poster,
       benefits: data.benefit,
       eligibilities: data.eligibility,
-      status: 'ACTIVE',
+      status: this.getEventStatus(data.categories),
       quota: this.toString(quota),
       price: this.toString(price),
       event_start: DateUtils.toUnix(eventDate[0]),
@@ -64,23 +68,46 @@ export class FindEventsByOrganizerIdResult extends PaginatedQueryResult<EventQue
       : `${firstValue === 0 ? 'free' : firstValue} - ${isNaN(lastValue) ? 'unlimited' : lastValue}`;
   }
 
-  private getEventDate(eventCategory: EventCategoryQueryModel[]): [Date, Date] {
-    const startDate = orderBy(eventCategory, (c) => c.registrationStart, 'asc').map(
+  private getEventDate(eventCategories: EventCategoryQueryModel[]): [Date, Date] {
+    const startDate = orderBy(eventCategories, (c) => c.registrationStart, 'asc').map(
       (c) => c.registrationStart,
     )[0];
-    const endDate = orderBy(eventCategory, (c) => c.registrationEnd, 'desc').map(
+    const endDate = orderBy(eventCategories, (c) => c.registrationEnd, 'desc').map(
       (c) => c.registrationEnd,
     )[0];
 
     return [startDate, endDate];
   }
 
-  private getEventType(eventCategory: EventCategoryQueryModel[]): string {
-    const eventTimelines = flattenDeep(eventCategory.map((c) => c.timelines));
+  private getEventType(eventCategories: EventCategoryQueryModel[]): string {
+    const eventTimelines = flattenDeep(eventCategories.map((c) => c.timelines));
     const eventTypes = eventTimelines
       .map((timeline) => timeline.type)
-      .filter((type) => type !== EVENT_TIMELINE_TYPE.INFORMATION);
+      .filter((type) => type !== EVENT_TIMELINE_TYPE_ENUM.INFORMATION);
 
     return uniq(eventTypes.sort()).join(', ');
+  }
+
+  private getEventStatus(eventCategories: EventCategoryQueryModel[]): string {
+    const status = eventCategories.map((category) => {
+      let status = category.status;
+      const currentDate = new Date();
+
+      if (status === EVENT_CATEGORY_STATUS_ENUM.PUBLISHED) {
+        if (category.startDate > currentDate) {
+          status = EVENT_CATEGORY_STATUS_ENUM.UPCOMING;
+        } else if (
+          isWithinInterval(currentDate, { start: category.startDate, end: category.endDate })
+        ) {
+          status = EVENT_CATEGORY_STATUS_ENUM.ONGOING;
+        } else if (category.startDate < currentDate) {
+          status = EVENT_CATEGORY_STATUS_ENUM.FINISHED;
+        }
+      }
+
+      return status;
+    });
+
+    return uniq(status).sort().join(', ');
   }
 }

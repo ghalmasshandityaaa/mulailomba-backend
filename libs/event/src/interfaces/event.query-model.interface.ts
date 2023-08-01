@@ -1,5 +1,9 @@
 import { FileType } from '../entities/typeorm.event.entity';
-import { EVENT_PREREQUISITE_TYPE, EVENT_TIMELINE_TYPE } from '../event.constants';
+import {
+  EVENT_CATEGORY_STATUS_ENUM,
+  EVENT_PREREQUISITE_TYPE_ENUM,
+  EVENT_TIMELINE_TYPE_ENUM,
+} from '../event.constants';
 
 export interface EventQueryModel {
   id: string;
@@ -26,6 +30,7 @@ export interface EventCategoryQueryModel {
   registrationEnd: Date;
   startDate: Date;
   endDate: Date;
+  status: EVENT_CATEGORY_STATUS_ENUM;
   timelineSetting: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -41,7 +46,7 @@ export interface EventTimelineQueryModel {
   description: string | null;
   startDate: Date | null;
   endDate: Date | null;
-  type: EVENT_TIMELINE_TYPE;
+  type: EVENT_TIMELINE_TYPE_ENUM;
   input: string | null;
   additionalFile: FileType | null;
   createdAt: Date;
@@ -54,7 +59,7 @@ interface EventPrerequisiteQueryModel {
   id: string;
   name: string;
   description: string;
-  type: EVENT_PREREQUISITE_TYPE;
+  type: EVENT_PREREQUISITE_TYPE_ENUM;
   answer: string[] | null;
   isRequired: boolean;
   index: number;
