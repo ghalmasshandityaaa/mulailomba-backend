@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import { EVENT_CATEGORY_STATUS_ENUM } from '../event.constants';
 import { TypeOrmEventPrerequisiteEntity } from './typeorm.event-prerequisite.entity';
 import { TypeOrmEventTimelineEntity } from './typeorm.event-timeline.entity';
 import { TypeOrmEventEntity } from './typeorm.event.entity';
@@ -39,6 +40,9 @@ export class TypeOrmEventCategoryEntity {
 
   @Column({ name: 'end_date' })
   readonly endDate: Date;
+
+  @Column({ name: 'status', type: 'enum', enum: EVENT_CATEGORY_STATUS_ENUM, nullable: false })
+  readonly status: EVENT_CATEGORY_STATUS_ENUM;
 
   @Column({ name: 'timeline_setting', default: false })
   readonly timelineSetting: boolean;

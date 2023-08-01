@@ -1,4 +1,5 @@
 import { Entity } from '@mulailomba/common';
+import { EVENT_CATEGORY_STATUS_ENUM } from '../event.constants';
 
 type Props = {
   name?: string | null;
@@ -8,6 +9,7 @@ type Props = {
   registrationEnd: Date;
   startDate: Date;
   endDate: Date;
+  status: EVENT_CATEGORY_STATUS_ENUM;
   timelineSetting: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -46,6 +48,7 @@ export class EventCategoryEntity extends Entity<Props, string> {
     const entity = new EventCategoryEntity({
       ...props,
       name: props.name || null,
+      status: EVENT_CATEGORY_STATUS_ENUM.DRAFT,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

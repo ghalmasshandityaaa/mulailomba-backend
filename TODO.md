@@ -7,12 +7,12 @@ Project Description
 ### Todo
 
 - [ ] Add get event by id
-- [ ] Add status event/lomba
 
 ### In Progress
 
 ### Done ✓
 
+- [x] Add status event/lomba
 - [x] Refactor additional input to prerequisite
 - [x] Init cloudinary
 - [x] refactor/refresh-token
