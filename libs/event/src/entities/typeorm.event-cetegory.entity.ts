@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
-import { TypeOrmEventAdditionalInputEntity } from './typeorm.event-additional-input.entity';
+import { TypeOrmEventPrerequisiteEntity } from './typeorm.event-prerequisite.entity';
 import { TypeOrmEventTimelineEntity } from './typeorm.event-timeline.entity';
 import { TypeOrmEventEntity } from './typeorm.event.entity';
 
@@ -60,6 +60,6 @@ export class TypeOrmEventCategoryEntity {
   @OneToMany(() => TypeOrmEventTimelineEntity, (timeline) => timeline.category)
   readonly timelines: TypeOrmEventTimelineEntity[];
 
-  @OneToMany(() => TypeOrmEventAdditionalInputEntity, (input) => input.category)
-  readonly additionalInputs: TypeOrmEventAdditionalInputEntity[];
+  @OneToMany(() => TypeOrmEventPrerequisiteEntity, (input) => input.category)
+  readonly prerequisites: TypeOrmEventPrerequisiteEntity[];
 }

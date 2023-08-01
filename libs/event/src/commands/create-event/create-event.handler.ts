@@ -1,8 +1,8 @@
 import { IUnitOfWorkFactory } from '@mulailomba/common';
 import {
-  EventAdditionalInputEntity,
   EventCategoryEntity,
   EventEntity,
+  EventPrerequisiteEntity,
   EventTimelineEntity,
 } from '@mulailomba/event/domains';
 import { CREATE_EVENT_UNIT_OF_WORK_FACTORY } from '@mulailomba/event/event.constants';
@@ -41,7 +41,7 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand, v
     });
 
     const timelines: EventTimelineEntity[] = [];
-    const additionalInputs: EventAdditionalInputEntity[] = [];
+    const prerequisite: EventPrerequisiteEntity[] = [];
     const categories: EventCategoryEntity[] = command.categories.map((category) => {
       const newCategory: EventCategoryEntity = EventCategoryEntity.create({
         name: category.name,
@@ -70,9 +70,9 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand, v
         );
       });
 
-      category.additionalInputs.forEach((input) => {
-        additionalInputs.push(
-          EventAdditionalInputEntity.create({
+      category.prerequisite.forEach((input) => {
+        prerequisite.push(
+          EventPrerequisiteEntity.create({
             name: input.name,
             description: input.description,
             type: input.type,
@@ -94,7 +94,7 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand, v
       await uow.saveEvent([event]);
       await uow.saveEventCategory(categories);
       await uow.saveEventTimeline(timelines);
-      await uow.saveEventAdditionalInput(additionalInputs);
+      await uow.saveEventPrerequisite(prerequisite);
 
       await uow.complete();
     } catch (error) {

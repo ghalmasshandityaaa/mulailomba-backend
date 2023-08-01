@@ -1,14 +1,11 @@
 import { FileType } from '@mulailomba/event/entities/typeorm.event.entity';
-import {
-  EVENT_ADDITIONAL_INPUT_TYPE,
-  EVENT_TIMELINE_TYPE,
-} from '@mulailomba/event/event.constants';
+import { EVENT_PREREQUISITE_TYPE, EVENT_TIMELINE_TYPE } from '@mulailomba/event/event.constants';
 import { ICommand } from '@nestjs/cqrs';
 
-class AdditionalInputProps {
+class PrerequisiteProps {
   readonly name: string;
   readonly description: string;
-  readonly type: EVENT_ADDITIONAL_INPUT_TYPE;
+  readonly type: EVENT_PREREQUISITE_TYPE;
   readonly answer: string[];
   readonly isRequired: boolean;
   readonly index: number;
@@ -33,7 +30,7 @@ class CategoryProps {
   readonly startDate: Date;
   readonly endDate: Date;
   readonly timelineSetting: boolean;
-  readonly additionalInputs: AdditionalInputProps[];
+  readonly prerequisite: PrerequisiteProps[];
   readonly timelines: TimelineProps[];
 }
 

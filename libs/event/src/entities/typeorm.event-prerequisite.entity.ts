@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { EVENT_ADDITIONAL_INPUT_TYPE } from '../event.constants';
+import { EVENT_PREREQUISITE_TYPE } from '../event.constants';
 import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
 
-@Entity({ name: 'event_additional_input' })
-export class TypeOrmEventAdditionalInputEntity {
+@Entity({ name: 'event_prerequisite' })
+export class TypeOrmEventPrerequisiteEntity {
   @PrimaryColumn({ type: 'uuid' })
   readonly id: string;
 
@@ -13,8 +13,8 @@ export class TypeOrmEventAdditionalInputEntity {
   @Column({ name: 'description' })
   readonly description: string;
 
-  @Column({ name: 'type', type: 'enum', enum: EVENT_ADDITIONAL_INPUT_TYPE })
-  readonly type: EVENT_ADDITIONAL_INPUT_TYPE;
+  @Column({ name: 'type', type: 'enum', enum: EVENT_PREREQUISITE_TYPE })
+  readonly type: EVENT_PREREQUISITE_TYPE;
 
   @Column({
     name: 'answer',
@@ -47,7 +47,7 @@ export class TypeOrmEventAdditionalInputEntity {
   readonly eventCategoryId: string;
 
   // relations
-  @ManyToOne(() => TypeOrmEventCategoryEntity, (eventCategory) => eventCategory.additionalInputs)
+  @ManyToOne(() => TypeOrmEventCategoryEntity, (eventCategory) => eventCategory.prerequisites)
   @JoinColumn({ name: 'event_category_id' })
   readonly category: TypeOrmEventCategoryEntity;
 }

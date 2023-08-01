@@ -10,7 +10,7 @@ import { event1690034806823 } from './1690034806823-event';
 import { wishlist1690034829797 } from './1690034829797-wishlist';
 import { eventCategory1690034836116 } from './1690034836116-event-category';
 import { eventTimeline1690034843800 } from './1690034843800-event-timeline';
-import { eventAdditionalInput1690034852061 } from './1690034852061-event-additional-input';
+import { eventPrerequisite1690034852061 } from './1690034852061-event-prerequisite';
 
 export const Migrations = [
   user1690034715248,
@@ -25,5 +25,5 @@ export const Migrations = [
   wishlist1690034829797,
   eventCategory1690034836116,
   eventTimeline1690034843800,
-  eventAdditionalInput1690034852061,
+  eventPrerequisite1690034852061,
 ];
