@@ -6,8 +6,8 @@ import {
   EVENT_TIMELINE_TYPE_ENUM,
 } from '@mulailomba/event/event.constants';
 import { EventCategoryQueryModel, EventQueryModel } from '@mulailomba/event/interfaces';
-import { isWithinInterval } from 'date-fns';
-import { flattenDeep, orderBy, sortBy, uniq } from 'lodash';
+import { isWithinInterval, max, min } from 'date-fns';
+import { flattenDeep, sortBy, uniq } from 'lodash';
 
 type JsonEventProps = {
   id: string;
@@ -69,12 +69,8 @@ export class FindEventsByOrganizerIdResult extends PaginatedQueryResult<EventQue
   }
 
   private getEventDate(eventCategories: EventCategoryQueryModel[]): [Date, Date] {
-    const startDate = orderBy(eventCategories, (c) => c.registrationStart, 'asc').map(
-      (c) => c.registrationStart,
-    )[0];
-    const endDate = orderBy(eventCategories, (c) => c.registrationEnd, 'desc').map(
-      (c) => c.registrationEnd,
-    )[0];
+    const startDate = min(eventCategories.map((category) => category.startDate));
+    const endDate = max(eventCategories.map((category) => category.endDate));
 
     return [startDate, endDate];
   }
