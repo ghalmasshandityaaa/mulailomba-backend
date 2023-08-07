@@ -11,9 +11,10 @@ import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { CreateEventCommand } from './create-event.command';
+import { CreateEventResult } from './create-event.result';
 
 @CommandHandler(CreateEventCommand)
-export class CreateEventHandler implements ICommandHandler<CreateEventCommand, void> {
+export class CreateEventHandler implements ICommandHandler<CreateEventCommand, CreateEventResult> {
   constructor(
     @InjectPinoLogger(CreateEventHandler.name)
     private readonly logger: PinoLogger,
@@ -25,7 +26,7 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand, v
    *
    * @param command
    */
-  async execute(command: CreateEventCommand): Promise<void> {
+  async execute(command: CreateEventCommand): Promise<CreateEventResult> {
     this.logger.trace(`BEGIN`);
     this.logger.info({ command });
 
@@ -103,6 +104,9 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand, v
       throw error;
     }
 
+    const result = new CreateEventResult(event.id);
+
     this.logger.trace(`END`);
+    return result;
   }
 }
