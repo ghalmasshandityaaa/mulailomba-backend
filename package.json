@@ -27,9 +27,9 @@
     "tsc": "./node_modules/.bin/tsc --noEmit",
     "typeorm": "typeorm",
     "migration:create": "typeorm migration:create",
-    "migration:show": "tsc && typeorm migration:show -d dist/migrations/config/data-source.js",
-    "migration:run": "tsc && typeorm migration:run -t -d dist/migrations/config/data-source.js",
-    "migration:revert": "tsc && typeorm migration:revert -d dist/migrations/config/data-source.js"
+    "migration:show": "tsc && typeorm migration:show -d dist/libs/database/src/config/data-source.js",
+    "migration:run": "tsc && typeorm migration:run -t -d dist/libs/database/src/config/data-source.js",
+    "migration:revert": "tsc && typeorm migration:revert -d dist/libs/database/src/config/data-source.js"
   },
   "dependencies": {
     "@joi/date": "^2.1.0",
@@ -72,6 +72,7 @@
     "typeorm": "0.3.10"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@nestjs/cli": "8.2.2",
     "@nestjs/schematics": "8.0.11",
     "@nestjs/testing": "8.4.7",
@@ -135,7 +136,8 @@
       "^@mulailomba/token(|/.*)$": "<rootDir>/libs/token/src/$1",
       "^@mulailomba/core(|/.*)$": "<rootDir>/libs/core/src/$1",
       "^@mulailomba/cloudinary(|/.*)$": "<rootDir>/libs/cloudinary/src/$1",
-      "^@mulailomba/file(|/.*)$": "<rootDir>/libs/file/src/$1"
+      "^@mulailomba/file(|/.*)$": "<rootDir>/libs/file/src/$1",
+      "^@mulailomba/database(|/.*)$": "<rootDir>/libs/database/src/$1"
     }
   },
   "lint-staged": {
