@@ -8,6 +8,7 @@ import {
   ServerConfigModule,
 } from '@mulailomba/config';
 import { CoreModule } from '@mulailomba/core/core.module';
+import { TypeOrmOptionsProvider } from '@mulailomba/database/config';
 import { EventModule } from '@mulailomba/event';
 import { FileModule } from '@mulailomba/file/file.module';
 import { LoggerModule } from '@mulailomba/logger';
@@ -18,7 +19,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthModule } from './health';
-import { TypeOrmOptionsProvider } from './providers';
 
 @Module({
   imports: [

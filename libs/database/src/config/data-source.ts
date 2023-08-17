@@ -1,7 +1,8 @@
 import * as dotenv from 'dotenv';
 import { resolve } from 'path';
 import { DataSource } from 'typeorm';
-import { Migrations } from '..';
+import { Migrations } from '../migrations';
+import { Seeds } from '../seeds';
 
 dotenv.config({
   path: resolve(process.cwd(), '.env'),
@@ -10,5 +11,5 @@ dotenv.config({
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.PG_DATABASE_URL,
-  migrations: Migrations,
+  migrations: [...Migrations, ...Seeds],
 });

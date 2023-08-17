@@ -8,3 +8,8 @@ export interface UploadedFileType {
   size: number;
   base64: string;
 }
+
+export type FileType = {
+  publicId: string;
+  secureUrl: string;
+};
