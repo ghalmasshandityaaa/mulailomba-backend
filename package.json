@@ -137,7 +137,8 @@
       "^@mulailomba/core(|/.*)$": "<rootDir>/libs/core/src/$1",
       "^@mulailomba/cloudinary(|/.*)$": "<rootDir>/libs/cloudinary/src/$1",
       "^@mulailomba/file(|/.*)$": "<rootDir>/libs/file/src/$1",
-      "^@mulailomba/database(|/.*)$": "<rootDir>/libs/database/src/$1"
+      "^@mulailomba/database(|/.*)$": "<rootDir>/libs/database/src/$1",
+      "^@mulailomba/category(|/.*)$": "<rootDir>/libs/category/src/$1"
     }
   },
   "lint-staged": {

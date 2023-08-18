@@ -1,3 +1,4 @@
+import { CategoryModule } from '@mulailomba/category';
 import { Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -24,7 +25,7 @@ const Repositories: Provider[] = [
 ];
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature(TypeOrmEventEntities)],
+  imports: [CqrsModule, TypeOrmModule.forFeature(TypeOrmEventEntities), CategoryModule],
   controllers: [EventController],
   providers: [...Domains, ...CommandHandlers, ...QueryHandlers, ...Repositories],
   exports: [],

@@ -51,7 +51,9 @@
       "@mulailomba/file": ["libs/file/src"],
       "@mulailomba/file/*": ["libs/file/src/*"],
       "@mulailomba/database": ["libs/database/src"],
-      "@mulailomba/database/*": ["libs/database/src/*"]
+      "@mulailomba/database/*": ["libs/database/src/*"],
+      "@mulailomba/category": ["libs/category/src"],
+      "@mulailomba/category/*": ["libs/category/src/*"]
     }
   }
 }
