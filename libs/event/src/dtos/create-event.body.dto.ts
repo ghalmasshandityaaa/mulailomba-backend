@@ -5,7 +5,11 @@ import * as JoiImport from 'joi';
 import { getClassSchema, JoiSchema } from 'joi-class-decorators';
 import { values } from 'lodash';
 import { DateTime } from 'luxon';
-import { EVENT_PREREQUISITE_TYPE_ENUM, EVENT_TIMELINE_TYPE_ENUM } from '../event.constants';
+import {
+  EVENT_ELIGIBILITY_ENUM,
+  EVENT_PREREQUISITE_TYPE_ENUM,
+  EVENT_TIMELINE_TYPE_ENUM,
+} from '../event.constants';
 
 const joi: JoiImport.Root = JoiImport.extend(JoiDate);
 
@@ -241,11 +245,17 @@ export class CreateEventBodyDTO {
   @Type(() => FileDto)
   readonly poster: FileDto;
 
-  @JoiSchema(joi.array().items(joi.string()).min(1).unique().required().label('benefits'))
+  @JoiSchema(joi.array().items(joi.string().trim()).min(1).unique().required().label('benefits'))
   readonly benefits: string[];
 
   @JoiSchema(
-    joi.array().items(joi.string().uuid()).min(1).unique().required().label('eligibilities'),
+    joi
+      .array()
+      .items(joi.string().valid(...values(EVENT_ELIGIBILITY_ENUM)))
+      .min(1)
+      .unique()
+      .required()
+      .label('eligibilities'),
   )
   readonly eligibilities: string[];
 

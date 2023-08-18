@@ -1,3 +1,6 @@
+import { CATEGORY_SERVICE } from '@mulailomba/category/category.constants';
+import { CategoryError } from '@mulailomba/category/errors';
+import { ICategoryService } from '@mulailomba/category/interfaces';
 import { IUnitOfWorkFactory } from '@mulailomba/common';
 import {
   EventCategoryEntity,
@@ -20,6 +23,8 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand, C
     private readonly logger: PinoLogger,
     @Inject(CREATE_EVENT_UNIT_OF_WORK_FACTORY)
     private readonly createEventUowFactory: IUnitOfWorkFactory<ICreateEventUnitOfWork>,
+    @Inject(CATEGORY_SERVICE)
+    private readonly categoryService: ICategoryService,
   ) {}
 
   /**
@@ -29,6 +34,9 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand, C
   async execute(command: CreateEventCommand): Promise<CreateEventResult> {
     this.logger.trace(`BEGIN`);
     this.logger.info({ command });
+
+    const category = await this.categoryService.findById(command.categoryId);
+    if (!category) throw new CategoryError.NotFound();
 
     const event = EventEntity.create({
       name: command.name,
