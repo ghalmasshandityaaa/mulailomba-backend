@@ -1,6 +1,7 @@
 export interface IPaginatedQuery {
   page?: number;
   pageSize?: number;
+  lastData?: number;
 }
 
 export interface ISearchableQuery {
