@@ -22,7 +22,7 @@ export class TypeOrmEventPrerequisiteEntity {
     nullable: true,
     transformer: {
       from(value) {
-        return value ? value.slice(1, -1).split(',') : [];
+        return value ? JSON.parse(value) : [];
       },
       to(value) {
         return value ? JSON.stringify(value) : [];

@@ -29,16 +29,12 @@ export class seedEvent1692277347451 implements MigrationInterface {
           description: faker.word.words({ count: { min: 10, max: 20 } }),
           poster: file,
           is_multiple_category: multipleCategory,
-          benefits: `[${Array.from({ length: 3 }, () =>
-            faker.word.words({ count: { min: 3, max: 5 } }),
-          )}]`,
-          eligibilities: `[${faker.helpers.arrayElement([
-            'SD',
-            'SMP',
-            'SMA',
-            'MAHASISWA',
-            'UMUM',
-          ])}]`,
+          benefits: JSON.stringify(
+            Array.from({ length: 3 }, () => faker.word.words({ count: { min: 3, max: 5 } })),
+          ),
+          eligibilities: JSON.stringify([
+            faker.helpers.arrayElement(['SD', 'SMP', 'SMA', 'MAHASISWA', 'UMUM']),
+          ]),
           created_at: faker.date.past(),
           updated_at: faker.date.recent(),
           organizer_id: o.id,
@@ -101,9 +97,11 @@ export class seedEvent1692277347451 implements MigrationInterface {
               description: faker.word.words({ count: { min: 10, max: 20 } }),
               type,
               answer: ['SINGLE', 'MULTIPLE'].includes(type)
-                ? `[${Array.from({ length: 5 }, () =>
-                    faker.word.words({ count: { min: 3, max: 5 } }),
-                  )}]`
+                ? JSON.stringify(
+                    Array.from({ length: 5 }, () =>
+                      faker.word.words({ count: { min: 3, max: 5 } }),
+                    ),
+                  )
                 : `[]`,
               is_required: faker.datatype.boolean(),
               index: index++,

@@ -46,7 +46,7 @@ class EventPrerequisiteDTO {
       .items(joi.string())
       .when('type', {
         is: joi.valid(EVENT_PREREQUISITE_TYPE_ENUM.MULTIPLE, EVENT_PREREQUISITE_TYPE_ENUM.SINGLE),
-        then: joi.array().min(1).required(),
+        then: joi.array().items(joi.string().trim()).min(1).required(),
         otherwise: joi.optional(),
       })
       .label('answer'),

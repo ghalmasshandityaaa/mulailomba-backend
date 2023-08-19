@@ -51,7 +51,7 @@ export class TypeOrmEventEntity {
     type: 'text',
     transformer: {
       from(value) {
-        return value ? value.slice(1, -1).split(',') : [];
+        return value ? JSON.parse(value) : [];
       },
       to(value) {
         return value ? JSON.stringify(value) : [];
@@ -65,7 +65,7 @@ export class TypeOrmEventEntity {
     type: 'text',
     transformer: {
       from(value) {
-        return value ? value.slice(1, -1).split(',') : [];
+        return value ? JSON.parse(value) : [];
       },
       to(value) {
         return value ? JSON.stringify(value) : [];
