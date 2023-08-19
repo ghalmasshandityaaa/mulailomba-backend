@@ -1,8 +1,8 @@
 import { TypeOrmUnitOfWork } from '@mulailomba/common/unit-of-works';
 import { DataSource, Repository } from 'typeorm';
 import {
+  EventAggregate,
   EventCategoryEntity,
-  EventEntity,
   EventPrerequisiteEntity,
   EventTimelineEntity,
 } from '../domains';
@@ -34,7 +34,7 @@ export class CreateEventUnitOfWork extends TypeOrmUnitOfWork implements ICreateE
     super(dataSource);
   }
 
-  async saveEvent(event: EventEntity[]): Promise<void> {
+  async saveEvent(event: EventAggregate[]): Promise<void> {
     await this.eventRepository.insert(event.map((e) => ({ id: e.id, ...e.props })));
   }
 

@@ -3,8 +3,8 @@ import { CategoryError } from '@mulailomba/category/errors';
 import { ICategoryService } from '@mulailomba/category/interfaces';
 import { IUnitOfWorkFactory } from '@mulailomba/common';
 import {
+  EventAggregate,
   EventCategoryEntity,
-  EventEntity,
   EventPrerequisiteEntity,
   EventTimelineEntity,
 } from '@mulailomba/event/domains';
@@ -38,7 +38,7 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand, C
     const category = await this.categoryService.findById(command.categoryId);
     if (!category) throw new CategoryError.NotFound();
 
-    const event = EventEntity.create({
+    const event = EventAggregate.create({
       name: command.name,
       description: command.description,
       poster: command.poster,
