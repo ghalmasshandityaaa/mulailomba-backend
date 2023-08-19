@@ -11,8 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateEventCommand } from '../commands/create-event/create-event.command';
-import { CreateEventBodyDTO, FindEventByOrganizerIdQueryDTO } from '../dtos';
+import { CreateEventCommand, PublishEventCommand } from '../commands';
+import { CreateEventBodyDTO, FindEventByOrganizerIdQueryDTO, PublishEventBodyDTO } from '../dtos';
 import { FindEventsByOrganizerIdQuery } from '../queries';
 
 @Controller({
@@ -52,5 +52,17 @@ export class EventController {
     });
 
     return this.queryBus.execute(query);
+  }
+
+  @Post('publish')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RolePermission.ORGANIZER)
+  async publishEvent(@Identity() identity: IIdentity, @Body() body: PublishEventBodyDTO) {
+    const command = new PublishEventCommand({
+      id: body.id,
+      organizerId: identity.id,
+    });
+    return this.commandBus.execute(command);
   }
 }

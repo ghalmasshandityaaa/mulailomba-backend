@@ -64,4 +64,13 @@ export class EventCategoryEntity extends Entity<Props, string> {
   public static rebuild(props: Props, id: string): EventCategoryEntity {
     return new EventCategoryEntity(props, id);
   }
+
+  /**
+   *
+   * @param id
+   */
+  public publishEvent(): void {
+    this.props.updatedAt = new Date();
+    this.props.status = EVENT_CATEGORY_STATUS_ENUM.PUBLISHED;
+  }
 }

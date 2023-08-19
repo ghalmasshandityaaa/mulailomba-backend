@@ -32,7 +32,9 @@ export class seedEvent1692277347451 implements MigrationInterface {
           benefits: JSON.stringify(
             Array.from({ length: 3 }, () => faker.word.words({ count: { min: 3, max: 5 } })),
           ),
-          eligibilities: faker.helpers.arrayElement(['SD', 'SMP', 'SMA', 'MAHASISWA', 'UMUM']),
+          eligibilities: JSON.stringify([
+            faker.helpers.arrayElement(['SD', 'SMP', 'SMA', 'MAHASISWA', 'UMUM']),
+          ]),
           created_at: faker.date.past(),
           updated_at: faker.date.recent(),
           organizer_id: o.id,
@@ -100,7 +102,7 @@ export class seedEvent1692277347451 implements MigrationInterface {
                       faker.word.words({ count: { min: 3, max: 5 } }),
                     ),
                   )
-                : [],
+                : `[]`,
               is_required: faker.datatype.boolean(),
               index: index++,
               created_at: faker.date.past(),

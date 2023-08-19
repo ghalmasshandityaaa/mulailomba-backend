@@ -1,5 +1,6 @@
-import { Entity } from '@mulailomba/common';
+import { Aggregate } from '@mulailomba/common';
 import { FileType } from '../entities/typeorm.event.entity';
+import { EventPublishEvent } from './events';
 
 type Props = {
   name: string;
@@ -31,7 +32,7 @@ export type CreateEventProps = Required<
 /**
  *
  */
-export class EventEntity extends Entity<Props, string> {
+export class EventAggregate extends Aggregate<Props, string> {
   constructor(props: Props, id?: string) {
     super(props, id);
   }
@@ -41,14 +42,14 @@ export class EventEntity extends Entity<Props, string> {
    * @param props
    * @returns
    */
-  public static create(props: CreateEventProps): EventEntity {
-    const entity = new EventEntity({
+  public static create(props: CreateEventProps): EventAggregate {
+    const aggregate = new EventAggregate({
       ...props,
       description: props.description || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    return entity;
+    return aggregate;
   }
 
   /**
@@ -57,7 +58,18 @@ export class EventEntity extends Entity<Props, string> {
    * @param id
    * @returns
    */
-  public static rebuild(props: Props, id: string): EventEntity {
-    return new EventEntity(props, id);
+  public static rebuild(props: Props, id: string): EventAggregate {
+    return new EventAggregate(props, id);
+  }
+
+  /**
+   *
+   */
+  public publishEvent(): void {
+    this.raise(
+      new EventPublishEvent({
+        id: this.id,
+      }),
+    );
   }
 }

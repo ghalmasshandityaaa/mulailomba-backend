@@ -6,6 +6,7 @@ export type PaginatedCollectionMetadata = {
   readonly page: number;
   readonly pageSize: number;
   readonly totalCount: number;
+  readonly lastData?: string;
 };
 
 export type PaginatedCollection<T> = ICollection<T> & {
