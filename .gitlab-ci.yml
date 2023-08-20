@@ -2,8 +2,11 @@ stages:
   - test
   - build
   - migration
+
 sast:
   stage: test
+  script:
+    - echo "Running SAST tests"
   include:
     - template: Security/SAST.gitlab-ci.yml
     - template: Security/Dependency-Scanning.gitlab-ci.yml
