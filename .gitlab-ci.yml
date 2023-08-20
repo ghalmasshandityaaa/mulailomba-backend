@@ -69,6 +69,9 @@ migration:show:dev:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     APP_MODE: development
   <<: *dev-config
+  before_script:
+    - yarn install --frozen-lockfile
+    - yarn global add typescript
 # migration:run:dev:
 #   extends: .migration:run
 #   variables:
