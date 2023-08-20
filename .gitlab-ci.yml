@@ -16,8 +16,8 @@ include:
   stage: migration
   image: node:latest
   before_script:
-    - yarn migration:show
   script:
+    - yarn migration:show
     - yarn migration:run
 
 .migration-changes: &migration-changes
@@ -64,3 +64,4 @@ migration:dev:
     - echo $DEV_PG_DATABASE_SSL
     - yarn install --frozen-lockfile
     - yarn global add typescript
+  when: manual
