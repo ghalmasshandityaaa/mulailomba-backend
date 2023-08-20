@@ -26,6 +26,8 @@ include:
   image: node:latest
   script:
     - yarn migration:run
+  dependencies:
+    - migration:show
 
 .migration-changes: &migration-changes
   changes:
@@ -60,6 +62,7 @@ build-job:
   image: node:latest
   script:
     - yarn install --frozen-lockfile
+    - yarn global add typescript
     - yarn tsc
 
 # Migration, Dev
