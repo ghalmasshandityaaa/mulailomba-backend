@@ -67,6 +67,7 @@ migration:show:dev:
   extends: .migration:show
   variables:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
+    PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
     APP_MODE: development
   <<: *dev-config
   before_script:
