@@ -7,8 +7,78 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
   - test
+  - migration
 sast:
   stage: test
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
+
+.migration:show: &migration_show
+  stage: migration
+  image: node:latest
+  script:
+    - yarn migration:show
+
+.migration:run: &migration_run
+  stage: migration
+  image: node:latest
+  script:
+    - yarn migration:run
+
+.migration-changes: &migration-changes
+  changes:
+    - libs/database/src/migrations/*
+    - libs/database/src/seeds/*
+
+.service-changes: &service-changes
+  changes:
+    - libs/**/*
+    - yarn.lock
+    - .gitlab-ci.yml
+
+.dev-config: &dev-config
+  environment: development
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "development"'
+      changes:
+        - libs/**/*
+        - yarn.lock
+        - .gitlab-ci.yml
+
+# .prod-config: &prod-config
+#   environment: production
+#   rules:
+#     - if: '$CI_COMMIT_TAG'
+#     - when: manual
+
+# Migration, Dev
+migration:show:dev:
+  extends: .migration:show
+  variables:
+    PG_DATABASE_URL: $DEV_PG_DATABASE_URL
+    APP_MODE: development
+  <<: *dev-config
+
+migration:run:dev:
+  extends: .migration:run
+  variables:
+    PG_DATABASE_URL: $DEV_PG_DATABASE_URL
+    APP_MODE: development
+  <<: *dev-config
+# Migration, Prod
+# migration:show:prod:
+#   extends: .migration:show
+#   variables:
+#     PG_DATABASE_URL: $PROD_PG_DATABASE_URL
+#     APP_MODE: production
+#   <<: *prod-config
+
+# migration:run:prod:
+#   extends: .migration:run
+#   variables:
+#     PG_DATABASE_URL: $PROD_PG_DATABASE_URL
+#     APP_MODE: production
+#   <<: *prod-config
