@@ -12,19 +12,13 @@ include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
 
-.migration:show: &migration_show
+.migration: &migration
   stage: migration
   image: node:latest
-  script:
+  before_script:
     - yarn migration:show
-
-.migration:run: &migration_run
-  stage: migration
-  image: node:latest
   script:
     - yarn migration:run
-  # dependencies:
-  #   - .migration:show
 
 .migration-changes: &migration-changes
   changes:
@@ -58,8 +52,8 @@ build-job:
     - yarn tsc
 
 # Migration, Dev
-migration:show:dev:
-  extends: .migration:show
+migration:dev:
+  extends: .migration
   variables:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
