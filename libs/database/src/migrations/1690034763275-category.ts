@@ -12,7 +12,7 @@ export class category1690034763275 implements MigrationInterface {
       {
         name: 'name',
         type: 'varchar',
-        length: '25',
+        length: '150',
         isNullable: false,
       },
       {

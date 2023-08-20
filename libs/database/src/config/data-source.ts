@@ -12,10 +12,10 @@ export const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.PG_DATABASE_URL,
   migrations: [...Migrations, ...Seeds],
-  ssl:
-    process.env.PG_DATABASE_SSL === 'true'
-      ? {
-          rejectUnauthorized: false,
-        }
-      : false,
+  ssl: true,
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
 });

@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { CategoryFactory } from './factory';
 
-export class seedCategory1692281746818 implements MigrationInterface {
+export class seedCategory1692271354052 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const user = await queryRunner.manager
       .createQueryBuilder()

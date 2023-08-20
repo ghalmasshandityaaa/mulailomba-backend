@@ -24,7 +24,7 @@ include:
   script:
     - yarn migration:run
   # dependencies:
-  #   - migration:show
+  #   - .migration:show
 
 .migration-changes: &migration-changes
   changes:
@@ -48,12 +48,6 @@ include:
         - yarn.lock
         - .gitlab-ci.yml
 
-# .prod-config: &prod-config
-#   environment: production
-#   rules:
-#     - if: '$CI_COMMIT_TAG'
-#     - when: manual
-
 build-job:
   stage: build
   image: node:latest
@@ -71,28 +65,7 @@ migration:show:dev:
     APP_MODE: development
   <<: *dev-config
   before_script:
+    - echo $DEV_PG_DATABASE_URL
+    - echo $DEV_PG_DATABASE_SSL
     - yarn install --frozen-lockfile
     - yarn global add typescript
-# migration:run:dev:
-#   extends: .migration:run
-#   variables:
-#     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
-#     APP_MODE: development
-#   needs:
-#     - job: migration:show:dev
-#
-# Migration, Prod
-# migration:show:prod:
-#   extends: .migration:show
-#   variables:
-#     PG_DATABASE_URL: $PROD_PG_DATABASE_URL
-#     APP_MODE: production
-#   <<: *prod-config
-
-# migration:run:prod:
-#   extends: .migration:run
-#   variables:
-#     PG_DATABASE_URL: $PROD_PG_DATABASE_URL
-#     APP_MODE: production
-#   <<: *prod-config
-
