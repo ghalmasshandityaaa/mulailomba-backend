@@ -60,6 +60,7 @@ build-job:
   image: node:latest
   script:
     - yarn install --frozen-lockfile
+    - yarn tsc
 
 # Migration, Dev
 migration:show:dev:
