@@ -48,11 +48,11 @@ include:
         - yarn.lock
         - .gitlab-ci.yml
 
-.prod-config: &prod-config
-  environment: production
-  rules:
-    - if: '$CI_COMMIT_TAG'
-    - when: manual
+# .prod-config: &prod-config
+#   environment: production
+#   rules:
+#     - if: '$CI_COMMIT_TAG'
+#     - when: manual
 
 # Migration, Dev
 migration:show:dev:
@@ -68,18 +68,17 @@ migration:run:dev:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     APP_MODE: development
   <<: *dev-config
-
 # Migration, Prod
-migration:show:prod:
-  extends: .migration:show
-  variables:
-    PG_DATABASE_URL: $PROD_PG_DATABASE_URL
-    APP_MODE: production
-  <<: *prod-config
+# migration:show:prod:
+#   extends: .migration:show
+#   variables:
+#     PG_DATABASE_URL: $PROD_PG_DATABASE_URL
+#     APP_MODE: production
+#   <<: *prod-config
 
-migration:run:prod:
-  extends: .migration:run
-  variables:
-    PG_DATABASE_URL: $PROD_PG_DATABASE_URL
-    APP_MODE: production
-  <<: *prod-config
+# migration:run:prod:
+#   extends: .migration:run
+#   variables:
+#     PG_DATABASE_URL: $PROD_PG_DATABASE_URL
+#     APP_MODE: production
+#   <<: *prod-config
