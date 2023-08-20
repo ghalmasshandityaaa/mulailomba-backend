@@ -79,6 +79,8 @@ migration:run:dev:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     APP_MODE: development
   <<: *dev-config
+  needs:
+    - job: migration:show:dev
 # Migration, Prod
 # migration:show:prod:
 #   extends: .migration:show
