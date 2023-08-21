@@ -28,7 +28,6 @@ export class HealthModule {
     };
 
     const router = createRouter();
-
     return {
       module: HealthModule,
       imports: [TerminusModule, router, CloudinaryModule.forRoot()],
