@@ -54,7 +54,7 @@ migration:show:dev:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
     APP_MODE: development
-  <<: *migration-changes
+  <<: *dev-config
   script:
     - yarn migration:show
   rules:
@@ -69,7 +69,7 @@ migration:run:dev:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
     APP_MODE: development
-  <<: *migration-changes
+  <<: *dev-config
   script:
     - yarn migration:run
   rules:
