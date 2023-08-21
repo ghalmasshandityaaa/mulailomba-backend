@@ -6,48 +6,38 @@ sast:
   stage: test
   script:
     - echo "Running SAST tests"
+  rules:
+    - if: '$CI_COMMIT_REF_NAME'
 
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
 
-.service-changes: &service-changes
-  changes:
-    - libs/**/*
-    - yarn.lock
-    - .gitlab-ci.yml
-
 # Migration, Dev
-migration:show:dev:
+.migration_template:
   stage: migration
   image: node:latest
+  variables:
+    PG_DATABASE_URL: $DEV_PG_DATABASE_URL
+    PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
+    APP_MODE: development
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "development"'
+    - if: '$CI_COMMIT_REF_NAME == "staging"'
+    - if: '$CI_COMMIT_TAG'
+
+migration:show:dev:
+  <<: *migration_template
   before_script:
     - yarn install --frozen-lockfile
     - yarn global add typescript
-  variables:
-    PG_DATABASE_URL: $DEV_PG_DATABASE_URL
-    PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
-    APP_MODE: development
   script:
     - yarn migration:show
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "development"'
-    - if: '$CI_COMMIT_BRANCH == "staging"'
-    - if: '$CI_COMMIT_TAG'
 
 migration:run:dev:
-  stage: migration
-  image: node:latest
-  variables:
-    PG_DATABASE_URL: $DEV_PG_DATABASE_URL
-    PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
-    APP_MODE: development
+  <<: *migration_template
   script:
     - yarn migration:run
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "development"'
-    - if: '$CI_COMMIT_BRANCH == "staging"'
-    - if: '$CI_COMMIT_TAG'
   when: manual
   dependencies:
     - migration:show:dev
