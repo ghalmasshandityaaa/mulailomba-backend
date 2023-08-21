@@ -51,7 +51,7 @@ build-job:
     - yarn tsc
 
 # Migration, Dev
-migration:dev:
+migration:show:dev:
   extends: .migration
   variables:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
