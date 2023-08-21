@@ -24,6 +24,11 @@ include:
     - if: '$CI_COMMIT_REF_NAME == "staging"'
     - if: '$CI_COMMIT_TAG'
 
+migration_changes_rule:
+  changes:
+    - 'libs/database/src/migrations/*'
+    - 'libs/database/src/seeds/*'
+
 migration:show:dev:
   extends: .migration_template
   before_script:
@@ -32,18 +37,14 @@ migration:show:dev:
   script:
     - yarn migration:show
   rules:
-    - changes:
-        - 'libs/database/src/migrations/*'
-        - 'libs/database/src/seeds/*'
+    - extends: migration_changes_rule
 
 migration:run:dev:
   extends: .migration_template
   script:
     - yarn migration:run
   rules:
-    - changes:
-        - 'libs/database/src/migrations/*'
-        - 'libs/database/src/seeds/*'
+    - extends: migration_changes_rule
   when: manual
   dependencies:
     - migration:show:dev
