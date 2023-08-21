@@ -12,12 +12,6 @@ include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
 
-.migration: &migration
-  stage: migration
-  image: node:latest
-  script:
-    - yarn migration:show
-
 .migration-changes: &migration-changes
   changes:
     - libs/database/src/migrations/*
@@ -51,15 +45,22 @@ build-job:
 
 # Migration, Dev
 migration:show:dev:
-  extends: .migration
+  stage: migration
+  image: node:latest
+  before_script:
+    - yarn install --frozen-lockfile
+    - yarn global add typescript
   variables:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
     APP_MODE: development
   <<: *dev-config
-  before_script:
-    - yarn install --frozen-lockfile
-    - yarn global add typescript
+  script:
+    - yarn migration:show
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "development"'
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+    - if: '$CI_COMMIT_TAG'
 
 migration:run:dev:
   stage: migration
@@ -71,6 +72,10 @@ migration:run:dev:
   <<: *dev-config
   script:
     - yarn migration:run
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "development"'
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+    - if: '$CI_COMMIT_TAG'
   when: manual
   dependencies:
     - migration:show:dev
