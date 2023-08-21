@@ -48,6 +48,7 @@ migration:show:dev:
   script:
     - yarn migration:show
   rules:
+    - changes: *migration-changes
     - if: '$CI_COMMIT_BRANCH == "development"'
     - if: '$CI_COMMIT_BRANCH == "staging"'
     - if: '$CI_COMMIT_TAG'
@@ -62,6 +63,7 @@ migration:run:dev:
   script:
     - yarn migration:run
   rules:
+    - changes: *migration-changes
     - if: '$CI_COMMIT_BRANCH == "development"'
     - if: '$CI_COMMIT_BRANCH == "staging"'
     - if: '$CI_COMMIT_TAG'
