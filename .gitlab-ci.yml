@@ -11,28 +11,11 @@ include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
 
-.migration-changes: &migration-changes
-  changes:
-    - libs/database/src/migrations/*
-    - libs/database/src/seeds/*
-
 .service-changes: &service-changes
   changes:
     - libs/**/*
     - yarn.lock
     - .gitlab-ci.yml
-
-# .dev-config: &dev-config
-#   environment: development
-#   rules:
-#     - if: '$CI_COMMIT_TAG'
-#       when: never
-#     - if: '$CI_COMMIT_BRANCH == "development"'
-#     - when: manual
-#       changes:
-#         - libs/**/*
-#         - yarn.lock
-#         - .gitlab-ci.yml
 
 # Migration, Dev
 migration:show:dev:
@@ -48,7 +31,6 @@ migration:show:dev:
   script:
     - yarn migration:show
   rules:
-    - changes: *migration-changes
     - if: '$CI_COMMIT_BRANCH == "development"'
     - if: '$CI_COMMIT_BRANCH == "staging"'
     - if: '$CI_COMMIT_TAG'
@@ -63,7 +45,6 @@ migration:run:dev:
   script:
     - yarn migration:run
   rules:
-    - changes: *migration-changes
     - if: '$CI_COMMIT_BRANCH == "development"'
     - if: '$CI_COMMIT_BRANCH == "staging"'
     - if: '$CI_COMMIT_TAG'
