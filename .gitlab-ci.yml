@@ -58,11 +58,8 @@ migration:show:dev:
     APP_MODE: development
   <<: *dev-config
   before_script:
-    - echo $DEV_PG_DATABASE_URL
-    - echo $DEV_PG_DATABASE_SSL
     - yarn install --frozen-lockfile
     - yarn global add typescript
-  when: manual
 
 migration:run:dev:
   stage: migration
