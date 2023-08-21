@@ -37,14 +37,14 @@ migration:show:dev:
   script:
     - yarn migration:show
   rules:
-    <<: *migration_changes_rule
+    - <<: *migration_changes_rule
 
 migration:run:dev:
   extends: .migration_template
   script:
     - yarn migration:run
   rules:
-    <<: *migration_changes_rule
+    - <<: *migration_changes_rule
   when: manual
   dependencies:
     - migration:show:dev
