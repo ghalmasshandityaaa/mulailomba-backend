@@ -1,6 +1,5 @@
 stages:
   - test
-  # - build
   - migration
 
 sast:
@@ -23,25 +22,17 @@ include:
     - yarn.lock
     - .gitlab-ci.yml
 
-.dev-config: &dev-config
-  environment: development
-  rules:
-    - if: '$CI_COMMIT_TAG'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "development"'
-    - when: manual
-      changes:
-        - libs/**/*
-        - yarn.lock
-        - .gitlab-ci.yml
-
-# build-job:
-#   stage: build
-#   image: node:latest
-#   script:
-#     - yarn install --frozen-lockfile
-#     - yarn global add typescript
-#     - yarn tsc
+# .dev-config: &dev-config
+#   environment: development
+#   rules:
+#     - if: '$CI_COMMIT_TAG'
+#       when: never
+#     - if: '$CI_COMMIT_BRANCH == "development"'
+#     - when: manual
+#       changes:
+#         - libs/**/*
+#         - yarn.lock
+#         - .gitlab-ci.yml
 
 # Migration, Dev
 migration:show:dev:
@@ -54,7 +45,6 @@ migration:show:dev:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
     APP_MODE: development
-  <<: *dev-config
   script:
     - yarn migration:show
   rules:
@@ -69,7 +59,6 @@ migration:run:dev:
     PG_DATABASE_URL: $DEV_PG_DATABASE_URL
     PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
     APP_MODE: development
-  <<: *dev-config
   script:
     - yarn migration:run
   rules:
