@@ -6,23 +6,17 @@
   "private": true,
   "license": "UNLICENSED",
   "workspaces": [
-    "src/*",
+    "apps/*",
     "libs/*"
   ],
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "node ./dist/src/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "sync": "git checkout development && git pull origin development && git push github development && git push private development",
     "prepare": "husky install",
     "tsc": "./node_modules/.bin/tsc --noEmit",
     "typeorm": "typeorm",
@@ -100,9 +94,11 @@
     "pino-pretty": "6.0.0",
     "prettier": "2.3.2",
     "ts-jest": "29.0.3",
+    "ts-loader": "^9.4.4",
     "ts-node": "10.0.0",
     "tsconfig-paths": "3.10.1",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "webpack": "^5.88.2"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -121,8 +117,8 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/libs/"
+      "<rootDir>/libs/",
+      "<rootDir>/apps/"
     ],
     "moduleNameMapper": {
       "^@mulailomba/common(|/.*)$": "<rootDir>/libs/common/src/$1",
