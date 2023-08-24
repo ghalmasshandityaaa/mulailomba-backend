@@ -10,7 +10,6 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { json } from 'express';
-import helmet from 'helmet';
 import { Logger as PinoLogger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
@@ -30,11 +29,6 @@ async function bootstrap() {
         transformOptions: { enableImplicitConversion: true },
       }),
       new JoiSchemaValidationPipe(),
-    )
-    .use(
-      helmet({
-        contentSecurityPolicy: false,
-      }),
     )
     .useGlobalInterceptors(new ApiVersionInterceptor('1.0.0'))
     .useGlobalFilters(
