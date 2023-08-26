@@ -1,9 +1,11 @@
 import {
   ApiVersionInterceptor,
+  CommandHandlerNotFoundExceptionFilter,
   JoiSchemaErrorFilter,
   JoiSchemaValidationPipe,
   NotFoundErrorFilter,
   PayloadTooLargeExceptionErrorFilter,
+  QueryHandlerNotFoundExceptionFilter,
   UnhandledExceptionFilter,
 } from '@mulailomba/common';
 import { ServerConfigService } from '@mulailomba/config';
@@ -37,6 +39,8 @@ async function bootstrap() {
       new UnhandledExceptionFilter(),
       new NotFoundErrorFilter(),
       new PayloadTooLargeExceptionErrorFilter(),
+      new QueryHandlerNotFoundExceptionFilter(),
+      new CommandHandlerNotFoundExceptionFilter(),
     )
     .enableVersioning({
       type: VersioningType.URI,
