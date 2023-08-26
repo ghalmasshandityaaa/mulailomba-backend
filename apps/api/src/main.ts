@@ -1,10 +1,10 @@
 import {
   ApiVersionInterceptor,
   CommandHandlerNotFoundExceptionFilter,
-  JoiSchemaErrorFilter,
+  JoiSchemaExceptionFilter,
   JoiSchemaValidationPipe,
-  NotFoundErrorFilter,
-  PayloadTooLargeExceptionErrorFilter,
+  NotFoundExceptionFilter,
+  PayloadTooLargeExceptionFilter,
   QueryHandlerNotFoundExceptionFilter,
   UnhandledExceptionFilter,
 } from '@mulailomba/common';
@@ -35,10 +35,10 @@ async function bootstrap() {
     )
     .useGlobalInterceptors(new ApiVersionInterceptor('1.0.0'))
     .useGlobalFilters(
-      new JoiSchemaErrorFilter(),
+      new JoiSchemaExceptionFilter(),
       new UnhandledExceptionFilter(),
-      new NotFoundErrorFilter(),
-      new PayloadTooLargeExceptionErrorFilter(),
+      new NotFoundExceptionFilter(),
+      new PayloadTooLargeExceptionFilter(),
       new QueryHandlerNotFoundExceptionFilter(),
       new CommandHandlerNotFoundExceptionFilter(),
     )
