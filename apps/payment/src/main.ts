@@ -1,18 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { PinoLogger } from 'nestjs-pino';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-    transport: Transport.KAFKA,
+    transport: Transport.RMQ,
+    bufferLogs: true,
     options: {
-      client: {
-        brokers: ['localhost:9092'],
+      urls: ['amqp://localhost:5672'],
+      queue: 'payment_queue',
+      queueOptions: {
+        durable: false,
       },
-      consumer: {
-        groupId: 'payment-consumer',
-      },
+      noAck: false,
     },
   });
 
