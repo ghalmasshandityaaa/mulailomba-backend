@@ -30,6 +30,7 @@ async function bootstrap() {
   app.use(
     helmet({
       contentSecurityPolicy: true,
+      hidePoweredBy: true,
     }),
   );
   app
