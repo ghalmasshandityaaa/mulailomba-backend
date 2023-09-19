@@ -39,6 +39,7 @@
     "@nestjs/typeorm": "9.0.1",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.3",
+    "@slack/web-api": "^6.9.0",
     "bcrypt": "5.1.0",
     "class-transformer": "0.4.0",
     "class-validator": "0.13.1",
@@ -138,7 +139,8 @@
       "^@mulailomba/cloudinary(|/.*)$": "<rootDir>/libs/cloudinary/src/$1",
       "^@mulailomba/file(|/.*)$": "<rootDir>/libs/file/src/$1",
       "^@mulailomba/database(|/.*)$": "<rootDir>/libs/database/src/$1",
-      "^@mulailomba/category(|/.*)$": "<rootDir>/libs/category/src/$1"
+      "^@mulailomba/category(|/.*)$": "<rootDir>/libs/category/src/$1",
+      "^@mulailomba/slack(|/.*)$": "<rootDir>/libs/slack/src/$1"
     }
   },
   "lint-staged": {
