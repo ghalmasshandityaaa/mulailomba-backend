@@ -53,7 +53,9 @@
       "@mulailomba/database": ["libs/database/src"],
       "@mulailomba/database/*": ["libs/database/src/*"],
       "@mulailomba/category": ["libs/category/src"],
-      "@mulailomba/category/*": ["libs/category/src/*"]
+      "@mulailomba/category/*": ["libs/category/src/*"],
+      "@mulailomba/slack": ["libs/slack/src"],
+      "@mulailomba/slack/*": ["libs/slack/src/*"]
     }
   }
 }

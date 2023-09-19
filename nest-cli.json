@@ -132,6 +132,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/category/tsconfig.lib.json"
       }
+    },
+    "slack": {
+      "type": "library",
+      "root": "libs/slack",
+      "entryFile": "index",
+      "sourceRoot": "libs/slack/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/slack/tsconfig.lib.json"
+      }
     }
   }
 }
