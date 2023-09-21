@@ -60,7 +60,6 @@ async function bootstrap() {
       methods: ['GET', 'POST'],
     });
 
-  console.log(123, config.port);
   await app.listen(config.port || 3000, () => {
     logger.log(`API service running on port ${config.port}...`);
   });
