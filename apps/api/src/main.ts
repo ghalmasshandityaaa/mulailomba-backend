@@ -1,28 +1,39 @@
 import {
   ApiVersionInterceptor,
-  JoiSchemaErrorFilter,
+  CommandHandlerNotFoundExceptionFilter,
+  JoiSchemaExceptionFilter,
   JoiSchemaValidationPipe,
-  NotFoundErrorFilter,
-  PayloadTooLargeExceptionErrorFilter,
+  NotFoundExceptionFilter,
+  PayloadTooLargeExceptionFilter,
+  QueryHandlerNotFoundExceptionFilter,
+  UnhandledExceptionFilter,
 } from '@mulailomba/common';
 import { ServerConfigService } from '@mulailomba/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { json } from 'express';
-import { Logger as PinoLogger } from 'nestjs-pino';
+import helmet from 'helmet';
+import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
-// declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
 
   const config = app.get(ServerConfigService);
-  app.useLogger(app.get(PinoLogger));
+  const logger = app.get(Logger);
+  app.useLogger(logger);
   app.use(json({ limit: '5mb' }));
   app.use(cookieParser());
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: true,
+      hidePoweredBy: true,
+    }),
+  );
   app
     .useGlobalPipes(
       new ValidationPipe({
@@ -33,9 +44,12 @@ async function bootstrap() {
     )
     .useGlobalInterceptors(new ApiVersionInterceptor('1.0.0'))
     .useGlobalFilters(
-      new JoiSchemaErrorFilter(),
-      new NotFoundErrorFilter(),
-      new PayloadTooLargeExceptionErrorFilter(),
+      new JoiSchemaExceptionFilter(),
+      new UnhandledExceptionFilter(),
+      new NotFoundExceptionFilter(),
+      new PayloadTooLargeExceptionFilter(),
+      new QueryHandlerNotFoundExceptionFilter(),
+      new CommandHandlerNotFoundExceptionFilter(),
     )
     .enableVersioning({
       type: VersioningType.URI,
@@ -46,11 +60,8 @@ async function bootstrap() {
       methods: ['GET', 'POST'],
     });
 
-  await app.listen(config.port || 3000);
-
-  // if (module.hot) {
-  //   module.hot.accept();
-  //   module.hot.dispose(() => app.close());
-  // }
+  await app.listen(config.port || 3000, () => {
+    logger.log(`API service running on port ${config.port}...`);
+  });
 }
 bootstrap();

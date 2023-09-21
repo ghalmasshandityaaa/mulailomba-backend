@@ -6,23 +6,17 @@
   "private": true,
   "license": "UNLICENSED",
   "workspaces": [
-    "src/*",
+    "apps/*",
     "libs/*"
   ],
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
-    "start": "node ./dist/src/main.js",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "sync": "git checkout development && git pull origin development && git push github development && git push private development",
     "prepare": "husky install",
     "tsc": "./node_modules/.bin/tsc --noEmit",
     "typeorm": "typeorm",
@@ -38,10 +32,13 @@
     "@nestjs/core": "8.4.7",
     "@nestjs/cqrs": "8.0.5",
     "@nestjs/jwt": "10.0.3",
+    "@nestjs/microservices": "8.4.7",
     "@nestjs/passport": "9.0.3",
     "@nestjs/platform-express": "8.4.7",
     "@nestjs/terminus": "8.1.1",
     "@nestjs/typeorm": "9.0.1",
+    "amqp-connection-manager": "^4.1.14",
+    "amqplib": "^0.10.3",
     "@slack/web-api": "^6.9.0",
     "bcrypt": "5.1.0",
     "class-transformer": "0.4.0",
@@ -53,6 +50,7 @@
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "handlebars": "4.7.7",
+    "helmet": "6.0.1",
     "joi": "17",
     "joi-class-decorators": "1.1.0",
     "jwks-rsa": "3.0.1",
@@ -101,9 +99,11 @@
     "pino-pretty": "6.0.0",
     "prettier": "2.3.2",
     "ts-jest": "29.0.3",
+    "ts-loader": "^9.4.4",
     "ts-node": "10.0.0",
     "tsconfig-paths": "3.10.1",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "webpack": "^5.88.2"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -122,8 +122,8 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/libs/"
+      "<rootDir>/libs/",
+      "<rootDir>/apps/"
     ],
     "moduleNameMapper": {
       "^@mulailomba/common(|/.*)$": "<rootDir>/libs/common/src/$1",

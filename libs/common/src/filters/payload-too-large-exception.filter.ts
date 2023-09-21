@@ -3,21 +3,21 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
-  NotFoundException,
+  PayloadTooLargeException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { HttpErrorResponse } from '../interfaces';
 
-@Catch(NotFoundException)
-export class NotFoundErrorFilter implements ExceptionFilter {
-  catch(_: NotFoundException, host: ArgumentsHost) {
+@Catch(PayloadTooLargeException)
+export class PayloadTooLargeExceptionFilter implements ExceptionFilter {
+  catch(_: PayloadTooLargeException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
     response.status(HttpStatus.BAD_REQUEST).send({
       ok: false,
       error: {
-        code: 'request/not-found',
+        code: 'request/payload-too-large',
       },
     } as HttpErrorResponse);
   }

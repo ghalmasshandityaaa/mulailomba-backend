@@ -45,7 +45,6 @@ import { HealthModule } from './health';
     TokenModule,
     FileModule,
   ],
-  controllers: [],
   providers: [
     {
       provide: APP_INTERCEPTOR,
