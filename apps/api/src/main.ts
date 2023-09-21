@@ -13,6 +13,7 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { json } from 'express';
+import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
@@ -26,6 +27,12 @@ async function bootstrap() {
   app.useLogger(logger);
   app.use(json({ limit: '5mb' }));
   app.use(cookieParser());
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: true,
+    }),
+  );
   app
     .useGlobalPipes(
       new ValidationPipe({
