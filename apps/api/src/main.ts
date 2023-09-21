@@ -51,6 +51,7 @@ async function bootstrap() {
       methods: ['GET', 'POST'],
     });
 
+  console.log(123, config);
   await app.listen(config.port || 3000);
 }
 bootstrap();
