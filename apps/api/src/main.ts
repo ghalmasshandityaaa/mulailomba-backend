@@ -13,7 +13,6 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { json } from 'express';
-import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
@@ -27,12 +26,6 @@ async function bootstrap() {
   app.useLogger(logger);
   app.use(json({ limit: '5mb' }));
   app.use(cookieParser());
-  app.use(
-    helmet({
-      contentSecurityPolicy: true,
-      hidePoweredBy: true,
-    }),
-  );
   app
     .useGlobalPipes(
       new ValidationPipe({
@@ -59,7 +52,7 @@ async function bootstrap() {
       methods: ['GET', 'POST'],
     });
 
-  await app.startAllMicroservices();
+  console.log(123, config.port);
   await app.listen(config.port || 3000, () => {
     logger.log(`API service running on port ${config.port}...`);
   });
