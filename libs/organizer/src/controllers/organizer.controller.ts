@@ -36,16 +36,13 @@ export class OrganizerController {
 
   @Get('accounts')
   @HttpCode(HttpStatus.OK)
-  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RolePermission.USER)
   async findAccountOrganizers(
-    // @Identity() identity: IIdentity,
+    @Identity() identity: IIdentity,
     @Query() qs: FindAccountOrganizersQueryDTO,
   ) {
-    const query = new FindAccountOrganizersQuery({
-      userId: '5c7270d1-0b5f-4e2a-97a4-6d2a74207f0f',
-      ...qs,
-    });
+    const query = new FindAccountOrganizersQuery({ userId: identity.id, ...qs });
     return this.queryBus.execute(query);
   }
 
