@@ -1,3 +1,4 @@
+import { ISearchableQuery } from '@mulailomba/common';
 import { BaseReadRepository } from '@mulailomba/common/repositories';
 import { TypeOrmOrganizerEntity } from '@mulailomba/organizer/entities';
 import { IOrganizerReadRepository, OrganizerQueryModel } from '@mulailomba/organizer/interfaces';
@@ -60,13 +61,29 @@ export class TypeOrmOrganizerReadRepository
   /**
    *
    * @param userId
+   * @param params
    * @returns
    */
-  async findByUserId(userId: string): Promise<OrganizerQueryModel[]> {
-    const entities = await this.dataSource
+  async findByUserId(userId: string, params: ISearchableQuery): Promise<OrganizerQueryModel[]> {
+    const query = this.dataSource
       .createQueryBuilder(TypeOrmOrganizerEntity, 'organizer')
-      .where('organizer.userId = :userId', { userId })
-      .getMany();
+      .where('organizer.userId = :userId', { userId });
+
+    if (params.searchBy) {
+      for (const search of params.searchBy) {
+        if (search.contains) {
+          if ((search.target = 'name')) {
+            query.andWhere('organizer.name ilike :name', {
+              name: `%${search.contains}%`,
+            });
+          }
+
+          // TODO add more search content below
+        }
+      }
+    }
+
+    const entities = await query.getMany();
 
     return entities;
   }

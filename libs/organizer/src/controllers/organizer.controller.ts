@@ -8,11 +8,22 @@ import {
 } from '@mulailomba/common';
 import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
 import { AuthError } from '@mulailomba/core/errors';
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Response } from 'express';
 import { SwitchAccountCommand } from '../commands';
 import { SwitchAccountBodyDTO } from '../dtos';
+import { FindAccountOrganizersQueryDTO } from '../dtos/find-account-organizer.query.dto';
 import { FindOrganizerQuery } from '../queries';
 import { FindAccountOrganizersQuery } from '../queries/find-account-organizers/find-account-organizers.query';
 
@@ -25,10 +36,16 @@ export class OrganizerController {
 
   @Get('accounts')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  // @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RolePermission.USER)
-  async findAccountOrganizers(@Identity() identity: IIdentity) {
-    const query = new FindAccountOrganizersQuery({ userId: identity.id });
+  async findAccountOrganizers(
+    // @Identity() identity: IIdentity,
+    @Query() qs: FindAccountOrganizersQueryDTO,
+  ) {
+    const query = new FindAccountOrganizersQuery({
+      userId: '5c7270d1-0b5f-4e2a-97a4-6d2a74207f0f',
+      ...qs,
+    });
     return this.queryBus.execute(query);
   }
 

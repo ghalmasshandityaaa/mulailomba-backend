@@ -1,9 +1,11 @@
+import { FileType } from '@mulailomba/common';
+
 export interface JsonOrganizerProps {
   id: string;
   name: string;
   username: string;
-  profile: string | null;
-  background: string | null;
+  profile: FileType | null;
+  background: FileType | null;
   email_address: string;
   is_locked: boolean;
   is_active: boolean;

@@ -25,7 +25,7 @@ export class FindAccountOrganizersHandler
     this.logger.trace('BEGIN');
     this.logger.info({ query });
 
-    const collection = await this.repository.findByUserId(query.userId);
+    const collection = await this.repository.findByUserId(query.userId, { ...query });
     const result = new FindAccountOrganizersResult(collection);
 
     this.logger.trace('END');
