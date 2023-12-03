@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { TypeOrmEventEntity } from './typeorm.event.entity';
 
 @Entity({ name: 'organizer' })
 export class TypeOrmOrganizerEntity {
@@ -43,4 +44,8 @@ export class TypeOrmOrganizerEntity {
 
   @Column({ name: 'user_id' })
   readonly userId: string;
+
+  // relations
+  @OneToMany(() => TypeOrmEventEntity, (event) => event.organizer)
+  readonly events: TypeOrmEventEntity[];
 }

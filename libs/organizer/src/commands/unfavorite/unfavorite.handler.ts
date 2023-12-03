@@ -24,7 +24,6 @@ export class UnfavoriteHandler implements ICommandHandler<UnfavoriteCommand, voi
     this.logger.info({ command });
 
     const organizer = await this.repository.findById(command.organizerId);
-    console.log(1, organizer);
     if (!organizer || organizer.props.userId !== command.userId) {
       throw new OrganizerError.NotFound();
     } else if (!organizer.props.isFavorite) {
