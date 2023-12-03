@@ -8,6 +8,7 @@ export interface OrganizerQueryModel {
   password: string;
   isLocked: boolean;
   isActive: boolean;
+  isFavorite: boolean;
   createdAt: Date;
   updatedAt: Date;
   logoutAt?: Date;

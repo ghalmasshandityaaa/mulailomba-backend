@@ -11,6 +11,7 @@ type Props = {
   password: string;
   isLocked: boolean;
   isActive: boolean;
+  isFavorite: boolean;
   createdAt: Date;
   updatedAt: Date;
   logoutAt?: Date;
@@ -45,6 +46,7 @@ export class OrganizerAggregate extends Aggregate<Props, string> {
       username: kebabCase(props.name),
       password: props.password ? StringUtils.hash(props.password) : props.password,
       isActive: true,
+      isFavorite: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

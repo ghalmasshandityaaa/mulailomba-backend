@@ -29,6 +29,9 @@ export class TypeOrmOrganizerEntity {
   @Column({ name: 'is_active' })
   readonly isActive: boolean;
 
+  @Column({ name: 'is_favorite' })
+  readonly isFavorite: boolean;
+
   @Column({ name: 'created_at' })
   readonly createdAt: Date;
 
