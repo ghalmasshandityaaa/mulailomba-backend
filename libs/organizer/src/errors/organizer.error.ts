@@ -73,4 +73,19 @@ export namespace OrganizerError {
       );
     }
   }
+
+  export class AlreadyFavorited extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'organizer/already-favorited',
+            message: 'Organizer is already favorited and cannot be favorited again.',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

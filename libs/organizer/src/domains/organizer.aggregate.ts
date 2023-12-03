@@ -75,6 +75,10 @@ export class OrganizerAggregate extends Aggregate<Props, string> {
     this.raise(new OrganizerWasLogoutEvent({ organizerId: this.id }));
   }
 
+  public favorite(): void {
+    this.props.isFavorite = true;
+  }
+
   /**
    *
    * @param props

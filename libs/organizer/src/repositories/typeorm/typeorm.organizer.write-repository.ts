@@ -48,6 +48,23 @@ export class TypeOrmOrganizerWriteRepository
     }
   }
 
+  /**
+   *
+   * @param entity
+   */
+  async update(entity: OrganizerAggregate): Promise<void> {
+    return this.execute(async () => {
+      await this.dataSource
+        .createEntityManager()
+        .update(TypeOrmOrganizerEntity, { id: entity.id }, { ...entity.props });
+    });
+  }
+
+  /**
+   *
+   * @param id
+   * @returns
+   */
   async findById(id: string): Promise<OrganizerAggregate | undefined> {
     const entity = await this.dataSource
       .createQueryBuilder(TypeOrmOrganizerEntity, 'organizer')
