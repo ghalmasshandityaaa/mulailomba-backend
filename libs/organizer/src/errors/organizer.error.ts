@@ -73,4 +73,34 @@ export namespace OrganizerError {
       );
     }
   }
+
+  export class AlreadyFavorited extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'organizer/already-favorited',
+            message: 'Organizer is already favorited and cannot be favorited again.',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  export class NotFavorited extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'organizer/not-favorited',
+            message: 'Organizer is not favorited and cannot be unfavorited.',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

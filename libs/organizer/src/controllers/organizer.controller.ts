@@ -21,11 +21,10 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Response } from 'express';
-import { SwitchAccountCommand } from '../commands';
-import { SwitchAccountBodyDTO } from '../dtos';
-import { FindAccountOrganizersQueryDTO } from '../dtos/find-account-organizer.query.dto';
-import { FindOrganizerQuery } from '../queries';
-import { FindAccountOrganizersQuery } from '../queries/find-account-organizers/find-account-organizers.query';
+import { FavoriteCommand, SwitchAccountCommand, UnfavoriteCommand } from '../commands';
+import { FavoriteBodyDTO, FindAccountOrganizersQueryDTO, SwitchAccountBodyDTO } from '../dtos';
+import { UnfavoriteBodyDTO } from '../dtos/unfavorite.body.dto';
+import { FindAccountOrganizersQuery, FindOrganizerQuery } from '../queries';
 
 @Controller({
   path: 'organizers',
@@ -72,5 +71,23 @@ export class OrganizerController {
     CookieUtils.set(res, 'organizer_refresh_token', token.refreshToken);
 
     return token;
+  }
+
+  @Post('favorite')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RolePermission.USER)
+  async favoriteOrganizer(@Identity() identity: IIdentity, @Body() body: FavoriteBodyDTO) {
+    const command = new FavoriteCommand({ organizerId: body.id, userId: identity.id });
+    return await this.commandBus.execute(command);
+  }
+
+  @Post('unfavorite')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RolePermission.USER)
+  async unfavoriteOrganizer(@Identity() identity: IIdentity, @Body() body: UnfavoriteBodyDTO) {
+    const command = new UnfavoriteCommand({ organizerId: body.id, userId: identity.id });
+    return await this.commandBus.execute(command);
   }
 }

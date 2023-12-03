@@ -12,6 +12,7 @@ export class JsonOrganizerSerializer {
       email_address: model.emailAddress,
       is_locked: model.isLocked,
       is_active: model.isActive,
+      is_favorite: model.isFavorite,
       created_at: DateUtils.toUnix(model.createdAt),
       updated_at: DateUtils.toUnix(model.updatedAt),
       logout_at: model.logoutAt ? DateUtils.toUnix(model.logoutAt) : null,

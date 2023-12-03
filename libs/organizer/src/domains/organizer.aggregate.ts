@@ -11,6 +11,7 @@ type Props = {
   password: string;
   isLocked: boolean;
   isActive: boolean;
+  isFavorite: boolean;
   createdAt: Date;
   updatedAt: Date;
   logoutAt?: Date;
@@ -45,6 +46,7 @@ export class OrganizerAggregate extends Aggregate<Props, string> {
       username: kebabCase(props.name),
       password: props.password ? StringUtils.hash(props.password) : props.password,
       isActive: true,
+      isFavorite: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -71,6 +73,14 @@ export class OrganizerAggregate extends Aggregate<Props, string> {
 
   public logout(): void {
     this.raise(new OrganizerWasLogoutEvent({ organizerId: this.id }));
+  }
+
+  public favorite(): void {
+    this.props.isFavorite = true;
+  }
+
+  public unfavorite(): void {
+    this.props.isFavorite = false;
   }
 
   /**
