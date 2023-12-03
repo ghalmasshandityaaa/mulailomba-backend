@@ -2,12 +2,12 @@ import { JsonOrganizerProps, OrganizerQueryModel } from '@mulailomba/organizer/i
 import { JsonOrganizerSerializer } from '@mulailomba/organizer/serializers/json.organizer.serializer';
 
 export class FindAccountOrganizersResult {
-  readonly organizers: Array<JsonOrganizerProps & { totalEvent?: number }>;
+  readonly organizers: Array<JsonOrganizerProps & { total_event?: number }>;
 
   constructor(collections: Array<OrganizerQueryModel & { totalEvent?: number }>) {
     this.organizers = collections.map((collection) => ({
       ...JsonOrganizerSerializer.serialize({ ...collection }),
-      totalEvent: collection.totalEvent || 0,
+      total_event: collection.totalEvent || 0,
     }));
   }
 }
