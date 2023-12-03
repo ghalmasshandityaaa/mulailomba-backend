@@ -21,8 +21,9 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Response } from 'express';
-import { FavoriteCommand, SwitchAccountCommand } from '../commands';
+import { FavoriteCommand, SwitchAccountCommand, UnfavoriteCommand } from '../commands';
 import { FavoriteBodyDTO, FindAccountOrganizersQueryDTO, SwitchAccountBodyDTO } from '../dtos';
+import { UnfavoriteBodyDTO } from '../dtos/unfavorite.body.dto';
 import { FindAccountOrganizersQuery, FindOrganizerQuery } from '../queries';
 
 @Controller({
@@ -78,6 +79,15 @@ export class OrganizerController {
   @Roles(RolePermission.USER)
   async favoriteOrganizer(@Identity() identity: IIdentity, @Body() body: FavoriteBodyDTO) {
     const command = new FavoriteCommand({ organizerId: body.id, userId: identity.id });
+    return await this.commandBus.execute(command);
+  }
+
+  @Post('unfavorite')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RolePermission.USER)
+  async unfavoriteOrganizer(@Identity() identity: IIdentity, @Body() body: UnfavoriteBodyDTO) {
+    const command = new UnfavoriteCommand({ organizerId: body.id, userId: identity.id });
     return await this.commandBus.execute(command);
   }
 }

@@ -79,6 +79,10 @@ export class OrganizerAggregate extends Aggregate<Props, string> {
     this.props.isFavorite = true;
   }
 
+  public unfavorite(): void {
+    this.props.isFavorite = false;
+  }
+
   /**
    *
    * @param props

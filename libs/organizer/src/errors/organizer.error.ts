@@ -88,4 +88,19 @@ export namespace OrganizerError {
       );
     }
   }
+
+  export class NotFavorited extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'organizer/not-favorited',
+            message: 'Organizer is not favorited and cannot be unfavorited.',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
