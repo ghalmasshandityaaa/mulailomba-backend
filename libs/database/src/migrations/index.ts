@@ -13,6 +13,7 @@ import { eventTimeline1690034843800 } from './1690034843800-event-timeline';
 import { eventPrerequisite1690034852061 } from './1690034852061-event-prerequisite';
 import { addStatusEventCategory1690902290313 } from './1690902290313-add-status-event-category';
 import { updateColumnSize1692372733317 } from './1692372733317-update-column-size';
+import { addFavoriteOrganizer1701580374931 } from './1701580374931-add-favorite-organizer';
 
 export const Migrations = [
   user1690034715248,
@@ -30,4 +31,5 @@ export const Migrations = [
   eventPrerequisite1690034852061,
   addStatusEventCategory1690902290313,
   updateColumnSize1692372733317,
+  addFavoriteOrganizer1701580374931,
 ];
