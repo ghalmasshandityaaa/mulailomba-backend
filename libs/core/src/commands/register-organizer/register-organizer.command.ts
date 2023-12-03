@@ -1,3 +1,4 @@
+import { UploadedFileType } from '@mulailomba/common';
 import { ICommand } from '@nestjs/cqrs';
 
 class Props {
@@ -6,6 +7,8 @@ class Props {
   readonly isLocked: boolean;
   readonly password: string;
   readonly userId: string;
+  readonly profile?: UploadedFileType;
+  readonly background?: UploadedFileType;
 }
 
 export class RegisterOrganizerCommand extends Props implements ICommand {

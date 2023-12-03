@@ -44,16 +44,16 @@ export class CloudinaryService {
    * uploader.upload method.
    * @returns FileType | UploadApiErrorResponse
    */
-  async signedUpload(
-    file: UploadedFileType,
-    options?: UploadApiOptions,
-  ): Promise<FileType | UploadApiErrorResponse> {
-    return new Promise(async (resolve, reject) => {
+  async signedUpload(file: UploadedFileType, options?: UploadApiOptions): Promise<FileType> {
+    return new Promise(async (resolve, _) => {
       cloudinary.uploader.upload(
         `data:${file.mimetype};base64,${file.base64}`,
         options,
         (error, result) => {
-          if (error) reject(error);
+          if (error) {
+            this.logger.error({ error });
+            throw new Error(JSON.stringify(error));
+          }
           if (result) {
             const mappedResult: FileType = {
               publicId: result.public_id,

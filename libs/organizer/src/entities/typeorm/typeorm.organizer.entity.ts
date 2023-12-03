@@ -12,11 +12,19 @@ export class TypeOrmOrganizerEntity {
   @Column({ name: 'username' })
   readonly username: string;
 
-  @Column({ name: 'profile' })
-  readonly profile: string;
+  @Column({
+    name: 'profile',
+    type: 'varchar',
+    nullable: true,
+  })
+  readonly profile: string | null;
 
-  @Column({ name: 'background' })
-  readonly background: string;
+  @Column({
+    name: 'background',
+    type: 'varchar',
+    nullable: true,
+  })
+  readonly background: string | null;
 
   @Column({ name: 'email_address' })
   readonly emailAddress: string;
