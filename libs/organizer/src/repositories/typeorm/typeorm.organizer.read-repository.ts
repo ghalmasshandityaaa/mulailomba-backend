@@ -108,7 +108,7 @@ export class TypeOrmOrganizerReadRepository
     const entities = await query.getRawMany();
 
     return entities.map((entity) => ({
-      id: entity.id,
+      id: entity.organizer_id,
       name: entity.organizer_name,
       username: entity.organizer_username,
       profile: entity.organizer_profile,
