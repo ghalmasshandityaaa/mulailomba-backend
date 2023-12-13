@@ -123,6 +123,7 @@ export class AuthController {
   ) {
     const command = new RegisterOrganizerCommand({
       ...body,
+      isLocked: body.isLocked === 'true',
       userId: identity.id,
       profile: files.profile ? files.profile[0] : undefined,
       background: files.background ? files.background[0] : undefined,
