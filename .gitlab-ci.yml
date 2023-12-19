@@ -37,23 +37,20 @@ docker-build:
 
 deploy-development:
   stage: deploy
-  image: alpine:latest
+  image: gitlab/dind:latest
   environment:
     name: development
   before_script:
-    - 'command -v ssh-agent >/dev/null || (apk update && apk add --no-cache openssh-client wget gnupg)'
-    - wget -qO- https://get.docker.com/gpg | gpg --import
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
-    - touch ~/.ssh/config
-    - touch ~/.ssh/known_hosts
-    - chmod -R 400 ~/.ssh
-    - ssh-keyscan <ip> >> ~/.ssh/known_hosts
-    - '[[ -f /.dockerinit ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan -H $SSH_ADDRESS >> ~/.ssh/known_hosts
   script:
-    - ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_ADDRESS} "export APP_IMAGE_DEV=$CI_REGISTRY_IMAGE && export APP_IMAGE_DEV_TAG=$TAG_IMAGE && docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY && cd /root/mla-backend && git pull && docker-compose -f docker-compose.dev.yml down && docker-compose -f docker-compose.dev.yml pull && docker-compose -f docker-compose.dev.yml up -d"
-#
+    - printf "DATABASE_URL=${DATABASE_URL}\nPORT=80\n" > .env
+    - scp -r ./.env ./docker-compose.dev.yml root@${SSH_ADDRESS}:~/
+    - ssh $SSH_USER@$SSH_ADDRESS "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}; docker-compose -f docker-compose.dev.yml stop; docker-compose -f docker-compose.dev.yml rm web --force; docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest; docker-compose -f docker-compose.dev.yml up -d"#
 #
 # deploy-production:
 #   stage: deploy
