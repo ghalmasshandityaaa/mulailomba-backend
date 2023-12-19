@@ -1,9 +1,8 @@
-
-## Install Nest CLI globally
-RUN yarn global add @nestjs/cli
-
 # Build stage
 FROM node:18.19-alpine as build
+## Install Nest CLI globally
+RUN yarn global add @nestjs/cli
+## Work directory
 WORKDIR /home/node/app
 ## Copy
 COPY apps/api ./apps/api
