@@ -41,13 +41,16 @@ deploy-development:
   environment:
     name: development
   before_script:
-    - 'which ssh-agent || ( apk update && apk add --no-cache openssh )'
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client wget gnupg -y )'
+    - wget -qO- https://get.docker.com/gpg | apt-key add -
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 700 ~/.ssh/id_rsa
-    - eval "$(ssh-agent -s)"
-    - ssh-add ~/.ssh/id_rsa
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - touch ~/.ssh/config
+    - touch ~/.ssh/known_hosts
+    - chmod -R 400 ~/.ssh
+    - ssh-keyscan <ip> >> ~/.ssh/known_hosts
+    - '[[ -f /.dockerinit ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_ADDRESS} "export APP_IMAGE_DEV=$CI_REGISTRY_IMAGE && export APP_IMAGE_DEV_TAG=$TAG_IMAGE && docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY && cd /root/mla-backend && git pull && docker-compose -f docker-compose.dev.yml down && docker-compose -f docker-compose.dev.yml pull && docker-compose -f docker-compose.dev.yml up -d"
 #
