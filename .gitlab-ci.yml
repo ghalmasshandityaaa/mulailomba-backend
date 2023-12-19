@@ -50,11 +50,7 @@ deploy-development:
   script:
     - printf "DATABASE_URL=${DATABASE_URL}\nPORT=8001\n" > .env
     - scp -r ./.env ./docker-compose.dev.yml $SSH_USER@${SSH_ADDRESS}:~/
-    - ssh $SSH_USER@$SSH_ADDRESS "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
-    - docker compose -f docker-compose.dev.yml stop;
-    - docker compose -f docker-compose.dev.yml rm web --force;
-    - docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest;
-    - docker compose -f docker-compose.dev.yml up -d"
+    - ssh $SSH_USER@$SSH_ADDRESS "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}; docker compose -f docker-compose.dev.yml stop; docker compose -f docker-compose.dev.yml rm app-development --force; docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest; docker compose -f docker-compose.dev.yml up -d"
 #
 # deploy-production:
 #   stage: deploy
