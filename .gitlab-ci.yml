@@ -1,47 +1,47 @@
+cache:
+  key: '$CI_BUILD_REF_NAME node:16-alpine'
+  paths:
+    - node_modules/
+
 stages:
   - build
-  # - build-container
-  # - deploy
+  - build-container
+  - deploy
 
 variables:
   TAG_IMAGE: $CI_COMMIT_BRANCH-$CI_COMMIT_SHA
 
-# build-app:
-#   image: node:alpine
-#   stage: build
-#   before_script:
-#     - npm install
-#   script:
-#     - npm run build
-#   artifacts:
-#     untracked: true
-
-test:
+build-app:
+  image: node:16-alpine
   stage: build
-  variables:
-    SECURE_FILES_DOWNLOAD_PATH: './secure'
+  before_script:
+    - apk add --update bash
+    - apk add --update git && rm -rf /tmp/* /var/cache/apk/*
+    - npm i -g yarn
+    - yarn install
   script:
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - ls -lah './secure'
-#
-# docker-build:
-#   image: docker:latest
-#   stage: build-container
-#   dependencies:
-#     - build-app
-#   services:
-#     - docker:dind
-#   before_script:
-#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#   script:
-#     - docker build -t "$CI_REGISTRY_IMAGE:latest" -t "$CI_REGISTRY_IMAGE:$TAG_IMAGE" .
-#     - docker push "$CI_REGISTRY_IMAGE" --all-tags
+    - yarn build
+  artifacts:
+    untracked: true
 
-# deploy-development:
+docker-build:
+  image: docker:latest
+  stage: build-container
+  dependencies:
+    - build-app
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE:latest" -t "$CI_REGISTRY_IMAGE:$TAG_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE" --all-tags
+#
+# deploy-staging:
 #   stage: deploy
 #   image: alpine:latest
 #   environment:
-#     name: development
+#     name: staging
 #     url: http://staging.2pai-dev.com
 #   before_script:
 #     - 'which ssh-agent || ( apk update && apk add --no-cache openssh )'
