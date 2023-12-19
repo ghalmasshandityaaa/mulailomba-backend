@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  app-development:
+    image: ${APP_IMAGE_DEV}:${APP_IMAGE_DEV_TAG}
+    container_name: app-development
+    environment:
+      - PORT=8001
+    networks:
+      - nginx
+    restart: always
+networks:
+  envoy:
+    external: true
