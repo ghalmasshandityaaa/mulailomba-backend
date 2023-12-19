@@ -20,6 +20,7 @@ build-app:
     - yarn build
   artifacts:
     untracked: true
+    expire_in: 1 day
 
 docker-build:
   image: docker:latest
