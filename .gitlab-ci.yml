@@ -6,7 +6,7 @@ cache:
 stages:
   - build
   - build-container
-  - deploy
+  # - deploy
 
 variables:
   TAG_IMAGE: $CI_COMMIT_BRANCH-$CI_COMMIT_SHA
@@ -17,7 +17,6 @@ build-app:
   before_script:
     - apk add --update bash
     - apk add --update git && rm -rf /tmp/* /var/cache/apk/*
-    - npm i -g yarn
     - yarn install
   script:
     - yarn build
