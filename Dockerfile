@@ -1,3 +1,7 @@
+
+## Install Nest CLI globally
+RUN yarn global add @nestjs/cli
+
 # Build stage
 FROM node:18.19-alpine as build
 WORKDIR /home/node/app
@@ -5,12 +9,12 @@ WORKDIR /home/node/app
 COPY apps/api ./apps/api
 COPY libs ./libs
 COPY nest-cli.json package.json yarn.lock tsconfig.json tsconfig.build.json ./
-## Install Nest CLI globally
-RUN yarn global add @nestjs/cli
 ## Install dependencies
-RUN yarn install --production --frozen-lockfile
+RUN yarn install --frozen-lockfile
 ## Build source
-RUN yarn build api
+RUN yarn build
+# Remove development dependencies
+RUN npm prune --production
 ## Remove unused dependencies
 RUN rm -rf node_modules/rxjs/src/
 RUN rm -rf node_modules/rxjs/bundles/
