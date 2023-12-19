@@ -1,5 +1,5 @@
 cache:
-  key: '$CI_BUILD_REF_NAME node:16-alpine'
+  key: '$CI_BUILD_REF_NAME node:18.19-alpine'
   paths:
     - node_modules/
 
@@ -12,7 +12,7 @@ variables:
   TAG_IMAGE: $CI_COMMIT_BRANCH-$CI_COMMIT_SHA
 
 build-app:
-  image: node:16-alpine
+  image: node:18.19-alpine
   stage: build
   before_script:
     - yarn install
