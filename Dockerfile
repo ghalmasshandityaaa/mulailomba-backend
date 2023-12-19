@@ -5,6 +5,8 @@ WORKDIR /home/node/app
 COPY apps/api ./apps/api
 COPY libs ./libs
 COPY nest-cli.json package.json yarn.lock tsconfig.json tsconfig.build.json ./
+## Install Nest CLI globally
+RUN yarn global add @nestjs/cli
 ## Install dependencies
 RUN yarn install --production --frozen-lockfile
 ## Build source
