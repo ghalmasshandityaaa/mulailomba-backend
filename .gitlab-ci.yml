@@ -50,8 +50,7 @@ deploy-development:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_ADDRESS} "export APP_IMAGE_DEV=$CI_REGISTRY_IMAGE && export APP_IMAGE_DEV_TAG=$TAG_IMAGE && docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY && cd /root/mla-backend && git pull && docker-compose -f docker-compose.dev.yml down && docker-compose -f docker-compose.dev.yml pull && docker-compose -f docker-compose.dev.yml up -d"
-  only:
-    - master
+#
 #
 # deploy-production:
 #   stage: deploy
