@@ -48,7 +48,7 @@ deploy-development:
     - ssh-add ~/.ssh/id_rsa
     - ssh-keyscan -H $SSH_ADDRESS >> ~/.ssh/known_hosts
     - echo "Login to Docker registry..."
-    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}"
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" -p ${CI_REGISTRY_PASSWORD} "${CI_REGISTRY}"
   script:
     - echo "Setting environment variables..."
     - printf "DATABASE_URL=${DATABASE_URL}\nPORT=8001\n" > .env
