@@ -1,6 +1,6 @@
 stages:
   - build
-  # - deploy
+  - deploy
 
 variables:
   DOCKER_TAG: 'latest'
@@ -21,6 +21,29 @@ build:
     - docker pull "$DOCKER_IMAGE" || true
     - docker build --pull --cache-from "$DOCKER_IMAGE" --cache-from "${DOCKER_REPO}:latest" -t "$DOCKER_IMAGE" ./
     - docker push "$DOCKER_IMAGE"
+
+deploy:
+  image: kroniak/ssh-client
+  stage: deploy
+  before_script:
+    - chmod 400 $SSH_PRIVATE_KEY
+  script:
+    # login to gitlab container registry
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}"
+    # remove old containers and images if exist
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker rm -f ${CI_PROJECT_NAME} || true"
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker rmi \$(docker images -q ${DOCKER_REPO}) || true"
+    # download and run new image
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker run
+      --name=$CI_PROJECT_NAME
+      --restart=always
+      --network='host'
+      -d $DOCKER_IMAGE"
+#
 # deploy-development:
 #   stage: deploy
 #   image: gitlab/dind:latest

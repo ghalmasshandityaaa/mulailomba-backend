@@ -27,5 +27,5 @@ WORKDIR /home/node/app
 ## Copy
 COPY --from=build --chown=node:node /home/node/app/dist ./dist
 COPY --from=build --chown=node:node /home/node/app/node_modules ./node_modules
-
+EXPOSE 8001
 CMD ['node', 'dist/apps/api/src/main']
