@@ -37,7 +37,7 @@ deploy:
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "echo \"$ENV\" > ~/app/mla-backend/.env"
     - echo "Stopping and removing existing containers on the remote server..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
-      docker compose -f docker-compose.dev.yml down"
+      docker compose -f ~/app/mla-backend/docker-compose.dev.yml down"
     - echo "Pulling the latest Docker image..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
       docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY} && docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
