@@ -13,7 +13,7 @@ RUN yarn install --frozen-lockfile
 ## Build source
 RUN yarn build
 # Remove development dependencies
-RUN yarn install --production --forzen-lockfile
+RUN yarn install --production --frozen-lockfile
 ## Remove unused dependencies
 RUN rm -rf node_modules/rxjs/src/
 RUN rm -rf node_modules/rxjs/bundles/
@@ -28,4 +28,4 @@ WORKDIR /home/node/app
 COPY --from=build --chown=node:node /home/node/app/dist ./dist
 COPY --from=build --chown=node:node /home/node/app/node_modules ./node_modules
 EXPOSE 8001
-CMD ['node', 'dist/apps/api/src/main']
+CMD ["node", "dist/apps/api/src/main"]

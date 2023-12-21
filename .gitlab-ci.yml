@@ -27,50 +27,21 @@ deploy:
   stage: deploy
   before_script:
     - chmod 400 $SSH_PRIVATE_KEY
-  script:
     # login to gitlab container registry
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
       docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}"
-    # remove old containers and images if exist
+  script:
+    - echo "Setting environment variables..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
-      docker rm -f ${CI_PROJECT_NAME} || true"
+      printf "DATABASE_URL=${DATABASE_URL}\nPORT=8001\n" > .env"
+    - echo "Copying files to the remote server..."
+    - scp -r ./.env ./docker-compose.dev.yml $SSH_USER@$SSH_ADDRESS:~/app/mla-backend
+    - echo "Stopping and removing existing containers on the remote server..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
-      docker rmi \$(docker images -q ${DOCKER_REPO}) || true"
-    # download and run new image
+      docker compose -f docker-compose.dev.yml down"
+    - echo "Pulling the latest Docker image..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
-      docker run
-      --name=$CI_PROJECT_NAME
-      --restart=always
-      --network='host'
-      -d $DOCKER_IMAGE"
-#
-# deploy-development:
-#   stage: deploy
-#   image: gitlab/dind:latest
-#   environment:
-#     name: development
-#   before_script:
-#     - 'which ssh-agent || ( apk update && apk add --no-cache openssh )'
-#     - mkdir -p ~/.ssh
-#     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-#     - chmod 700 ~/.ssh/id_rsa
-#     - eval "$(ssh-agent -s)"
-#     - ssh-add ~/.ssh/id_rsa
-#     - ssh-keyscan -H $SSH_ADDRESS >> ~/.ssh/known_hosts
-#     - echo "Login to Docker registry..."
-#     - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" -p ${CI_REGISTRY_PASSWORD} "${CI_REGISTRY}"
-#     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-#   script:
-#     - ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_ADDRESS} "export APP_IMAGE_STG=$CI_REGISTRY_IMAGE && export APP_IMAGE_STG_TAG=$TAG_IMAGE && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY && cd ~/app/mla-backend && git pull && docker compose -f docker-compose.dev.yml down && docker compose -f docker-compose.dev.yml pull && docker compose -f docker-compose.dev.yml up -d"
-#       # - echo "Setting environment variables..."
-#       # - printf "DATABASE_URL=${DATABASE_URL}\nPORT=8001\n" > .env
-#       # - echo "Copying files to the remote server..."
-#       # - scp -r ./.env ./docker-compose.dev.yml $SSH_USER@$SSH_ADDRESS:~/
-#       # - echo "Logging in to Docker registry on the remote server..."
-#       # - ssh $SSH_USER@$SSH_ADDRESS "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
-#       # - echo "Stopping and removing existing containers on the remote server..."
-#       # - ssh $SSH_USER@$SSH_ADDRESS "docker compose -f docker-compose.dev.yml down"
-#       # - echo "Pulling the latest Docker image..."
-#       # - ssh $SSH_USER@$SSH_ADDRESS "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
-#       # - echo "Starting the Docker containers on the remote server..."
-#       # - ssh $SSH_USER@$SSH_ADDRESS "docker compose -f docker-compose.dev.yml up -d"
+      docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
+    - echo "Starting the Docker containers on the remote server..."
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
