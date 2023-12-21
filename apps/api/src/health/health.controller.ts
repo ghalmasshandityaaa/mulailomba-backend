@@ -37,4 +37,9 @@ export class HealthController {
       cloudinary,
     };
   }
+
+  @Get('tes')
+  tes() {
+    return 'ok';
+  }
 }
