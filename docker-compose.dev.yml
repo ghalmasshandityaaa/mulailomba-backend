@@ -2,7 +2,6 @@ version: '3'
 
 services:
   app-development:
-    container_name: app-development
     image: registry.gitlab.com/mulailomba/mla-backend:latest
     networks:
       - nginx

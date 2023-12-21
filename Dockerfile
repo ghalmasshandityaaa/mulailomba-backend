@@ -13,7 +13,7 @@ RUN yarn install --frozen-lockfile
 ## Build source
 RUN yarn build
 # Remove development dependencies
-RUN yarn install --production --frozen-lockfile
+# RUN yarn install --production --frozen-lockfile
 ## Remove unused dependencies
 RUN rm -rf node_modules/rxjs/src/
 RUN rm -rf node_modules/rxjs/bundles/
