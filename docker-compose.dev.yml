@@ -1,21 +1,9 @@
 version: '3'
 
 services:
-  app-development:
+  api:
     image: registry.gitlab.com/mulailomba/mla-backend:latest
-    networks:
-      - nginx
     env_file:
       - .env
     ports:
       - '8000:8000'
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 1
-        delay: 15s
-      restart_policy:
-        condition: on-failure
-networks:
-  nginx:
-    external: true
