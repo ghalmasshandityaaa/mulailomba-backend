@@ -26,6 +26,7 @@
     "migration:revert": "tsc && typeorm migration:revert -d dist/libs/database/src/config/data-source.js"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@joi/date": "^2.1.0",
     "@nestjs/common": "8.4.7",
     "@nestjs/config": "2.2.0",
@@ -71,7 +72,6 @@
     "typeorm": "0.3.10"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2",
     "@nestjs/cli": "8.2.2",
     "@nestjs/schematics": "8.0.11",
     "@nestjs/testing": "8.4.7",
