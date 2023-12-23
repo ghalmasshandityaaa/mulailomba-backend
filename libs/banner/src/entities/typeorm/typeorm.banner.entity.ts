@@ -1,4 +1,3 @@
-import { FileType } from '@mulailomba/common';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 export enum BannerPosition {
@@ -30,17 +29,9 @@ export class TypeOrmBannerEntity {
 
   @Column({
     name: 'file',
-    type: 'text',
-    transformer: {
-      from(value) {
-        return JSON.parse(value);
-      },
-      to(value) {
-        return JSON.stringify(value);
-      },
-    },
+    type: 'varchar',
   })
-  readonly file: FileType;
+  readonly file: string;
 
   @Column({ name: 'start_date' })
   readonly startDate: Date;

@@ -1,4 +1,3 @@
-import { FileType } from '../entities/typeorm.event.entity';
 import {
   EVENT_CATEGORY_STATUS_ENUM,
   EVENT_PREREQUISITE_TYPE_ENUM,
@@ -8,7 +7,7 @@ import {
 export interface EventQueryModel {
   id: string;
   name: string;
-  poster: FileType;
+  poster: string;
   description: string | null;
   isMultipleCategory: boolean;
   benefit: string[];
@@ -48,7 +47,7 @@ export interface EventTimelineQueryModel {
   endDate: Date | null;
   type: EVENT_TIMELINE_TYPE_ENUM;
   input: string | null;
-  additionalFile: FileType | null;
+  additionalFile: string | null;
   createdAt: Date;
   updatedAt: Date;
   eventCategoryId: string;

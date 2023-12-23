@@ -1,10 +1,9 @@
-import { UploadedFileType } from '@mulailomba/common';
-import { FileType } from '@mulailomba/event/entities/typeorm.event.entity';
+import { FileType, UploadedFileType } from '@mulailomba/common';
 import { Inject, Injectable } from '@nestjs/common';
 import { UploadApiErrorResponse, UploadApiOptions, v2 as cloudinary } from 'cloudinary';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { Readable } from 'stream';
-import { CloudinaryOptions, CLOUDINARY_OPTIONS } from './cloudinary.interface';
+import { CLOUDINARY_OPTIONS, CloudinaryOptions } from './cloudinary.interface';
 
 @Injectable()
 export class CloudinaryService {

@@ -1,4 +1,3 @@
-import { FileType } from '@mulailomba/common';
 import { BannerPosition, BannerStatus } from '../entities/typeorm/typeorm.banner.entity';
 
 export interface JsonBannerProps {
@@ -6,7 +5,7 @@ export interface JsonBannerProps {
   name: string;
   description: string;
   position: BannerPosition;
-  file: FileType;
+  file: string;
   start_date: number; // unix
   end_date: number; // unix
   status: BannerStatus;
