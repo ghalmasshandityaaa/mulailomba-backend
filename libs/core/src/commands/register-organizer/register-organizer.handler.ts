@@ -8,6 +8,7 @@ import { TOKEN_SERVICE } from '@mulailomba/token/constants';
 import { ITokenService } from '@mulailomba/token/interfaces';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { omit } from 'lodash';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { RegisterOrganizerCommand } from './register-organizer.command';
 import { RegisterOrganizerResult } from './register-organizer.result';
@@ -32,7 +33,7 @@ export class RegisterOrganizerCodeHandler
    */
   async execute(command: RegisterOrganizerCommand): Promise<RegisterOrganizerResult> {
     this.logger.trace(`BEGIN`);
-    this.logger.info({ command });
+    this.logger.info({ ...omit(command, 'profile', 'background') });
 
     const { profile, background, userId, ...data } = command;
     const organizer = await this.organizerService.findByEmail(command.emailAddress);

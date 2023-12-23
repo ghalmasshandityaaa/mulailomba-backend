@@ -198,7 +198,6 @@ export class MinioService {
   }): Promise<UploadedObjectInfo | undefined> {
     const method = 'getPresignedUrl';
     this.logger.trace({ method }, 'BEGIN');
-    this.logger.debug({ params });
 
     const { bucketName, fileName, file, metadata } = params;
 
