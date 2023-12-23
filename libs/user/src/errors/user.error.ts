@@ -44,4 +44,18 @@ export namespace UserError {
       );
     }
   }
+
+  export class PhoneNumberTaken extends HttpException {
+    constructor() {
+      super(
+        {
+          ok: false,
+          error: {
+            code: 'user/phone-number-taken',
+          },
+        } as HttpErrorResponse,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

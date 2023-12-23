@@ -1,8 +1,10 @@
+import { DatabaseConstraintError } from '@mulailomba/common/repositories';
 import { Inject } from '@nestjs/common';
 import { EventPublisher } from '@nestjs/cqrs';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { USER_READ_REPOSITORY, USER_WRITE_REPOSITORY } from '../constants';
 import { CreateUserProps, UserAggregate } from '../domains';
+import { UserError } from '../errors';
 import {
   IUserReadRepository,
   IUserService,
@@ -43,7 +45,15 @@ export class UserService implements IUserService {
 
   async create(props: CreateUserProps): Promise<UserAggregate> {
     const entity = this.publisher.mergeObjectContext(UserAggregate.create({ ...props }));
-    await this.writeRepository.create(entity);
+
+    try {
+      await this.writeRepository.create(entity);
+    } catch (err) {
+      if (err instanceof DatabaseConstraintError && err.constraint.isUnique) {
+        throw new UserError.PhoneNumberTaken();
+      }
+      throw err;
+    }
     return entity;
   }
 }
