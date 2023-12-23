@@ -1,4 +1,4 @@
-import { Aggregate, FileType, StringUtils } from '@mulailomba/common';
+import { Aggregate, StringUtils } from '@mulailomba/common';
 import { kebabCase } from 'lodash';
 import { OrganizerWasLogoutEvent } from './events';
 
@@ -21,10 +21,7 @@ type Props = {
 export type CreateOrganizerProps = Required<
   Pick<Props, 'name' | 'emailAddress' | 'password' | 'isLocked' | 'userId'>
 > &
-  Partial<{
-    profile: FileType;
-    background: FileType;
-  }>;
+  Partial<Pick<Props, 'profile' | 'background'>>;
 
 type UpdatableProps = Partial<
   Pick<Props, 'name' | 'username' | 'profile' | 'background' | 'password' | 'isLocked' | 'isActive'>
@@ -48,8 +45,8 @@ export class OrganizerAggregate extends Aggregate<Props, string> {
       ...props,
       username: kebabCase(props.name),
       password: props.password ? StringUtils.hash(props.password) : props.password,
-      profile: props.profile ? JSON.stringify(props.profile) : null,
-      background: props.background ? JSON.stringify(props.background) : null,
+      profile: props.profile ?? null,
+      background: props.background ?? null,
       isActive: true,
       isFavorite: false,
       createdAt: new Date(),

@@ -1,4 +1,3 @@
-import { CloudinaryModule } from '@mulailomba/cloudinary';
 import { DynamicModule, Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { TerminusModule } from '@nestjs/terminus';
@@ -30,7 +29,7 @@ export class HealthModule {
     const router = createRouter();
     return {
       module: HealthModule,
-      imports: [TerminusModule, router, CloudinaryModule.forRoot()],
+      imports: [TerminusModule, router],
       controllers: [HealthController],
     };
   }

@@ -1,5 +1,5 @@
-import { CloudinaryService } from '@mulailomba/cloudinary';
-import { FileType, FileUtils, RolePermission, UploadedFileType } from '@mulailomba/common';
+import { DateUtils, RolePermission, UploadedFileType } from '@mulailomba/common';
+import { MinioService } from '@mulailomba/minio';
 import { ORGANIZER_SERVICE } from '@mulailomba/organizer/constants';
 import { OrganizerAggregate } from '@mulailomba/organizer/domains';
 import { OrganizerError } from '@mulailomba/organizer/errors';
@@ -21,9 +21,9 @@ export class RegisterOrganizerCodeHandler
     private readonly logger: PinoLogger,
     @Inject(ORGANIZER_SERVICE)
     private readonly organizerService: IOrganizerService,
-    private readonly cloudinary: CloudinaryService,
     @Inject(TOKEN_SERVICE)
     private readonly tokenService: ITokenService,
+    private readonly minio: MinioService,
   ) {}
 
   /**
@@ -38,7 +38,7 @@ export class RegisterOrganizerCodeHandler
     const organizer = await this.organizerService.findByEmail(command.emailAddress);
     if (organizer) throw new OrganizerError.EmailTaken();
 
-    const uploadPromises: Array<Promise<FileType>> = [];
+    const uploadPromises: Array<Promise<{ url: string; secureUrl: string } | undefined>> = [];
     if (profile) {
       uploadPromises.push(this.upload({ file: profile, type: 'PROFILE', userId }));
     }
@@ -47,25 +47,25 @@ export class RegisterOrganizerCodeHandler
       uploadPromises.push(this.upload({ file: background, type: 'BACKGROUND', userId }));
     }
 
-    let newProfile: FileType | undefined;
-    let newBackground: FileType | undefined;
+    let newProfile: string | undefined;
+    let newBackground: string | undefined;
     if (uploadPromises.length) {
       const response = await Promise.all(uploadPromises);
       if (uploadPromises.length === 2) {
-        newProfile = response[0];
-        newBackground = response[1];
+        newProfile = response[0]?.url;
+        newBackground = response[1]?.url;
       } else if (profile) {
-        newProfile = response[0];
+        newProfile = response[0]?.url;
       } else {
-        newBackground = response[0];
+        newBackground = response[0]?.url;
       }
     }
 
     const newOrganizer = OrganizerAggregate.create({
       ...data,
       userId,
-      profile: newProfile || undefined,
-      background: newBackground || undefined,
+      profile: newProfile,
+      background: newBackground,
     });
 
     const [token] = await Promise.all([
@@ -87,20 +87,24 @@ export class RegisterOrganizerCodeHandler
     file: UploadedFileType;
     userId: string;
     type: 'BACKGROUND' | 'PROFILE';
-  }) {
-    // eslint-disable-next-line prefer-const
-    let { file, type, userId } = params;
+  }): Promise<{ url: string; secureUrl: string } | undefined> {
+    const { file, userId, type } = params;
 
-    file = { ...file, base64: file.buffer.toString('base64') };
+    const exist = await this.minio.bucketExists(userId);
+    if (!exist) await this.minio.createBucket(userId);
 
-    const { filename } = FileUtils.generateFilename(file, userId);
-    const response = await this.cloudinary.signedUpload(file, {
-      use_filename: true,
-      unique_filename: false,
-      public_id: filename,
-      folder: `${userId}/${type}`,
+    const timestamp = DateUtils.toUnix(new Date());
+    const filename = `${type}/${timestamp}-${file.originalname}`.replace(/\s/g, '');
+    await this.minio.putObject({
+      fileName: filename,
+      bucketName: userId,
+      file: file.buffer,
+      metadata: {
+        'Content-Type': file.mimetype,
+      },
     });
 
+    const response = await this.minio.getPresignedUrl(filename, userId);
     return response;
   }
 }

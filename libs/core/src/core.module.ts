@@ -1,5 +1,5 @@
-import { CloudinaryModule } from '@mulailomba/cloudinary';
 import { MailerModule } from '@mulailomba/mailer';
+import { MinioModule } from '@mulailomba/minio';
 import { OrganizerModule } from '@mulailomba/organizer';
 import { TokenModule } from '@mulailomba/token';
 import { UserModule } from '@mulailomba/user';
@@ -38,7 +38,7 @@ const Services: Provider<any>[] = [
     MailerModule,
     OrganizerModule,
     TokenModule,
-    CloudinaryModule.forRoot(),
+    MinioModule.forRoot(),
   ],
   controllers: [AuthController, AuthGoogleController, AuthFacebookController],
   providers: [

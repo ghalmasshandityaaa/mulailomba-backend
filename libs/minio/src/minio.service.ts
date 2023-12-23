@@ -31,19 +31,31 @@ export class MinioService {
   /**
    *
    * @param bucketName
+   * @returns
    */
-  async createBucket(bucketName: string): Promise<void> {
-    const method = 'createBucket';
-    this.logger.trace('BEGIN', { method });
+  async bucketExists(bucketName: string): Promise<boolean> {
+    const method = 'bucketExists';
+    this.logger.trace({ method }, 'BEGIN');
     this.logger.debug({ bucketName });
 
     const bucketExists = await this._minio.bucketExists(bucketName);
 
-    if (!bucketExists) {
-      await this._minio.makeBucket(bucketName);
-    }
+    this.logger.trace({ method }, 'END');
+    return bucketExists;
+  }
 
-    this.logger.trace('END', { method });
+  /**
+   *
+   * @param bucketName
+   */
+  async createBucket(bucketName: string): Promise<void> {
+    const method = 'createBucket';
+    this.logger.trace({ method }, 'BEGIN');
+    this.logger.debug({ bucketName });
+
+    await this._minio.makeBucket(bucketName);
+
+    this.logger.trace({ method }, 'END');
   }
 
   /**
@@ -52,11 +64,11 @@ export class MinioService {
    */
   async listBucket(): Promise<BucketItemFromList[]> {
     const method = 'listBucket';
-    this.logger.trace('BEGIN', { method });
+    this.logger.trace({ method }, 'BEGIN');
 
     const buckets = await this._minio.listBuckets();
 
-    this.logger.trace('END', { method });
+    this.logger.trace({ method }, 'END');
     return buckets;
   }
 
@@ -68,7 +80,7 @@ export class MinioService {
    */
   async listObject(bucketName: string, prefix?: string): Promise<BucketItem[]> {
     const method = 'createBucket';
-    this.logger.trace('BEGIN', { method });
+    this.logger.trace({ method }, 'BEGIN');
     this.logger.debug({ bucketName });
 
     const items: BucketItem[] = [];
@@ -89,7 +101,7 @@ export class MinioService {
       );
     }
 
-    this.logger.trace('END', { method });
+    this.logger.trace({ method }, 'END');
     return items;
   }
 
@@ -104,7 +116,7 @@ export class MinioService {
     bucketName: string,
   ): Promise<{ url: string; secureUrl: string } | undefined> {
     const method = 'getPresignedUrl';
-    this.logger.trace('BEGIN', { method });
+    this.logger.trace({ method }, 'BEGIN');
     this.logger.debug({ fileName, bucketName });
 
     const baseUrl = 'https://minio.mulailomba.com';
@@ -119,7 +131,7 @@ export class MinioService {
       return undefined;
     }
 
-    this.logger.trace('END', { method });
+    this.logger.trace({ method }, 'END');
 
     return {
       url: `${baseUrl}/${bucketName}/${fileName}`,
@@ -138,7 +150,7 @@ export class MinioService {
    */
   async getObject(fileName: string, bucketName: string): Promise<Buffer | undefined> {
     const method = 'getPresignedUrl';
-    this.logger.trace('BEGIN', { method });
+    this.logger.trace({ method }, 'BEGIN');
     this.logger.debug({ fileName, bucketName });
 
     let buffer: Buffer | undefined;
@@ -149,7 +161,7 @@ export class MinioService {
       this.logger.warn(`error when get object from minio, reason: ${err.message}`);
     }
 
-    this.logger.trace('END', { method });
+    this.logger.trace({ method }, 'END');
     return buffer;
   }
 
@@ -165,7 +177,7 @@ export class MinioService {
     metadata?: ItemBucketMetadata;
   }): Promise<UploadedObjectInfo | undefined> {
     const method = 'getPresignedUrl';
-    this.logger.trace('BEGIN', { method });
+    this.logger.trace({ method }, 'BEGIN');
     this.logger.debug({ params });
 
     const { bucketName, fileName, file, metadata } = params;
@@ -177,7 +189,7 @@ export class MinioService {
       this.logger.warn(`error when putting object to minio, reason: ${err.message}`);
     }
 
-    this.logger.trace('END', { method });
+    this.logger.trace({ method }, 'END');
     return result;
   }
 
@@ -188,7 +200,7 @@ export class MinioService {
    */
   async deleteObject(fileName: string, bucketName: string): Promise<void> {
     const method = 'deleteObject';
-    this.logger.trace('BEGIN', { method });
+    this.logger.trace({ method }, 'BEGIN');
     this.logger.debug({ fileName, bucketName });
 
     try {
@@ -197,7 +209,7 @@ export class MinioService {
       this.logger.warn(`error when deleting object to minio, reason: ${err.message}`);
     }
 
-    this.logger.trace('END', { method });
+    this.logger.trace({ method }, 'END');
   }
 
   /**
