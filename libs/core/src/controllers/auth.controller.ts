@@ -117,6 +117,7 @@ export class AuthController {
   )
   @Roles(RolePermission.USER)
   async registerOrganizer(
+    @Res({ passthrough: true }) res: Response,
     @Body() body: OrganizerRegisterBodyDTO,
     @Identity() identity: IIdentity,
     @UploadedFiles() files: { profile?: UploadedFileType[]; background?: UploadedFileType[] },
@@ -128,7 +129,10 @@ export class AuthController {
       profile: files.profile ? files.profile[0] : undefined,
       background: files.background ? files.background[0] : undefined,
     });
-    return await this.commandBus.execute(command);
+    const result = await this.commandBus.execute(command);
+
+    CookieUtils.set(res, 'organizer_refresh_token', result.refreshToken);
+    return result;
   }
 
   @Post('user/logout')
