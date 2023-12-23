@@ -90,9 +90,6 @@ export class RegisterOrganizerCodeHandler
   }): Promise<{ url: string; secureUrl: string } | undefined> {
     const { file, userId, type } = params;
 
-    const exist = await this.minio.bucketExists(userId);
-    if (!exist) await this.minio.createBucket(userId);
-
     const timestamp = DateUtils.toUnix(new Date());
     const filename = `${type}/${timestamp}-${file.originalname}`.replace(/\s/g, '');
     await this.minio.putObject({

@@ -47,13 +47,33 @@ export class MinioService {
   /**
    *
    * @param bucketName
+   * @param policy
    */
-  async createBucket(bucketName: string): Promise<void> {
+  async createBucket(bucketName: string, policy?: string): Promise<void> {
     const method = 'createBucket';
     this.logger.trace({ method }, 'BEGIN');
     this.logger.debug({ bucketName });
 
-    await this._minio.makeBucket(bucketName);
+    const _policy = {
+      Version: '2012-10-17',
+      Statement: [
+        {
+          Action: ['s3:*'],
+          Effect: 'Allow',
+          Principal: {
+            AWS: ['*'],
+          },
+          Resource: [`arn:aws:s3:::${bucketName}/*`],
+        },
+      ],
+    };
+
+    try {
+      await this._minio.makeBucket(bucketName);
+      await this._minio.setBucketPolicy(bucketName, policy || JSON.stringify(_policy));
+    } catch (err: any) {
+      this.logger.warn(`error when create ${bucketName} bucket, reason: ${err.message}`);
+    }
 
     this.logger.trace({ method }, 'END');
   }
@@ -130,6 +150,8 @@ export class MinioService {
       );
       return undefined;
     }
+
+    console.log(1, file);
 
     this.logger.trace({ method }, 'END');
 
