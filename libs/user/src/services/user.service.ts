@@ -1,7 +1,8 @@
 import { Inject } from '@nestjs/common';
+import { EventPublisher } from '@nestjs/cqrs';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { USER_READ_REPOSITORY, USER_WRITE_REPOSITORY } from '../constants';
-import { CreateUserProps, UserEntity } from '../domains';
+import { CreateUserProps, UserAggregate } from '../domains';
 import {
   IUserReadRepository,
   IUserService,
@@ -17,6 +18,7 @@ export class UserService implements IUserService {
     private readonly repository: IUserReadRepository,
     @Inject(USER_WRITE_REPOSITORY)
     private readonly writeRepository: IUserWriteRepository,
+    private readonly publisher: EventPublisher,
   ) {}
 
   async findById(id: string): Promise<UserQueryModel | undefined> {
@@ -39,8 +41,8 @@ export class UserService implements IUserService {
     return user;
   }
 
-  async create(props: CreateUserProps): Promise<UserEntity> {
-    const entity = UserEntity.create({ ...props });
+  async create(props: CreateUserProps): Promise<UserAggregate> {
+    const entity = this.publisher.mergeObjectContext(UserAggregate.create({ ...props }));
     await this.writeRepository.create(entity);
     return entity;
   }

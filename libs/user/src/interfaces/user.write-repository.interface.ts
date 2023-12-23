@@ -1,9 +1,9 @@
-import { UserEntity } from '../domains';
+import { UserAggregate } from '../domains';
 
 export interface IUserWriteRepository {
   /**
    *
-   * @param entity
+   * @param aggregate
    */
-  create(entity: UserEntity): Promise<void>;
+  create(aggregate: UserAggregate): Promise<void>;
 }

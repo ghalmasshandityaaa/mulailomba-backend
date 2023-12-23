@@ -151,8 +151,6 @@ export class MinioService {
       return undefined;
     }
 
-    console.log(1, file);
-
     this.logger.trace({ method }, 'END');
 
     return {

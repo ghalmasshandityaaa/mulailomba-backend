@@ -1,5 +1,5 @@
 import { TypeOrmBaseRepository } from '@mulailomba/common/repositories';
-import { UserEntity } from '@mulailomba/user/domains';
+import { UserAggregate } from '@mulailomba/user/domains';
 import { TypeOrmUserEntity } from '@mulailomba/user/entities';
 import { IUserWriteRepository } from '@mulailomba/user/interfaces';
 import { Injectable } from '@nestjs/common';
@@ -22,7 +22,7 @@ export class TypeOrmUserWriteRepository
    *
    * @param entity
    */
-  async create(entity: UserEntity): Promise<void> {
+  async create(entity: UserAggregate): Promise<void> {
     return this.execute(async () => {
       await this.dataSource.createEntityManager().insert(TypeOrmUserEntity, {
         id: entity.id,

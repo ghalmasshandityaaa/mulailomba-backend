@@ -1,4 +1,5 @@
-import { Entity, StringUtils } from '@mulailomba/common';
+import { Aggregate, StringUtils } from '@mulailomba/common';
+import { UserWasCreatedEvent } from './events';
 
 type Props = {
   fullName: string;
@@ -17,7 +18,7 @@ export type CreateUserProps = Required<
 /**
  *
  */
-export class UserEntity extends Entity<Props, string> {
+export class UserAggregate extends Aggregate<Props, string> {
   constructor(props: Props, id?: string) {
     super(props, id);
   }
@@ -27,14 +28,21 @@ export class UserEntity extends Entity<Props, string> {
    * @param props
    * @returns
    */
-  public static create(props: CreateUserProps): UserEntity {
-    const entity = new UserEntity({
+  public static create(props: CreateUserProps): UserAggregate {
+    const aggregate = new UserAggregate({
       ...props,
       password: StringUtils.hash(props.password),
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    return entity;
+
+    aggregate.raise(
+      new UserWasCreatedEvent({
+        userId: aggregate.id,
+      }),
+    );
+
+    return aggregate;
   }
 
   /**
@@ -43,7 +51,7 @@ export class UserEntity extends Entity<Props, string> {
    * @param id
    * @returns
    */
-  public static rebuild(props: Props, id: string): UserEntity {
-    return new UserEntity(props, id);
+  public static rebuild(props: Props, id: string): UserAggregate {
+    return new UserAggregate(props, id);
   }
 }
