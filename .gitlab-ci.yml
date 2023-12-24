@@ -54,7 +54,7 @@ include:
       docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY} && docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:${STAGE}"
     - echo "Starting the Docker containers on the remote server..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
-      docker compose -f ~/app/mla-backend/docker-compose.${STAGE}.yml up -d --remove-orphans"
+      docker compose -f ~/app/mla-backend/docker-compose.${STAGE}.yml up -d"
 
 #------------------------------------------------------
 # Development
