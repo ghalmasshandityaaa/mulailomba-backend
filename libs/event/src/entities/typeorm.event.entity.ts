@@ -13,11 +13,6 @@ import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
 import { TypeOrmEventEligibilityEntity } from './typeorm.event-eligibility.entity';
 import { TypeOrmOrganizerEntity } from './typeorm.organizer.entity';
 
-export type FileType = {
-  publicId: string;
-  secureUrl: string;
-};
-
 @Entity({ name: 'event' })
 export class TypeOrmEventEntity {
   @PrimaryColumn({ type: 'uuid' })
@@ -28,17 +23,9 @@ export class TypeOrmEventEntity {
 
   @Column({
     name: 'poster',
-    type: 'text',
-    transformer: {
-      from(value) {
-        return value ? JSON.parse(value) : null;
-      },
-      to(value) {
-        return value ? JSON.stringify(value) : null;
-      },
-    },
+    type: 'varchar',
   })
-  readonly poster: FileType;
+  readonly poster: string;
 
   @Column({ name: 'description', type: 'varchar', nullable: true })
   readonly description: string | null;

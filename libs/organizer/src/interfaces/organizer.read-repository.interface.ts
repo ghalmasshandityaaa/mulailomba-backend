@@ -1,3 +1,4 @@
+import { ISearchableQuery, ISortableQuery } from '@mulailomba/common';
 import { OrganizerQueryModel } from './organizer.query-model.interface';
 
 export interface IOrganizerReadRepository {
@@ -22,7 +23,11 @@ export interface IOrganizerReadRepository {
   /**
    *
    * @param userId
+   * @param params
    * @returns
    */
-  findByUserId(userId: string): Promise<OrganizerQueryModel[]>;
+  findByUserId(
+    userId: string,
+    params: ISearchableQuery & ISortableQuery,
+  ): Promise<Array<OrganizerQueryModel & { totalEvent?: number }>>;
 }

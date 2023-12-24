@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import * as nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
-import { IMailerService, IMailOptions, IRecipients } from '../interfaces';
+import { IMailOptions, IMailerService, IRecipients } from '../interfaces';
 import { EmailTemplates } from '../mailer.template';
 
 export class MailerService implements IMailerService {
@@ -85,7 +85,7 @@ export class MailerService implements IMailerService {
     const uniqueId = `${recipients.recipients.join(',')}:${activationCode}`;
     const idVerification = StringUtils.encrypt(uniqueId);
     const template = TemplateUtils.compile(EmailTemplates.ACTIVATION_CODE, {
-      url: `${this.APP_DOMAIN}/validate-registration?id=${idVerification}`,
+      url: `${this.APP_DOMAIN}/api/validate-registration?id=${idVerification}`,
     });
 
     const mailOption: IMailOptions = {

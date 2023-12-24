@@ -1,10 +1,12 @@
 import {
   Cookies,
   CookieUtils,
+  FileUtils,
   Identity,
   IIdentity,
   RolePermission,
   Roles,
+  UploadedFileType,
 } from '@mulailomba/common';
 import { JwtAuthGuard, RoleGuard } from '@mulailomba/common/guards';
 import {
@@ -15,20 +17,23 @@ import {
   HttpStatus,
   Post,
   Res,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import {
   LoginOrganizerCommand,
   LoginUserCommand,
   RefreshTokenCommand,
+  RegisterOrganizerCommand,
   RegisterUserCommand,
   ResendActivationCodeCommand,
 } from '../commands';
 import { CheckAvailabilityEmailCommand } from '../commands/check-availability-email/check-availability-email.command';
 import { OrganizerLogoutCommand } from '../commands/organizer-logout/organizer-logout.command';
-import { RegisterOrganizerCommand } from '../commands/register-organizer/register-organizer.command';
 import { VerifyUserCommand } from '../commands/verify-user/verify-user.command';
 import {
   CheckAvailabilityEmailBodyDTO,
@@ -98,10 +103,40 @@ export class AuthController {
   @Post('organizer/register')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'profile', maxCount: 1 },
+        { name: 'background', maxCount: 1 },
+      ],
+      {
+        fileFilter: FileUtils.filterCallback({ type: 'IMAGES' }),
+        limits: { fileSize: 10000000 }, // 10mb
+      },
+    ),
+  )
   @Roles(RolePermission.USER)
-  async registerOrganizer(@Body() body: OrganizerRegisterBodyDTO, @Identity() identity: IIdentity) {
-    const command = new RegisterOrganizerCommand({ ...body, userId: identity.id });
-    return await this.commandBus.execute(command);
+  async registerOrganizer(
+    @Res({ passthrough: true }) res: Response,
+    @Cookies('organizer_refresh_token') organizerRefreshToken: any,
+    @Body() body: OrganizerRegisterBodyDTO,
+    @Identity() identity: IIdentity,
+    @UploadedFiles() files: { profile?: UploadedFileType[]; background?: UploadedFileType[] },
+  ) {
+    const command = new RegisterOrganizerCommand({
+      ...body,
+      isLocked: body.isLocked === 'true',
+      userId: identity.id,
+      profile: files.profile ? files.profile[0] : undefined,
+      background: files.background ? files.background[0] : undefined,
+    });
+    const result = await this.commandBus.execute(command);
+
+    if (organizerRefreshToken) {
+      CookieUtils.set(res, 'organizer_refresh_token', result.refreshToken);
+    }
+
+    return result;
   }
 
   @Post('user/logout')

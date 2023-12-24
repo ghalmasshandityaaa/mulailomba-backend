@@ -1,6 +1,5 @@
 import { DateUtils, PaginatedCollection } from '@mulailomba/common';
 import { PaginatedQueryResult } from '@mulailomba/common/queries';
-import { FileType } from '@mulailomba/event/entities/typeorm.event.entity';
 import {
   EVENT_CATEGORY_STATUS_ENUM,
   EVENT_TIMELINE_TYPE_ENUM,
@@ -12,7 +11,7 @@ import { flattenDeep, sortBy, uniq } from 'lodash';
 type JsonEventProps = {
   id: string;
   name: string;
-  poster: FileType;
+  poster: string;
   benefits: string[];
   eligibilities: string[];
   status: string;

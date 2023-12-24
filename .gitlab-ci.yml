@@ -1,50 +1,50 @@
 stages:
   - test
-  - migration
+  - build
+  - deploy
 
-sast:
-  stage: test
-  script:
-    - echo "Running SAST tests"
+variables:
+  DOCKER_TAG: 'latest'
+  DOCKER_REPO: $CI_REGISTRY_IMAGE
+  DOCKER_IMAGE: '$DOCKER_REPO:$DOCKER_TAG'
 
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
 
-# Migration, Dev
-.migration_template:
-  stage: migration
-  image: node:latest
+build:
+  image: docker:20.10.16
+  stage: build
+  services:
+    - docker:20.10.16-dind
   variables:
-    PG_DATABASE_URL: $DEV_PG_DATABASE_URL
-    PG_DATABASE_SSL: $DEV_PG_DATABASE_SSL
-    APP_MODE: development
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "development"'
-    - if: '$CI_COMMIT_REF_NAME == "staging"'
-    - if: '$CI_COMMIT_TAG'
-
-.migration_changes_rule: &migration_changes_rule
-  changes:
-    - 'libs/database/src/migrations/*'
-    - 'libs/database/src/seeds/*'
-
-migration:show:dev:
-  extends: .migration_template
+    DOCKER_TLS_CERTDIR: '/certs'
   before_script:
-    - yarn install --frozen-lockfile
-    - yarn global add typescript
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script:
-    - yarn migration:show
-  rules:
-    - <<: *migration_changes_rule
+    - docker pull "$DOCKER_IMAGE" || true
+    - docker build --pull --cache-from "$DOCKER_IMAGE" --cache-from "${DOCKER_REPO}:latest" -t "$DOCKER_IMAGE" ./
+    - docker push "$DOCKER_IMAGE"
 
-migration:run:dev:
-  extends: .migration_template
+deploy:
+  image: kroniak/ssh-client
+  stage: deploy
+  before_script:
+    - chmod 400 $SSH_PRIVATE_KEY
+    # login to gitlab container registry
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}"
   script:
-    - yarn migration:run
-  rules:
-    - <<: *migration_changes_rule
-  when: manual
-  dependencies:
-    - migration:show:dev
+    - echo "Copying files to the remote server..."
+    - scp -i $SSH_PRIVATE_KEY -r ./docker-compose.dev.yml $SSH_USER@$SSH_ADDRESS:~/app/mla-backend
+    - echo $ENV
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "echo \"$ENV\" > ~/app/mla-backend/.env"
+    - echo "Stopping and removing existing containers on the remote server..."
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker compose -f ~/app/mla-backend/docker-compose.dev.yml down"
+    - echo "Pulling the latest Docker image..."
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY} && docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
+    - echo "Starting the Docker containers on the remote server..."
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
+      docker compose -f ~/app/mla-backend/docker-compose.dev.yml up -d --remove-orphans"

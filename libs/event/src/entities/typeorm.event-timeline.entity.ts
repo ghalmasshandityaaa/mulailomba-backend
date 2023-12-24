@@ -1,7 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { EVENT_TIMELINE_TYPE_ENUM } from '../event.constants';
 import { TypeOrmEventCategoryEntity } from './typeorm.event-cetegory.entity';
-import { FileType } from './typeorm.event.entity';
 
 @Entity({ name: 'event_timeline' })
 export class TypeOrmEventTimelineEntity {
@@ -28,17 +27,9 @@ export class TypeOrmEventTimelineEntity {
 
   @Column({
     name: 'additional_file',
-    type: 'text',
-    transformer: {
-      from(value) {
-        return value ? JSON.parse(value) : null;
-      },
-      to(value) {
-        return value ? JSON.stringify(value) : null;
-      },
-    },
+    type: 'varchar',
   })
-  readonly additionalFile: FileType | null;
+  readonly additionalFile: string | null;
 
   @Column({ name: 'created_at' })
   readonly createdAt: Date;

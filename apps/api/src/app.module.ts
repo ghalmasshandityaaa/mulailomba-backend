@@ -12,6 +12,7 @@ import { TypeOrmOptionsProvider } from '@mulailomba/database/config';
 import { EventModule } from '@mulailomba/event';
 import { FileModule } from '@mulailomba/file/file.module';
 import { LoggerModule } from '@mulailomba/logger';
+import { MinioModule } from '@mulailomba/minio';
 import { OrganizerModule } from '@mulailomba/organizer';
 import { TokenModule } from '@mulailomba/token';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
@@ -44,6 +45,7 @@ import { HealthModule } from './health';
     OrganizerModule,
     TokenModule,
     FileModule,
+    MinioModule.forRoot(),
   ],
   providers: [
     {

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { TypeOrmEventEntity } from './typeorm.event.entity';
 
 @Entity({ name: 'organizer' })
 export class TypeOrmOrganizerEntity {
@@ -11,11 +12,19 @@ export class TypeOrmOrganizerEntity {
   @Column({ name: 'username' })
   readonly username: string;
 
-  @Column({ name: 'profile' })
-  readonly profile: string;
+  @Column({
+    name: 'profile',
+    type: 'varchar',
+    nullable: true,
+  })
+  readonly profile: string | null;
 
-  @Column({ name: 'background' })
-  readonly background: string;
+  @Column({
+    name: 'background',
+    type: 'varchar',
+    nullable: true,
+  })
+  readonly background: string | null;
 
   @Column({ name: 'email_address' })
   readonly emailAddress: string;
@@ -29,6 +38,9 @@ export class TypeOrmOrganizerEntity {
   @Column({ name: 'is_active' })
   readonly isActive: boolean;
 
+  @Column({ name: 'is_favorite' })
+  readonly isFavorite: boolean;
+
   @Column({ name: 'created_at' })
   readonly createdAt: Date;
 
@@ -40,4 +52,8 @@ export class TypeOrmOrganizerEntity {
 
   @Column({ name: 'user_id' })
   readonly userId: string;
+
+  // relations
+  @OneToMany(() => TypeOrmEventEntity, (event) => event.organizer)
+  readonly events: TypeOrmEventEntity[];
 }

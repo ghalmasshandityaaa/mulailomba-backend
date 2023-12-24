@@ -1,4 +1,3 @@
-import { FileType } from '@mulailomba/common';
 import { BannerPosition, BannerStatus } from '../entities/typeorm/typeorm.banner.entity';
 
 export interface BannerQueryModel {
@@ -6,7 +5,7 @@ export interface BannerQueryModel {
   name: string;
   description: string;
   position: BannerPosition;
-  file: FileType;
+  file: string;
   startDate: Date;
   endDate: Date;
   status: BannerStatus;

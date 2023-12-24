@@ -34,6 +34,9 @@ export class RegisterUserHandler
       ...command,
       isActive: true,
     });
+
+    entity.commit();
+
     const tokens = await this.tokenService.generateToken({
       id: entity.id,
       isActive: entity.props.isActive,

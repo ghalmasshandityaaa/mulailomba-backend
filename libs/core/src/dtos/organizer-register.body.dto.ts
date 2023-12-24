@@ -11,15 +11,15 @@ export class OrganizerRegisterBodyDTO {
   @Expose({ name: 'email' })
   readonly emailAddress: string;
 
-  @JoiSchema(joi.boolean().required().label('is_locked'))
+  @JoiSchema(joi.string().required().valid('true', 'false').label('is_locked'))
   @Expose({ name: 'is_locked' })
-  readonly isLocked: boolean;
+  readonly isLocked: string;
 
   @JoiSchema(
     joi
       .string()
       .when('isLocked', {
-        is: true,
+        is: 'true',
         then: joi.required(),
         otherwise: joi.optional().allow(null),
       })

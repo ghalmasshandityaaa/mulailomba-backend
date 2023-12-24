@@ -1,4 +1,3 @@
-import { CloudinaryService } from '@mulailomba/cloudinary';
 import { Public } from '@mulailomba/common';
 import { Controller, Get, Header } from '@nestjs/common';
 import { HealthCheck, HealthCheckService, TypeOrmHealthIndicator } from '@nestjs/terminus';
@@ -13,7 +12,6 @@ export class HealthController {
     private db: TypeOrmHealthIndicator,
     @InjectDataSource()
     private dataSource: DataSource,
-    private readonly cloudinary: CloudinaryService,
   ) {}
 
   @Public()
@@ -21,20 +19,21 @@ export class HealthController {
   @Header('Cache-Control', 'no-cache')
   @HealthCheck()
   async check() {
-    const [cloudinary, database] = await Promise.all([
-      this.cloudinary.ping(),
-      this.health.check([
-        async () =>
-          this.db.pingCheck('database', {
-            connection: this.dataSource,
-            timeout: 3000,
-          }),
-      ]),
+    const database = await this.health.check([
+      async () =>
+        this.db.pingCheck('database', {
+          connection: this.dataSource,
+          timeout: 3000,
+        }),
     ]);
 
     return {
       database: pick(database, 'status').status,
-      cloudinary,
     };
+  }
+
+  @Get('tes')
+  tes() {
+    return 'ok';
   }
 }

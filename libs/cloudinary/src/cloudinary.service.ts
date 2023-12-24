@@ -1,10 +1,9 @@
-import { UploadedFileType } from '@mulailomba/common';
-import { FileType } from '@mulailomba/event/entities/typeorm.event.entity';
+import { FileType, UploadedFileType } from '@mulailomba/common';
 import { Inject, Injectable } from '@nestjs/common';
 import { UploadApiErrorResponse, UploadApiOptions, v2 as cloudinary } from 'cloudinary';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { Readable } from 'stream';
-import { CloudinaryOptions, CLOUDINARY_OPTIONS } from './cloudinary.interface';
+import { CLOUDINARY_OPTIONS, CloudinaryOptions } from './cloudinary.interface';
 
 @Injectable()
 export class CloudinaryService {
@@ -44,16 +43,16 @@ export class CloudinaryService {
    * uploader.upload method.
    * @returns FileType | UploadApiErrorResponse
    */
-  async signedUpload(
-    file: UploadedFileType,
-    options?: UploadApiOptions,
-  ): Promise<FileType | UploadApiErrorResponse> {
-    return new Promise(async (resolve, reject) => {
+  async signedUpload(file: UploadedFileType, options?: UploadApiOptions): Promise<FileType> {
+    return new Promise(async (resolve, _) => {
       cloudinary.uploader.upload(
         `data:${file.mimetype};base64,${file.base64}`,
         options,
         (error, result) => {
-          if (error) reject(error);
+          if (error) {
+            this.logger.error({ error });
+            throw new Error(JSON.stringify(error));
+          }
           if (result) {
             const mappedResult: FileType = {
               publicId: result.public_id,

@@ -1,4 +1,3 @@
-import { FileType } from '@mulailomba/event/entities/typeorm.event.entity';
 import {
   EVENT_PREREQUISITE_TYPE_ENUM,
   EVENT_TIMELINE_TYPE_ENUM,
@@ -21,7 +20,7 @@ class TimelineProps {
   readonly endDate?: Date | null;
   readonly type: EVENT_TIMELINE_TYPE_ENUM;
   readonly input?: string | null;
-  readonly additionalFile: FileType;
+  readonly additionalFile: string;
 }
 
 class CategoryProps {
@@ -40,7 +39,7 @@ class CategoryProps {
 class Props {
   readonly organizerId: string;
   readonly name: string;
-  readonly poster: FileType;
+  readonly poster: string;
   readonly categoryId: string;
   readonly benefits: string[];
   readonly eligibilities: string[];

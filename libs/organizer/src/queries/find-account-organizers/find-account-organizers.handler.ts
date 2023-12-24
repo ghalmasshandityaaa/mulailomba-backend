@@ -1,3 +1,4 @@
+import { ISortableQuery, QueryStringUtils } from '@mulailomba/common';
 import { ORGANIZER_READ_REPOSITORY } from '@mulailomba/organizer/constants';
 import { IOrganizerReadRepository } from '@mulailomba/organizer/interfaces';
 import { Inject } from '@nestjs/common';
@@ -25,7 +26,18 @@ export class FindAccountOrganizersHandler
     this.logger.trace('BEGIN');
     this.logger.info({ query });
 
-    const collection = await this.repository.findByUserId(query.userId);
+    const defaultSort: ISortableQuery = {
+      sortBy: [
+        {
+          target: 'total_event',
+          direction: 'DESC',
+        },
+      ],
+    };
+    const collection = await this.repository.findByUserId(query.userId, {
+      ...query,
+      sortBy: QueryStringUtils.mergeSortCondition(query.sortBy || [], defaultSort.sortBy || []),
+    });
     const result = new FindAccountOrganizersResult(collection);
 
     this.logger.trace('END');

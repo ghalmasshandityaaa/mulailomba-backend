@@ -2,7 +2,7 @@ import JoiDate from '@joi/date';
 import { Expose, Type } from 'class-transformer';
 import { subDays } from 'date-fns';
 import * as JoiImport from 'joi';
-import { getClassSchema, JoiSchema } from 'joi-class-decorators';
+import { JoiSchema, getClassSchema } from 'joi-class-decorators';
 import { values } from 'lodash';
 import { DateTime } from 'luxon';
 import {
@@ -12,16 +12,6 @@ import {
 } from '../event.constants';
 
 const joi: JoiImport.Root = JoiImport.extend(JoiDate);
-
-class FileDto {
-  @JoiSchema(joi.string().required().label('public_id'))
-  @Expose({ name: 'public_id' })
-  readonly publicId: string;
-
-  @JoiSchema(joi.string().uri().required().label('secure_url'))
-  @Expose({ name: 'secure_url' })
-  readonly secureUrl: string;
-}
 
 class EventPrerequisiteDTO {
   @JoiSchema(joi.string().trim().required().label('name'))
@@ -139,18 +129,9 @@ class EventTimelineDTO {
   )
   readonly input: string | null;
 
-  @JoiSchema(
-    joi
-      .when('type', {
-        is: EVENT_TIMELINE_TYPE_ENUM.INFORMATION,
-        then: getClassSchema(FileDto),
-        otherwise: joi.valid(null),
-      })
-      .label('additional_file'),
-  )
+  @JoiSchema(joi.string().required().label('additional_file'))
   @Expose({ name: 'additional_file' })
-  @Type(() => FileDto)
-  readonly additionalFile: FileDto;
+  readonly additionalFile: string;
 }
 
 class EventCategoryDTO {
@@ -241,9 +222,8 @@ export class CreateEventBodyDTO {
   @Expose({ name: 'category_id' })
   readonly categoryId: string;
 
-  @JoiSchema(getClassSchema(FileDto).required().label('poster'))
-  @Type(() => FileDto)
-  readonly poster: FileDto;
+  @JoiSchema(joi.string().required().label('poster'))
+  readonly poster: string;
 
   @JoiSchema(joi.array().items(joi.string().trim()).min(1).unique().required().label('benefits'))
   readonly benefits: string[];

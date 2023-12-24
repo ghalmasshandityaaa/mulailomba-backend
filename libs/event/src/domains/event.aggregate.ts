@@ -1,10 +1,9 @@
 import { Aggregate } from '@mulailomba/common';
-import { FileType } from '../entities/typeorm.event.entity';
 import { EventPublishEvent } from './events';
 
 type Props = {
   name: string;
-  poster: FileType;
+  poster: string;
   description?: string | null;
   isMultipleCategory: boolean;
   benefit: string[];
