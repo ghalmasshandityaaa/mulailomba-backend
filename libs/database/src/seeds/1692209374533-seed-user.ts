@@ -16,13 +16,28 @@ export class seedUser1692209374533 implements MigrationInterface {
       updated_at: faker.date.recent(),
     }));
 
-    await queryRunner.manager
-      .createQueryBuilder()
-      .insert()
-      .into('user')
-      .values(users)
-      .orIgnore('code')
-      .execute();
+    const query = queryRunner.manager.createQueryBuilder().insert().into('user').values(users);
+
+    if (process.env.APP_MODE?.toLowerCase() === 'production') {
+      query.values([
+        {
+          id: randomUUID({ disableEntropyCache: true }),
+          full_name: 'Administrator',
+          phone: '+6285163636161',
+          email_address: 'admin@mulailomba.com',
+          password: StringUtils.hash(
+            process.env.ADMIN_PASSWORD || faker.internet.password({ length: 16 }),
+          ),
+          is_active: true,
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      ]);
+    } else {
+      query.values(users);
+    }
+
+    await query.orIgnore('code').execute();
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
