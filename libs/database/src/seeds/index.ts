@@ -6,7 +6,7 @@ import { seedEvent1692277347451 } from './1692277347451-seed-event';
 
 let seeds: any[] = [];
 if (process.env.APP_MODE?.toLowerCase() === 'production') {
-  seeds = [seedCategory1692271354052];
+  seeds = [seedUser1692209374533, seedCategory1692271354052];
 } else {
   // for development or staging env
   seeds = [
