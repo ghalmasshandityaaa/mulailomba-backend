@@ -6,11 +6,11 @@ services:
     env_file:
       - .env
     ports:
-      - '8000:8000'
+      - '8100-8102:8000'
     deploy:
-      replicas: 1
+      replicas: 3
       update_config:
         parallelism: 1
         delay: 15s
       restart_policy:
-        condition: on-failure
+        condition: always
