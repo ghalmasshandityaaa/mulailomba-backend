@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  api:
+  api_prod:
     image: registry.gitlab.com/mulailomba/mla-backend:production
     env_file:
       - .env.production
