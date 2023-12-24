@@ -2,9 +2,9 @@ version: '3'
 
 services:
   api:
-    image: registry.gitlab.com/mulailomba/mla-backend:latest
+    image: registry.gitlab.com/mulailomba/mla-backend:development
     env_file:
-      - .env
+      - .env.development
     ports:
       - '8100-8102:8000'
     deploy:
