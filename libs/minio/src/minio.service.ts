@@ -225,7 +225,25 @@ export class MinioService {
     try {
       await this._minio.removeObject(bucketName, fileName);
     } catch (err: any) {
-      this.logger.warn(`error when deleting object to minio, reason: ${err.message}`);
+      this.logger.warn(`error when deleting object from minio, reason: ${err.message}`);
+    }
+
+    this.logger.trace({ method }, 'END');
+  }
+
+  /**
+   *
+   * @param bucketName
+   */
+  async deleteBucket(bucketName: string): Promise<void> {
+    const method = 'deleteObject';
+    this.logger.trace({ method }, 'BEGIN');
+    this.logger.debug({ bucketName });
+
+    try {
+      await this._minio.removeBucket(bucketName);
+    } catch (err: any) {
+      this.logger.warn(`error when deleting bucket from minio, reason: ${err.message}`);
     }
 
     this.logger.trace({ method }, 'END');
