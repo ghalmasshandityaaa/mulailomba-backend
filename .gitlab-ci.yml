@@ -6,13 +6,20 @@ stages:
 variables:
   DOCKER_TAG: 'latest'
   DOCKER_REPO: $CI_REGISTRY_IMAGE
-  DOCKER_IMAGE: '$DOCKER_REPO:$DOCKER_TAG'
 
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
 
-build:
+.api_changes: &api_changes
+  changes:
+    - apps/api/**/*
+    - libs/**/*
+
+#------------------------------------------------------
+# Base
+#------------------------------------------------------
+.build:
   image: docker:20.10.16
   stage: build
   services:
@@ -22,11 +29,11 @@ build:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script:
-    - docker pull "$DOCKER_IMAGE" || true
-    - docker build --pull --cache-from "$DOCKER_IMAGE" --cache-from "${DOCKER_REPO}:latest" -t "$DOCKER_IMAGE" ./
-    - docker push "$DOCKER_IMAGE"
+    - docker pull "$DOCKER_REPO:$STAGE" || true
+    - docker build --pull --cache-from "$DOCKER_REPO:$STAGE" --cache-from "${DOCKER_REPO}:$STAGE" -t "$DOCKER_REPO:$STAGE" ./
+    - docker push "$DOCKER_REPO:$STAGE"
 
-deploy:
+.deploy:
   image: kroniak/ssh-client
   stage: deploy
   before_script:
@@ -36,15 +43,41 @@ deploy:
       docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}"
   script:
     - echo "Copying files to the remote server..."
-    - scp -i $SSH_PRIVATE_KEY -r ./docker-compose.dev.yml $SSH_USER@$SSH_ADDRESS:~/app/mla-backend
+    - scp -i $SSH_PRIVATE_KEY -r ./docker-compose.${STAGE}.yml $SSH_USER@$SSH_ADDRESS:~/app/mla-backend
     - echo $ENV
-    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "echo \"$ENV\" > ~/app/mla-backend/.env"
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "echo \"$ENV\" > ~/app/mla-backend/.env.${STAGE}"
     - echo "Stopping and removing existing containers on the remote server..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
-      docker compose -f ~/app/mla-backend/docker-compose.dev.yml down"
+      docker compose -f ~/app/mla-backend/docker-compose.${STAGE}.yml down"
     - echo "Pulling the latest Docker image..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
-      docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY} && docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
+      docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY} && docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:${STAGE}"
     - echo "Starting the Docker containers on the remote server..."
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_ADDRESS "
-      docker compose -f ~/app/mla-backend/docker-compose.dev.yml up -d --remove-orphans"
+      docker compose -f ~/app/mla-backend/docker-compose.${STAGE}.yml up -d --remove-orphans"
+
+#------------------------------------------------------
+# Development
+#------------------------------------------------------
+build_api_dev:
+  extends: .build
+  environment: development
+  variables:
+    STAGE: development
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "development"'
+      <<: *api_changes
+
+deploy_api_dev:
+  extends: .deploy
+  environment: development
+  variables:
+    STAGE: development
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "development"'
+      <<: *api_changes
+  needs: ['build_api_dev']
