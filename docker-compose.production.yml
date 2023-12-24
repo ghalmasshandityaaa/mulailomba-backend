@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  api:
+    image: registry.gitlab.com/mulailomba/mla-backend:production
+    env_file:
+      - .env.production
+    ports:
+      - '8200-8202:8000'
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 15s
+      restart_policy:
+        condition: always

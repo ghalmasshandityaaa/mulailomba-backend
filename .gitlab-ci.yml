@@ -81,3 +81,24 @@ deploy_api_dev:
     - if: '$CI_COMMIT_BRANCH == "development"'
       <<: *api_changes
   needs: ['build_api_dev']
+
+#------------------------------------------------------
+# Production
+#------------------------------------------------------
+build_api_prod:
+  extends: .build
+  environment: production
+  variables:
+    STAGE: production
+  rules:
+    - if: '$CI_COMMIT_TAG'
+
+deploy_api_prod:
+  extends: .deploy
+  environment: production
+  variables:
+    STAGE: production
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: manual
+  needs: ['build_api_prod']
