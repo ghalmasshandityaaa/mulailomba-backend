@@ -19,6 +19,7 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BenchmarkModule } from './becnhmark/benchmark.module';
 import { HealthModule } from './health';
 
 @Module({
@@ -46,6 +47,7 @@ import { HealthModule } from './health';
     TokenModule,
     FileModule,
     MinioModule.forRoot(),
+    BenchmarkModule,
   ],
   providers: [
     {
